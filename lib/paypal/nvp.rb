@@ -1,7 +1,7 @@
 module Paypal
   class NVP
     include AttrRequired, AttrOptional
-    attr_required :username, :password, :signature, :endpoint
+    attr_required :username, :password, :signature, :version, :endpoint
     attr_optional :sandbox
 
     def initialize(attributes = {})
@@ -41,7 +41,7 @@ module Paypal
       else
         raise APIError.new(response)
       end
-    rescue AttrRequuired::AttrMissing => e
+    rescue AttrRequired::AttrMissing => e
       raise AttrMissing.new(e.message)
     rescue RestClient::Exception => e
       raise Exception.new(e.http_code, e.message, e.http_body)
