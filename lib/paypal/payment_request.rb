@@ -1,5 +1,6 @@
-class Paypal
+module Paypal
   class PaymentRequest
+    include AttrRequired, AttrOptional
     attr_required :payment_action, :amount
     attr_optional :transaction_id, :transaction_type, :payment_type, :order_time, :currency_code, :tax_amount, :payment_status, :pending_reason, :reason_code
 

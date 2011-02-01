@@ -1,4 +1,4 @@
-class Paypal
+module Paypal
 
   class Exception < StandardError; end
   class AttrMissing < Exception; end

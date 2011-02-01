@@ -1,5 +1,5 @@
-class Paypal
-  class Express < Paypal
+module Paypal
+  class Express < NVP
     attr_required :return_url, :cancel_url
 
     def initialize(attributes = {})
