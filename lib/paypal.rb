@@ -1,20 +1,22 @@
+require 'active_support/core_ext/object'
 require 'attr_required'
 require 'attr_optional'
 require 'restclient_with_ssl_support'
 
 require 'paypal/exceptions'
-require 'paypal/nvp'
+require 'paypal/nvp/request'
 require 'paypal/nvp/response'
-require 'paypal/express'
+require 'paypal/express/request'
 require 'paypal/express/response'
-require 'paypal/payment_request'
+require 'paypal/payment/request'
+require 'paypal/payment/response'
 
 module Paypal
 
   API_VERSION = '66.0'
   ENDPOINT = {
-    :production => 'http://www.paypal.com/cgi-bin/webscr',
-    :sandbox => 'http://www.sandbox.paypal.com/cgi-bin/webscr'
+    :production => 'https://www.paypal.com/cgi-bin/webscr',
+    :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
   }
 
   def self.sandbox?
