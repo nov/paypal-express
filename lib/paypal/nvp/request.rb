@@ -2,7 +2,8 @@ module Paypal
   module NVP
     class Request
       include AttrRequired, AttrOptional
-      attr_required :username, :password, :signature, :version, :endpoint
+      attr_required :username, :password, :signature
+      attr_reader :version, :endpoint
 
       ENDPOINT = {
         :production => 'https://api-3t.paypal.com/nvp',
@@ -10,9 +11,9 @@ module Paypal
       }
 
       def initialize(attributes = {})
-        @username = attributes[:username]
-        @password = attributes[:password]
-        @signature = attributes[:signature]
+        required_attributes.each do |key|
+          self.send "#{key}=", attributes[key]
+        end
         @version = API_VERSION
         @endpoint = if Paypal.sandbox?
           ENDPOINT[:sandbox]

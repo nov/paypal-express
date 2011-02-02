@@ -1,19 +1,50 @@
 module Paypal
   module NVP
     class Response
-      attr_accessor :ack, :correlation_id, :timestamp, :build, :version, :token
-    
-      {:SHIPTOZIP=>"150-0002", :PAYERSTATUS=>"verified", :SHIPTOCOUNTRYCODE=>"JP", :CHECKOUTSTATUS=>"PaymentActionNotInitiated", :LASTNAME=>"User", :AMT=>"12.00", :SHIPPINGAMT=>"0.00", :TAXAMT=>"0.00", :SHIPTOSTATE=>"Tokyo", :ADDRESSSTATUS=>"Unconfirmed", :PAYERID=>"SDFHZQS6KTZGG", :SHIPDISCAMT=>"0.00", :EMAIL=>"buyer_1289794459_per@matake.jp", :SHIPTOCITY=>"Shibuya-ku", :INSURANCEAMT=>"0.00", :SHIPTOSTREET=>"Nishi 4-chome, Kita 55-jo, Kita-ku", :SHIPTOCOUNTRYNAME=>"Japan", :FIRSTNAME=>"Test", :COUNTRYCODE=>"JP", :CURRENCYCODE=>"USD", :SHIPTONAME=>"Test User", :HANDLINGAMT=>"0.00"}
-    
-      alias_method :status, :ack
+      attribute_mapping = {
+        :ACK => :ack,
+        :ADDRESSSTATUS => :address_status,
+        :BUILD => :build,
+        :CHECKOUTSTATUS => :checkout_status,
+        :CORRELATIONID => :colleration_id,
+        :COUNTRYCODE => :country_code,
+        :CURRENCYCODE => :currency_code,
+        :TIMESTAMP => :timestamp,
+        :TOKEN => :token,
+        :VERSION => :version
+      }
+      attr_accessor *attribute_mapping.values
+      attr_accessor :amount, :payer, :ship_to, :payment_responses
 
       def initialize(response_params = {})
-        @ack = response_params[:ACK]
-        @correlation_id = response_params[:CORRELATIONID]
-        @timestamp = response_params[:TIMESTAMP]
-        @build = response_params[:BUILD]
-        @version = response_params[:VERSION]
-        @token = response_params[:TOKEN]
+        attribute_mapping.each do |key, value|
+          self.send "#{value}=", response_params[key]
+        end
+        @amount = Payment::Response::Amount.new(
+          :total => response_params[:AMT],
+          :handing => response_params[:HANDLINGAMT],
+          :insurance => response_params[:INSURANCEAMT],
+          :ship_disc => response_params[:SHIPDISCAMT],
+          :shipping => response_params[:SHIPPINGAMT],
+          :tax => response_params[:TAXAMT]
+        )
+        @payer = Payment::Response::Payer.new(
+          :identifier => response_params[:PAYERID],
+          :status => response_params[:PAYERSTATUS],
+          :first_name => response_params[:FIRSTNAME],
+          :last_name => response_params[:LASTNAME],
+          :email => response_params[:EMAIL]
+        )
+        @ship_to = Payment::Response::ShipTo.new(
+          :name => response_params[:SHIPTONAME],
+          :zip => response_params[:SHIPTOZIP],
+          :street => response_params[:SHIPTOSTREET],
+          :city => response_params[:SHIPTOCITY],
+          :state => response_params[:SHIPTOSTATE],
+          :country_code => response_params[:SHIPTOCOUNTRYCODE],
+          :country_name => response_params[:SHIPTOCOUNTRYNAME]
+        )
+        @payment_responses = []
       end
     end
   end

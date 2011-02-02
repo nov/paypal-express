@@ -3,7 +3,7 @@ module Paypal
     class Request
       include AttrRequired, AttrOptional
       attr_required :payment_action, :amount
-      attr_optional :transaction_id, :transaction_type, :payment_type, :order_time, :currency_code, :tax_amount, :payment_status, :pending_reason, :reason_code
+      attr_optional :currency_code
 
       def initialize(attributes = {})
         (required_attributes + optional_attributes).each do |key|
