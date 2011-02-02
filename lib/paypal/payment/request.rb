@@ -1,30 +1,27 @@
 module Paypal
   module Payment
     class Request
-      include AttrRequired, AttrOptional
-      attr_required :payment_action, :amount
-      attr_optional :currency_code
+      include AttrRequired
+      attr_required :amount
+      attr_accessor :action, :currency_code
 
       def initialize(attributes = {})
-        (required_attributes + optional_attributes).each do |key|
-          self.send "#{key}=", attributes[key]
-        end
-        @payment_action ||= 'Sale'
-        @amount ||= 0
-        @currency_code ||= 'USD'
+        @amount = attributes[:amount]
+        @action = attributes[:action] || 'Sale'
+        @currency_code = attributes[:currency_code] || 'USD'
       end
 
       def formatted_amount(amount)
-        if amount == amount.to_i
+        if amount.to_f == amount.to_i
           "#{amount.to_i}.00"
         else
-          "#{amount.to_i}.#{((amount - amount.to_i) * 100).to_i}"
+          "#{amount.to_i}.#{((amount.to_f - amount.to_i) * 100).to_i}"
         end
       end
 
       def to_params(index = 0)
         {
-          :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.payment_action,
+          :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.action,
           :"PAYMENTREQUEST_#{index}_AMT" => formatted_amount(self.amount),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code
         }

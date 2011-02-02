@@ -1,7 +1,7 @@
 module Paypal
   module NVP
     class Request
-      include AttrRequired, AttrOptional
+      include AttrRequired
       attr_required :username, :password, :signature
       attr_reader :version, :endpoint
 

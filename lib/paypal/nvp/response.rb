@@ -1,7 +1,7 @@
 module Paypal
   module NVP
     class Response
-      attribute_mapping = {
+      @@attribute_mapping = {
         :ACK => :ack,
         :ADDRESSSTATUS => :address_status,
         :BUILD => :build,
@@ -13,38 +13,74 @@ module Paypal
         :TOKEN => :token,
         :VERSION => :version
       }
-      attr_accessor *attribute_mapping.values
-      attr_accessor :amount, :payer, :ship_to, :payment_responses
+      attr_accessor *@@attribute_mapping.values
+      attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
+      attr_accessor :amount, :payer, :ship_to, :payment_responses, :payment_info
 
       def initialize(response_params = {})
-        attribute_mapping.each do |key, value|
-          self.send "#{value}=", response_params[key]
+        params = response_params.dup
+        @@attribute_mapping.each do |key, value|
+          self.send "#{value}=", params.delete(key)
         end
+        @shipping_options_is_default = params.delete(:SHIPPINGOPTIONISDEFAULT) == 'true'
+        @success_page_redirect_requested = params.delete(:SUCCESSPAGEREDIRECTREQUESTED) == 'true'
+        @insurance_option_selected = params.delete(:INSURANCEOPTIONSELECTED) == 'true'
         @amount = Payment::Response::Amount.new(
-          :total => response_params[:AMT],
-          :handing => response_params[:HANDLINGAMT],
-          :insurance => response_params[:INSURANCEAMT],
-          :ship_disc => response_params[:SHIPDISCAMT],
-          :shipping => response_params[:SHIPPINGAMT],
-          :tax => response_params[:TAXAMT]
+          :total => params.delete(:AMT),
+          :handing => params.delete(:HANDLINGAMT),
+          :insurance => params.delete(:INSURANCEAMT),
+          :ship_disc => params.delete(:SHIPDISCAMT),
+          :shipping => params.delete(:SHIPPINGAMT),
+          :tax => params.delete(:TAXAMT)
         )
         @payer = Payment::Response::Payer.new(
-          :identifier => response_params[:PAYERID],
-          :status => response_params[:PAYERSTATUS],
-          :first_name => response_params[:FIRSTNAME],
-          :last_name => response_params[:LASTNAME],
-          :email => response_params[:EMAIL]
+          :identifier => params.delete(:PAYERID),
+          :status => params.delete(:PAYERSTATUS),
+          :first_name => params.delete(:FIRSTNAME),
+          :last_name => params.delete(:LASTNAME),
+          :email => params.delete(:EMAIL)
         )
         @ship_to = Payment::Response::ShipTo.new(
-          :name => response_params[:SHIPTONAME],
-          :zip => response_params[:SHIPTOZIP],
-          :street => response_params[:SHIPTOSTREET],
-          :city => response_params[:SHIPTOCITY],
-          :state => response_params[:SHIPTOSTATE],
-          :country_code => response_params[:SHIPTOCOUNTRYCODE],
-          :country_name => response_params[:SHIPTOCOUNTRYNAME]
+          :name => params.delete(:SHIPTONAME),
+          :zip => params.delete(:SHIPTOZIP),
+          :street => params.delete(:SHIPTOSTREET),
+          :city => params.delete(:SHIPTOCITY),
+          :state => params.delete(:SHIPTOSTATE),
+          :country_code => params.delete(:SHIPTOCOUNTRYCODE),
+          :country_name => params.delete(:SHIPTOCOUNTRYNAME)
         )
-        @payment_responses = []
+
+        # payment_responses
+        payment_responses = []
+        params.keys.each do |attribute|
+          prefix, index, key = attribute.to_s.split('_')
+          case prefix
+          when 'PAYMENTREQUEST', 'PAYMENTREQUESTINFO'
+            payment_responses[index.to_i] ||= {}
+            payment_responses[index.to_i][key.to_sym] = params.delete(attribute)
+          end
+        end
+        @payment_responses = payment_responses.collect do |payment_response_attributes|
+          Payment::Response.new payment_response_attributes
+        end
+
+        # payment_info
+        payment_info = []
+        params.keys.each do |attribute|
+          prefix, index, key = attribute.to_s.split('_')
+          if prefix == 'PAYMENTINFO'
+            payment_info[index.to_i] ||= {}
+            payment_info[index.to_i][key.to_sym] = params.delete(attribute)
+          end
+        end
+        @payment_info = payment_info.collect do |payment_info_attributes|
+          Payment::Info.new payment_response_attributes
+        end
+
+        # warn ignored params
+        params.each do |key, value|
+          Paypal.log "Ignored Parameter: #{key}=#{value}", :warn
+        end
       end
     end
   end

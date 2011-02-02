@@ -25,6 +25,19 @@ module Paypal
         response = self.request :GetExpressCheckoutDetails, {:TOKEN => token}
         Response.new response
       end
+
+      def checkout(token, payer_id, payment_requests)
+        params = {
+          :TOKEN => token,
+          :PAYERID => payer_id
+        }
+        Array(payment_requests).each_with_index do |payment_request, index|
+          params.merge! payment_request.to_params(index)
+        end
+        response = self.request :DoExpressCheckoutPayment, params
+        Response.new response
+      end
+
     end
   end
 end

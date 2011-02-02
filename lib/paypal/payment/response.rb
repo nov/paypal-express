@@ -1,15 +1,29 @@
 module Paypal
   module Payment
     class Response
-      # PAYMENTREQUEST_0_AMT
-      # PAYMENTREQUEST_0_HANDLINGAMT
-      # PAYMENTREQUEST_0_INSURANCEAMT
-      # PAYMENTREQUEST_0_SHIPDISCAMT
-      # PAYMENTREQUEST_0_SHIPPINGAMT
-      # PAYMENTREQUEST_0_TAXAMT
-      # PAYMENTREQUEST_0_INSURANCEOPTIONOFFERED
-      # PAYMENTREQUEST_0_CURRENCYCODE
-      # PAYMENTREQUESTINFO_0_ERRORCODE
+      attr_reader :amount, :insurance_option_offered, :currency_code, :error_code
+
+      def initialize(attributes = {})
+        @amount = Amount.new(
+          :total => attributes[:AMT],
+          :handing => attributes[:HANDLINGAMT],
+          :insurance => attributes[:INSURANCEAMT],
+          :ship_disc => attributes[:SHIPDISCAMT],
+          :shipping => attributes[:SHIPPINGAMT],
+          :tax => attributes[:TAXAMT]
+        )
+        @insurance_option_offered = attributes[:INSURANCEOPTIONOFFERED] == 'true'
+        @currency_code = attributes[:CURRENCYCODE]
+        @error_code = attributes[:ERRORCODE]
+      end
+
+      def to_request(overwritten = {})
+        params = {
+          :amount => self.amount.total,
+          :currency_code => self.currency_code
+        }.merge(overwritten)
+        Request.new params
+      end
     end
   end
 end
