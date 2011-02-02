@@ -2,7 +2,6 @@ module Paypal
   class NVP
     include AttrRequired, AttrOptional
     attr_required :username, :password, :signature, :version, :endpoint
-    attr_optional :sandbox
 
     ENDPOINT = {
       :production => 'https://api-3t.paypal.com/nvp',
@@ -13,9 +12,8 @@ module Paypal
       @username = attributes[:username]
       @password = attributes[:password]
       @signature = attributes[:signature]
-      @sandbox = attributes[:sandbox]
       @version = API_VERSION
-      @endpoint = if @sandbox
+      @endpoint = if Paypal.sandbox?
         ENDPOINT[:sandbox]
       else
         ENDPOINT[:production]
@@ -47,7 +45,8 @@ module Paypal
     end
 
     def handle_response
-      CGI.parse(yield).inject({}) do |res, (k, v)|
+      response = yield
+      response = CGI.parse(response).inject({}) do |res, (k, v)|
         res.merge!(k.to_sym => v.first)
       end
       case response[:ACK]

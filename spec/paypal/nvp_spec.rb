@@ -37,8 +37,10 @@ describe Paypal::NVP, '.new' do
     end
 
     it 'should support sandbox mode' do
-      client = Paypal::NVP.new required_params.merge(:sandbox => true)
-      client.endpoint.should == Paypal::NVP::ENDPOINT[:sandbox]
+      sandbox_mode do
+        client = Paypal::NVP.new required_params
+        client.endpoint.should == Paypal::NVP::ENDPOINT[:sandbox]
+      end
     end
   end
 
