@@ -5,9 +5,9 @@ module Paypal
     attr_required :return_url, :cancel_url
 
     def initialize(attributes = {})
-      super
       @return_url = attributes[:return_url]
       @cancel_url = attributes[:cancel_url]
+      super
     end
 
     def setup(payment_requests)
