@@ -74,7 +74,7 @@ module Paypal
           end
         end
         @payment_info = payment_info.collect do |payment_info_attributes|
-          Payment::Info.new payment_response_attributes
+          Payment::Info.new payment_info_attributes
         end
 
         # warn ignored params

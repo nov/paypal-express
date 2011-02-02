@@ -23,14 +23,14 @@ module Paypal
         @@attribute_mapping.each do |key, value|
           self.send "#{value}=", attrs.delete(key)
         end
-        @amount = Amount.new(
+        @amount = Response::Amount.new(
           :total => attrs.delete(:AMT),
           :fee => attrs.delete(:FEEAMT),
           :tax => attrs.delete(:TAXAMT)
         )
 
         # warn ignored params
-        params.each do |key, value|
+        attrs.each do |key, value|
           Paypal.log "Ignored Parameter: #{key}=#{value}", :warn
         end
       end
