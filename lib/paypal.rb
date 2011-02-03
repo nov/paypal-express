@@ -1,4 +1,4 @@
-require "logger"
+require 'logger'
 require 'active_support/core_ext'
 require 'attr_required'
 require 'attr_optional'
@@ -22,7 +22,7 @@ module Paypal
     @@logger = logger
   end
   @@logger = Logger.new(STDERR)
-  @@logger.progname = "Paypal::Express"
+  @@logger.progname = 'Paypal::Express'
 
   def self.sandbox?
     @@sandbox
@@ -49,7 +49,6 @@ require 'paypal/payment/response'
 require 'paypal/payment/response/amount'
 require 'paypal/payment/response/info'
 require 'paypal/payment/response/payer'
-require 'paypal/payment/response/recurring'
 require 'paypal/payment/response/ship_to'
 require 'paypal/payment/recurring'
 require 'paypal/payment/recurring/activation'

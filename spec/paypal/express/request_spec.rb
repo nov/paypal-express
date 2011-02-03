@@ -20,7 +20,7 @@ describe Paypal::Express::Request, '.new' do
         end
         lambda do
           Paypal::Express::Request.new insufficient_attributes
-        end.should raise_error Paypal::AttrMissing
+        end.should raise_error AttrRequired::AttrMissing
       end
     end
   end
@@ -29,7 +29,7 @@ describe Paypal::Express::Request, '.new' do
     it 'should succeed' do
       lambda do
         Paypal::Express::Request.new required_params
-      end.should_not raise_error Paypal::AttrMissing
+      end.should_not raise_error AttrRequired::AttrMissing
     end
   end
 

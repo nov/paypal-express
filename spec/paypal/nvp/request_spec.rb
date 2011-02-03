@@ -18,7 +18,7 @@ describe Paypal::NVP::Request, '.new' do
         end
         lambda do
           Paypal::NVP::Request.new insufficient_attributes
-        end.should raise_error Paypal::AttrMissing
+        end.should raise_error AttrRequired::AttrMissing
       end
     end
   end
@@ -27,7 +27,7 @@ describe Paypal::NVP::Request, '.new' do
     it 'should succeed' do
       lambda do
         Paypal::NVP::Request.new required_params
-      end.should_not raise_error Paypal::AttrMissing
+      end.should_not raise_error AttrRequired::AttrMissing
     end
 
     it 'should setup endpoint and version' do
