@@ -1,13 +1,13 @@
 module Paypal
-  module Recurring
-    class Schedule < Base
+  module Payment
+    class Request::Recurring::Schedule < Base
       attr_required :description
       attr_optional :max_fails, :auto_bill
 
       def to_params
         {
           :DESC  => self.description,
-          :MAXFAILEDPAYMENTS => self.max_failed_payments,
+          :MAXFAILEDPAYMENTS => self.max_fails,
           :AUTOBILLAMT => self.auto_bill
         }
       end

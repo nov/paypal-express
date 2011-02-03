@@ -1,6 +1,6 @@
 module Paypal
-  module Recurring
-    class Profile < Base
+  module Payment
+    class Request::Recurring < Base
       attr_required :start_date
       attr_optional :name, :reference
       attr_accessor :schedule, :billing, :activation
@@ -10,6 +10,9 @@ module Paypal
         @billing = Billing.new attributes[:billing]
         @activation = Activation.new attributes[:activation]
         super
+        if @start_date.is_a?(Time)
+          @start_date = @start_date.to_s(:db)
+        end
       end
 
       def to_params
@@ -25,7 +28,9 @@ module Paypal
           :SUBSCRIBERNAME => self.name,
           :PROFILEREFERENCE => self.reference
         )
-        params..delete_if(&:blank?)
+        params.delete_if do |k, v|
+          v.blank?
+        end
       end
     end
   end

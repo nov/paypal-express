@@ -37,14 +37,21 @@ module Paypal
 
 end
 
+require 'paypal/base'
 require 'paypal/exceptions'
+require 'paypal/util'
 require 'paypal/nvp/request'
 require 'paypal/nvp/response'
 require 'paypal/express/request'
 require 'paypal/express/response'
-require 'paypal/payment/info'
 require 'paypal/payment/request'
+require 'paypal/payment/request/recurring'
+require 'paypal/payment/request/recurring/activation'
+require 'paypal/payment/request/recurring/billing'
+require 'paypal/payment/request/recurring/schedule'
 require 'paypal/payment/response'
 require 'paypal/payment/response/amount'
+require 'paypal/payment/response/info'
 require 'paypal/payment/response/payer'
+require 'paypal/payment/response/recurring'
 require 'paypal/payment/response/ship_to'

@@ -32,9 +32,12 @@ module Paypal
         Response.new response
       end
 
-      def subscribe!(token, recurring_profile_request)
-        
-        resposne = self.request :CreateRecurringPaymentsProfile, params
+      def subscribe!(token, recurring_profile)
+        params = {
+          :TOKEN => token
+        }
+        params.merge! recurring_profile.to_params
+        response = self.request :CreateRecurringPaymentsProfile, params
         Response.new response
       end
 

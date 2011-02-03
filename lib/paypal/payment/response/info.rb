@@ -1,6 +1,6 @@
 module Paypal
   module Payment
-    class Info < Base
+    class Response::Info < Base
       @@attribute_mapping = {
         :ACK => :ack,
         :CURRENCYCODE => :currency_code,

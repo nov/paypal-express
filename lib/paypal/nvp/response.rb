@@ -16,7 +16,7 @@ module Paypal
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :payer, :ship_to, :payment_responses, :payment_info
+      attr_accessor :amount, :payer, :ship_to, :recurring_profile, :payment_responses, :payment_info
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -50,6 +50,10 @@ module Paypal
           :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
           :country_name => attrs.delete(:SHIPTOCOUNTRYNAME)
         )
+        @recurring = Payment::Response::Recurring.new(
+          :identifier => attrs.delete(:PROFILEID),
+          :status => attrs.delete(:PROFILESTATUS)
+        )
 
         # payment_responses
         payment_responses = []
@@ -75,7 +79,7 @@ module Paypal
           end
         end
         @payment_info = payment_info.collect do |_attrs_|
-          Payment::Info.new _attrs_
+          Payment::Response::Info.new _attrs_
         end
 
         # warn ignored attrs

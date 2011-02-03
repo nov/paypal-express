@@ -1,7 +1,6 @@
 module Paypal
 
   class Exception < StandardError; end
-  class AttrMissing < Exception; end
 
   class HttpError < Exception
     attr_accessor :code, :type, :message

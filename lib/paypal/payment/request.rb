@@ -10,7 +10,9 @@ module Paypal
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
           :"L_BILLINGTYPE#{index}" => self.billing_type,
           :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description
-        }.delete_if(&:blank?)
+        }.delete_if do |k, v|
+          v.blank?
+        end
       end
     end
   end

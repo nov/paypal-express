@@ -1,6 +1,6 @@
 module Paypal
-  module Recurring
-    class Billing < Base
+  module Payment
+    class Request::Recurring::Billing < Base
       attr_required :period, :frequency, :amount
       attr_optional :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :currency_code, :shipping_amount, :tax_amount
 
