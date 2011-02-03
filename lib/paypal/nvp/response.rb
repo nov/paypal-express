@@ -87,7 +87,7 @@ module Paypal
           },
           :summary => {
             :next_billing_date => attrs.delete(:NEXTBILLINGDATE),
-            :cycles_completed => attrs.delete(:NUMCYCYLESCOMPLETED),
+            :cycles_completed => attrs.delete(:NUMCYCLESCOMPLETED),
             :cycles_remaining => attrs.delete(:NUMCYCLESREMAINING),
             :outstanding_balance => attrs.delete(:OUTSTANDINGBALANCE),
             :failed_count => attrs.delete(:FAILEDPAYMENTCOUNT),
