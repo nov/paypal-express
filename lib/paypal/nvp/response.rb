@@ -42,6 +42,8 @@ module Paypal
           :email => attrs.delete(:EMAIL)
         )
         @ship_to = Payment::Response::ShipTo.new(
+          :owner => attrs.delete(:SHIPADDRESSOWNER),
+          :status => attrs.delete(:SHIPADDRESSSTATUS),
           :name => attrs.delete(:SHIPTONAME),
           :zip => attrs.delete(:SHIPTOZIP),
           :street => attrs.delete(:SHIPTOSTREET),
@@ -52,8 +54,22 @@ module Paypal
         )
         @recurring = Payment::Response::Recurring.new(
           :identifier => attrs.delete(:PROFILEID),
-          :status => attrs.delete(:PROFILESTATUS)
+          # NOTE:
+          #  CreateRecurringPaymentsProfile returns PROFILESTATUS
+          #  GetRecurringPaymentsProfileDetails returns STATUS
+          :description => attrs.delete(:DESC),
+          :status => attrs.delete(:STATUS) || attrs.delete(:PROFILESTATUS),
+          :start_date => attrs.delete(:PROFILESTARTDATE),
+          :name => attrs.delete(:SUBSCRIBERNAME),
+          :reference => attrs.delete(:PROFILEREFERENCE),
+          :billing => {
+            :period => attrs.delete(:BILLINGPERIOD),
+            :frequency => attrs.delete(:BILLINGFREQUENCY),
+            :total_cycles => attrs.delete(:TOTALBILLINGCYCLES)
+          }
         )
+        attr_required :period, :frequency, :amount
+        attr_optional :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :currency_code, :shipping_amount, :tax_amount
 
         # payment_responses
         payment_responses = []
@@ -81,6 +97,9 @@ module Paypal
         @payment_info = payment_info.collect do |_attrs_|
           Payment::Response::Info.new _attrs_
         end
+
+        # remove duplicated parameters
+        attrs.delete(:SHIPTOCOUNTRY) # NOTE: Same with SHIPTOCOUNTRYCODE
 
         # warn ignored attrs
         attrs.each do |key, value|

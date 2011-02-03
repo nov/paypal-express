@@ -41,6 +41,24 @@ module Paypal
         Response.new response
       end
 
+      def subscription(profile_id)
+        params = {
+          :PROFILEID => profile_id
+        }
+        response = self.request :GetRecurringPaymentsProfileDetails, params
+        Response.new response
+      end
+
+      def renew!(profile_id, action, note = '')
+        params = {
+          :PROFILEID => profile_id,
+          :ACTION => action,
+          :NOTE => note
+        }
+        response = self.request :ManageRecurringPaymentsProfileStatus, params
+        Response.new response
+      end
+
     end
   end
 end

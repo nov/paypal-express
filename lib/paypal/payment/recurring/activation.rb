@@ -1,6 +1,6 @@
 module Paypal
   module Payment
-    class Request::Recurring::Activation < Base
+    class Recurring::Activation < Base
       attr_optional :initial_amount, :failed_action
 
       def to_params

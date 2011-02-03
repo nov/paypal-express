@@ -1,8 +1,8 @@
 module Paypal
   module Payment
-    class Request::Recurring::Billing < Base
-      attr_required :period, :frequency, :amount
-      attr_optional :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :currency_code, :shipping_amount, :tax_amount
+    class Recurring::Billing < Base
+      attr_required :period, :frequency
+      attr_optional :amount, :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :currency_code, :shipping_amount, :tax_amount
 
       def to_params
         {
