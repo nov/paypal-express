@@ -5,7 +5,7 @@ module Paypal
       if amount.to_f == amount.to_i
         "#{amount.to_i}.00"
       else
-        "#{amount.to_i}.#{(amount * 100).to_s.split(".").first.to_i % 100}"
+        "#{amount.to_i}.#{(amount * 100).to_s.split(".").first[-2,2]}"
       end
     end
 
