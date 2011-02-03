@@ -41,7 +41,7 @@ module Paypal
         end
       end
 
-      def numeric_attributes?(key)
+      def numeric_attribute?(key)
         super || [:max_fails, :failed_count].include?(key)
       end
     end

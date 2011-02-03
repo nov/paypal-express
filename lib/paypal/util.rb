@@ -1,23 +1,19 @@
 module Paypal
   module Util
 
-    def self.formatted_amount(amount)
-      if amount.to_f == amount.to_i
-        "#{amount.to_i}.00"
+    def self.formatted_amount(x)
+      sprintf("%0.2f", (BigDecimal.new(x.to_s) * 100).truncate / 100.0)
+    end
+
+    def self.to_numeric(x)
+      if x.to_f == x.to_i
+        x.to_i
       else
-        "#{amount.to_i}.#{(amount * 100).to_s.split(".").first[-2,2]}"
+        x.to_f
       end
     end
 
-    def self.numeric_amount(amount)
-      if amount.to_f == amount.to_i
-        amount.to_i
-      else
-        amount.to_f
-      end
-    end
-
-    def numeric_attributes?(key)
+    def numeric_attribute?(key)
       key.to_s =~ /(amount|frequency|cycles|paid)/
     end
 

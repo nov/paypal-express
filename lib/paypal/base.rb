@@ -5,8 +5,8 @@ module Paypal
     def initialize(attributes = {})
       if attributes.is_a?(Hash)
         (required_attributes + optional_attributes).each do |key|
-          value = if numeric_attributes?(key)
-            Util.numeric_amount(attributes[key])
+          value = if numeric_attribute?(key)
+            Util.to_numeric(attributes[key])
           else
             attributes[key]
           end
