@@ -16,7 +16,7 @@ module Paypal
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :payer, :ship_to, :recurring_profile, :payment_responses, :payment_info
+      attr_accessor :amount, :payer, :ship_to, :recurring, :payment_responses, :payment_info
 
       def initialize(attributes = {})
         attrs = attributes.dup

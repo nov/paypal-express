@@ -37,9 +37,9 @@ module Paypal
 
 end
 
-require 'paypal/base'
-require 'paypal/exceptions'
 require 'paypal/util'
+require 'paypal/exceptions'
+require 'paypal/base'
 require 'paypal/nvp/request'
 require 'paypal/nvp/response'
 require 'paypal/express/request'

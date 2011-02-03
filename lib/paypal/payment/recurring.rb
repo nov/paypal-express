@@ -1,8 +1,7 @@
 module Paypal
   module Payment
     class Recurring < Base
-      attr_required :start_date, :description
-      attr_optional :identifier, :status, :name, :reference, :max_fails, :auto_bill, :aggregate_amount, :aggregate_optional_amount, :final_payment_date
+      attr_optional :start_date, :description, :identifier, :status, :name, :reference, :max_fails, :auto_bill, :aggregate_amount, :aggregate_optional_amount, :final_payment_date
       attr_accessor :activation, :billing, :regular_billing, :summary
 
       def initialize(attributes = {})
@@ -40,6 +39,10 @@ module Paypal
         params.delete_if do |k, v|
           v.blank?
         end
+      end
+
+      def numeric_attributes?(key)
+        super || [:max_fails, :failed_count].include?(key)
       end
     end
   end

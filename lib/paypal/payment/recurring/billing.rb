@@ -1,12 +1,10 @@
 module Paypal
   module Payment
     class Recurring::Billing < Base
-      attr_required :period, :frequency
-      attr_optional :paid, :currency_code, :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :trial_amount_paid
+      attr_optional :period, :frequency, :paid, :currency_code, :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :trial_amount_paid
       attr_reader :amount
 
       def initialize(attributes = {})
-        attributes[:amount] ||= {}
         @amount = if attributes[:amount].is_a?(Response::Amount)
           attributes[:amount]
         else
