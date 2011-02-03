@@ -1,20 +1,35 @@
 module Paypal
   module Payment
-    class Response
-      attr_reader :amount, :insurance_option_offered, :currency_code, :error_code
+    class Response < Base
+      attr_reader :amount, :ship_to, :insurance_option_offered, :currency_code, :error_code
 
       def initialize(attributes = {})
+        attrs = attributes.dup
         @amount = Amount.new(
-          :total => attributes[:AMT],
-          :handing => attributes[:HANDLINGAMT],
-          :insurance => attributes[:INSURANCEAMT],
-          :ship_disc => attributes[:SHIPDISCAMT],
-          :shipping => attributes[:SHIPPINGAMT],
-          :tax => attributes[:TAXAMT]
+          :total => attrs.delete(:AMT),
+          :handing => attrs.delete(:HANDLINGAMT),
+          :insurance => attrs.delete(:INSURANCEAMT),
+          :ship_disc => attrs.delete(:SHIPDISCAMT),
+          :shipping => attrs.delete(:SHIPPINGAMT),
+          :tax => attrs.delete(:TAXAMT)
         )
-        @insurance_option_offered = attributes[:INSURANCEOPTIONOFFERED] == 'true'
-        @currency_code = attributes[:CURRENCYCODE]
-        @error_code = attributes[:ERRORCODE]
+        @ship_to = Payment::Response::ShipTo.new(
+          :name => attrs.delete(:SHIPTONAME),
+          :zip => attrs.delete(:SHIPTOZIP),
+          :street => attrs.delete(:SHIPTOSTREET),
+          :city => attrs.delete(:SHIPTOCITY),
+          :state => attrs.delete(:SHIPTOSTATE),
+          :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
+          :country_name => attrs.delete(:SHIPTOCOUNTRYNAME)
+        )
+        @insurance_option_offered = attrs.delete(:INSURANCEOPTIONOFFERED) == 'true'
+        @currency_code = attrs.delete(:CURRENCYCODE)
+        @error_code = attrs.delete(:ERRORCODE)
+
+        # warn ignored params
+        attrs.each do |key, value|
+          Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
+        end
       end
 
       def to_request(overwritten = {})

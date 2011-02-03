@@ -3,12 +3,6 @@ module Paypal
     class Request < NVP::Request
       attr_required :return_url, :cancel_url
 
-      def initialize(attributes = {})
-        @return_url = attributes[:return_url]
-        @cancel_url = attributes[:cancel_url]
-        super
-      end
-
       def setup(payment_requests)
         params = {
           :RETURNURL => self.return_url,
@@ -26,7 +20,7 @@ module Paypal
         Response.new response
       end
 
-      def checkout(token, payer_id, payment_requests)
+      def checkout!(token, payer_id, payment_requests)
         params = {
           :TOKEN => token,
           :PAYERID => payer_id
@@ -35,6 +29,12 @@ module Paypal
           params.merge! payment_request.to_params(index)
         end
         response = self.request :DoExpressCheckoutPayment, params
+        Response.new response
+      end
+
+      def subscribe!(token, recurring_profile_request)
+        
+        resposne = self.request :CreateRecurringPaymentsProfile, params
         Response.new response
       end
 

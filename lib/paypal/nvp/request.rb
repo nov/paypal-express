@@ -1,7 +1,6 @@
 module Paypal
   module NVP
-    class Request
-      include AttrRequired
+    class Request < Base
       attr_required :username, :password, :signature
       attr_reader :version, :endpoint
 
@@ -11,18 +10,13 @@ module Paypal
       }
 
       def initialize(attributes = {})
-        required_attributes.each do |key|
-          self.send "#{key}=", attributes[key]
-        end
         @version = API_VERSION
         @endpoint = if Paypal.sandbox?
           ENDPOINT[:sandbox]
         else
           ENDPOINT[:production]
         end
-        attr_missing!
-      rescue AttrRequired::AttrMissing => e
-        raise AttrMissing.new(e.message)
+        super
       end
 
       def common_params

@@ -1,30 +1,16 @@
 module Paypal
   module Payment
-    class Request
-      include AttrRequired
-      attr_required :amount
-      attr_accessor :action, :currency_code
-
-      def initialize(attributes = {})
-        @amount = attributes[:amount]
-        @action = attributes[:action] || 'Sale'
-        @currency_code = attributes[:currency_code] || 'USD'
-      end
-
-      def formatted_amount(amount)
-        if amount.to_f == amount.to_i
-          "#{amount.to_i}.00"
-        else
-          "#{amount.to_i}.#{((amount.to_f - amount.to_i) * 100).to_i}"
-        end
-      end
+    class Request < Base
+      attr_optional :amount, :action, :currency_code, :billing_type, :billing_agreement_description
 
       def to_params(index = 0)
         {
           :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.action,
-          :"PAYMENTREQUEST_#{index}_AMT" => formatted_amount(self.amount),
-          :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code
-        }
+          :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount),
+          :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
+          :"L_BILLINGTYPE#{index}" => self.billing_type,
+          :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description
+        }.delete_if(&:blank?)
       end
     end
   end

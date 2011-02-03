@@ -1,6 +1,6 @@
 module Paypal
   module Payment
-    class Info
+    class Info < Base
       @@attribute_mapping = {
         :ACK => :ack,
         :CURRENCYCODE => :currency_code,
@@ -31,7 +31,7 @@ module Paypal
 
         # warn ignored params
         attrs.each do |key, value|
-          Paypal.log "Ignored Parameter: #{key}=#{value}", :warn
+          Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
         end
       end
     end
