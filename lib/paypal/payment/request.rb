@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Request < Base
-      attr_optional :amount, :action, :currency_code, :notify_url, :billing_type, :billing_agreement_description
+      attr_optional :amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
 
       def to_params(index = 0)
         {
