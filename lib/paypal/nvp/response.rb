@@ -17,7 +17,7 @@ module Paypal
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :payer, :ship_to, :recurring, :payment_responses, :payment_info
+      attr_accessor :amount, :ship_to, :payer, :recurring, :payment_responses, :payment_info
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -35,13 +35,6 @@ module Paypal
           :shipping => attrs.delete(:SHIPPINGAMT),
           :tax => attrs.delete(:TAXAMT)
         )
-        @payer = Payment::Response::Payer.new(
-          :identifier => attrs.delete(:PAYERID),
-          :status => attrs.delete(:PAYERSTATUS),
-          :first_name => attrs.delete(:FIRSTNAME),
-          :last_name => attrs.delete(:LASTNAME),
-          :email => attrs.delete(:EMAIL)
-        )
         @ship_to = Payment::Response::ShipTo.new(
           :owner => attrs.delete(:SHIPADDRESSOWNER),
           :status => attrs.delete(:SHIPADDRESSSTATUS),
@@ -53,49 +46,64 @@ module Paypal
           :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
           :country_name => attrs.delete(:SHIPTOCOUNTRYNAME)
         )
-        @recurring = Payment::Recurring.new(
-          :identifier => attrs.delete(:PROFILEID),
-          # NOTE:
-          #  CreateRecurringPaymentsProfile returns PROFILESTATUS
-          #  GetRecurringPaymentsProfileDetails returns STATUS
-          :description => attrs.delete(:DESC),
-          :status => attrs.delete(:STATUS) || attrs.delete(:PROFILESTATUS),
-          :start_date => attrs.delete(:PROFILESTARTDATE),
-          :name => attrs.delete(:SUBSCRIBERNAME),
-          :reference => attrs.delete(:PROFILEREFERENCE),
-          :auto_bill => attrs.delete(:AUTOBILLOUTAMT),
-          :max_fails => attrs.delete(:MAXFAILEDPAYMENTS),
-          :aggregate_amount => attrs.delete(:AGGREGATEAMT),
-          :aggregate_optional_amount => attrs.delete(:AGGREGATEOPTIONALAMT),
-          :final_payment_date => attrs.delete(:FINALPAYMENTDUEDATE),
-          :billing => {
-            :amount => @amount,
-            :currency_code => @currency_code,
-            :period => attrs.delete(:BILLINGPERIOD),
-            :frequency => attrs.delete(:BILLINGFREQUENCY),
-            :total_cycles => attrs.delete(:TOTALBILLINGCYCLES),
-            :trial_amount_paid => attrs.delete(:TRIALAMTPAID)
-          },
-          :regular_billing => {
-            :amount => attrs.delete(:REGULARAMT),
-            :shipping_amount => attrs.delete(:REGULARSHIPPINGAMT),
-            :tax_amount => attrs.delete(:REGULARTAXAMT),
-            :currency_code => attrs.delete(:REGULARCURRENCYCODE),
-            :period => attrs.delete(:REGULARBILLINGPERIOD),
-            :frequency => attrs.delete(:REGULARBILLINGFREQUENCY),
-            :total_cycles => attrs.delete(:REGULARTOTALBILLINGCYCLES),
-            :paid => attrs.delete(:REGULARAMTPAID)
-          },
-          :summary => {
-            :next_billing_date => attrs.delete(:NEXTBILLINGDATE),
-            :cycles_completed => attrs.delete(:NUMCYCLESCOMPLETED),
-            :cycles_remaining => attrs.delete(:NUMCYCLESREMAINING),
-            :outstanding_balance => attrs.delete(:OUTSTANDINGBALANCE),
-            :failed_count => attrs.delete(:FAILEDPAYMENTCOUNT),
-            :last_payment_date => attrs.delete(:LASTPAYMENTDATE),
-            :last_payment_amount => attrs.delete(:LASTPAYMENTAMT)
-          }
-        )
+        if attrs[:PAYERID]
+          @payer = Payment::Response::Payer.new(
+            :identifier => attrs.delete(:PAYERID),
+            :status => attrs.delete(:PAYERSTATUS),
+            :first_name => attrs.delete(:FIRSTNAME),
+            :last_name => attrs.delete(:LASTNAME),
+            :email => attrs.delete(:EMAIL)
+          )
+        end
+        if attrs[:PROFILEID]
+          @recurring = Payment::Recurring.new(
+            :identifier => attrs.delete(:PROFILEID),
+            # NOTE:
+            #  CreateRecurringPaymentsProfile returns PROFILESTATUS
+            #  GetRecurringPaymentsProfileDetails returns STATUS
+            :description => attrs.delete(:DESC),
+            :status => attrs.delete(:STATUS) || attrs.delete(:PROFILESTATUS),
+            :start_date => attrs.delete(:PROFILESTARTDATE),
+            :name => attrs.delete(:SUBSCRIBERNAME),
+            :reference => attrs.delete(:PROFILEREFERENCE),
+            :auto_bill => attrs.delete(:AUTOBILLOUTAMT),
+            :max_fails => attrs.delete(:MAXFAILEDPAYMENTS),
+            :aggregate_amount => attrs.delete(:AGGREGATEAMT),
+            :aggregate_optional_amount => attrs.delete(:AGGREGATEOPTIONALAMT),
+            :final_payment_date => attrs.delete(:FINALPAYMENTDUEDATE)
+          )
+          if attrs[:BILLINGPERIOD]
+            @recurring.billing = Payment::Recurring::Billing.new(
+              :amount => @amount,
+              :currency_code => @currency_code,
+              :period => attrs.delete(:BILLINGPERIOD),
+              :frequency => attrs.delete(:BILLINGFREQUENCY),
+              :total_cycles => attrs.delete(:TOTALBILLINGCYCLES),
+              :trial_amount_paid => attrs.delete(:TRIALAMTPAID)
+            )
+          end
+          if attrs[:REGULARAMT]
+            @recurring.regular_billing = Payment::Recurring::Billing.new(
+              :amount => attrs.delete(:REGULARAMT),
+              :shipping_amount => attrs.delete(:REGULARSHIPPINGAMT),
+              :tax_amount => attrs.delete(:REGULARTAXAMT),
+              :currency_code => attrs.delete(:REGULARCURRENCYCODE),
+              :period => attrs.delete(:REGULARBILLINGPERIOD),
+              :frequency => attrs.delete(:REGULARBILLINGFREQUENCY),
+              :total_cycles => attrs.delete(:REGULARTOTALBILLINGCYCLES),
+              :paid => attrs.delete(:REGULARAMTPAID)
+            )
+            @recurring.summary = Payment::Recurring::Summary.new(
+              :next_billing_date => attrs.delete(:NEXTBILLINGDATE),
+              :cycles_completed => attrs.delete(:NUMCYCLESCOMPLETED),
+              :cycles_remaining => attrs.delete(:NUMCYCLESREMAINING),
+              :outstanding_balance => attrs.delete(:OUTSTANDINGBALANCE),
+              :failed_count => attrs.delete(:FAILEDPAYMENTCOUNT),
+              :last_payment_date => attrs.delete(:LASTPAYMENTDATE),
+              :last_payment_amount => attrs.delete(:LASTPAYMENTAMT)
+            )
+          end
+        end
 
         # payment_responses
         payment_responses = []

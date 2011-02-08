@@ -165,20 +165,19 @@ describe Paypal::Express::Request do
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :CreateRecurringPaymentsProfile
       instance._sent_params_.should == {
-        :AMT => '1000.00',
-        :MAXFAILEDPAYMENTS => 0,
-        :BILLINGPERIOD => :Month,
-        :PROFILESTARTDATE => '2011-02-08 09:00:00',
         :DESC => 'Recurring Profile',
         :TRIALAMT => '0.00',
-        :TRIALTOTALBILLINGCYCLES => 0,
-        :TRIALBILLINGFREQUENCY => 0,
         :TOKEN => 'token',
-        :TAXAMT => '0.00',
-        :TOTALBILLINGCYCLES => 0,
-        :INITAMT => '0.00',
         :SHIPPINGAMT => '0.00',
-        :BILLINGFREQUENCY => 1
+        :AMT => '1000.00',
+        :TRIALTOTALBILLINGCYCLES => 0,
+        :BILLINGFREQUENCY => 1,
+        :MAXFAILEDPAYMENTS => 0,
+        :TRIALBILLINGFREQUENCY => 0,
+        :BILLINGPERIOD => :Month,
+        :TAXAMT => '0.00',
+        :PROFILESTARTDATE => '2011-02-08 09:00:00',
+        :TOTALBILLINGCYCLES => 0
       }
     end
   end

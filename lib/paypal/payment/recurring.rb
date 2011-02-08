@@ -6,12 +6,10 @@ module Paypal
 
       def initialize(attributes = {})
         super
-        @activation = Activation.new attributes[:activation]
-        @billing = Billing.new attributes[:billing]
-        if attributes[:regular_billing]
-          @regular_billing = Billing.new attributes[:regular_billing]
-        end
-        @summary = Summary.new attributes[:summary]
+        @activation = Activation.new attributes[:activation] if attributes[:activation]
+        @billing = Billing.new attributes[:billing] if attributes[:billing]
+        @regular_billing = Billing.new attributes[:regular_billing] if attributes[:regular_billing]
+        @summary = Summary.new attributes[:summary] if attributes[:summary]
       end
 
       def to_params

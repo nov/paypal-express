@@ -67,22 +67,21 @@ describe Paypal::Payment::Recurring do
   describe '#to_params' do
     it 'should handle Recurring Profile parameters' do
       instance.to_params.should == {
-        :SUBSCRIBERNAME => "Nov Matake",
+        :AUTOBILLAMT => 'NoAutoBill',
+        :BILLINGFREQUENCY => 1,
+        :TRIALTOTALBILLINGCYCLES => 0,
+        :SHIPPINGAMT => '0.00',
+        :DESC => 'Subscription Payment Profile',
+        :SUBSCRIBERNAME => 'Nov Matake',
+        :BILLINGPERIOD => 'Month',
+        :AMT => '1000.00',
+        :MAXFAILEDPAYMENTS => 0,
         :TOTALBILLINGCYCLES => 0,
         :TRIALBILLINGFREQUENCY => 0,
-        :CURRENCYCODE => "JPY",
-        :TRIALTOTALBILLINGCYCLES => 0,
-        :DESC => "Subscription Payment Profile",
-        :AMT => "1000.00",
-        :INITAMT => "0.00",
-        :TRIALAMT => "0.00",
-        :AUTOBILLAMT => "NoAutoBill",
-        :SHIPPINGAMT => "0.00",
-        :BILLINGPERIOD => "Month",
-        :MAXFAILEDPAYMENTS => 0,
-        :TAXAMT => "0.00",
-        :PROFILESTARTDATE => "2011-02-03T15:00:00Z",
-        :BILLINGFREQUENCY => 1
+        :TAXAMT => '0.00',
+        :TRIALAMT => '0.00',
+        :PROFILESTARTDATE => '2011-02-03T15:00:00Z',
+        :CURRENCYCODE => 'JPY'
       }
     end
 

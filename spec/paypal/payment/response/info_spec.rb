@@ -73,17 +73,13 @@ describe Paypal::Payment::Response::Info do
       end
     end
 
-    context 'when non supported attributes are given' do
+    context 'when non-supported attributes are given' do
       it 'should ignore them and warn' do
         _attr_ = attributes.merge(
-          :ignored_1 => 'Ignore me!',
-          :ignored_2 => 'HEYHEY'
+          :ignored => 'Ignore me!'
         )
         Paypal.logger.should_receive(:warn).with(
-          "Ignored Parameter (Paypal::Payment::Response::Info): ignored_1=Ignore me!"
-        )
-        Paypal.logger.should_receive(:warn).with(
-          "Ignored Parameter (Paypal::Payment::Response::Info): ignored_2=HEYHEY"
+          "Ignored Parameter (Paypal::Payment::Response::Info): ignored=Ignore me!"
         )
         Paypal::Payment::Response::Info.new _attr_
       end

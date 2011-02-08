@@ -31,14 +31,6 @@ module Paypal
           Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
         end
       end
-
-      def to_request(overwritten = {})
-        params = {
-          :amount => self.amount.total,
-          :currency_code => self.currency_code
-        }.merge(overwritten)
-        Request.new params
-      end
     end
   end
 end
