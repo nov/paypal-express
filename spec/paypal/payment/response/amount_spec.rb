@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 
 describe Paypal::Payment::Response::Amount, '.new' do
-  let(:keys) do
+  let :keys do
     Paypal::Payment::Response::Amount.optional_attributes
   end
 
