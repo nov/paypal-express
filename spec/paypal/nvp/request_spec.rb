@@ -9,6 +9,10 @@ describe Paypal::NVP::Request do
     }
   end
 
+  let :instance do
+    Paypal::NVP::Request.new attributes
+  end
+
   describe '.new' do
     context 'when any required parameters are missing' do
       it 'should raise AttrMissing exception' do
@@ -41,6 +45,43 @@ describe Paypal::NVP::Request do
           client = Paypal::NVP::Request.new attributes
           client.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
         end
+      end
+    end
+  end
+
+  describe '#request' do
+    it 'should POST to NPV endpoint' do
+      lambda do
+        instance.request :RPCMethod
+      end.should request_to Paypal::NVP::Request::ENDPOINT[:production], :post
+    end
+
+    context 'when got API error response' do
+      before do
+        fake_response 'SetExpressCheckout/failure'
+      end
+
+      it 'should raise Paypal::APIError' do
+        lambda do
+          instance.request :SetExpressCheckout
+        end.should raise_error(Paypal::APIError)
+      end
+    end
+
+    context 'when got HTTP error response' do
+      before do
+        FakeWeb.register_uri(
+          :post,
+          Paypal::NVP::Request::ENDPOINT[:production],
+          :body => "Invalid Request",
+          :status => ["400", "Bad Request"]
+        )
+      end
+
+      it 'should raise Paypal::APIError' do
+        lambda do
+          instance.request :SetExpressCheckout
+        end.should raise_error(Paypal::HttpError)
       end
     end
   end
