@@ -1,9 +1,19 @@
 = paypal-express
 
-Description goes here.
+Handle PayPal Express Checkout.
+Both instance payment and recurring payment are supported.
+
+== Installation
+
+  gem install paypal-express
+
+== Usage
+
+See Wiki on Github
+https://github.com/nov/paypal-express/wiki
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add tests for it. This is important so I don't break it in a
