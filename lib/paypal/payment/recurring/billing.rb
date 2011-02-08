@@ -28,8 +28,8 @@ module Paypal
           :TRIALTOTALBILLINGCYCLES => self.trial_total_cycles,
           :TRIALAMT => Util.formatted_amount(self.trial_amount),
           :CURRENCYCODE => self.currency_code,
-          :SHIPPINGAMT => Util.formatted_amount(self.shipping_amount),
-          :TAXAMT => Util.formatted_amount(self.tax_amount)
+          :SHIPPINGAMT => Util.formatted_amount(self.amount.shipping),
+          :TAXAMT => Util.formatted_amount(self.amount.tax)
         }
       end
     end
