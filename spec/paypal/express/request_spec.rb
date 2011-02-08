@@ -75,6 +75,12 @@ describe Paypal::Express::Request do
   end
 
   describe '#setup' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'SetExpressCheckout/success'
+      response = instance.setup recurring_payment_request
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     context 'when instance payment request given' do
       it 'should call SetExpressCheckout' do
         lambda do
@@ -105,32 +111,15 @@ describe Paypal::Express::Request do
         }
       end
     end
-
-    context 'when got success response' do
-      before do
-        fake_response 'SetExpressCheckout/success'
-      end
-
-      it 'should return Paypal::Express::Response' do
-        response = instance.setup recurring_payment_request
-        response.should be_instance_of(Paypal::Express::Response)
-      end
-    end
-
-    context 'when got error response' do
-      before do
-        fake_response 'SetExpressCheckout/failure'
-      end
-
-      it 'should raise Paypal::APIError' do
-        lambda do
-          instance.setup recurring_payment_request
-        end.should raise_error(Paypal::APIError)
-      end
-    end
   end
 
   describe '#details' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'GetExpressCheckoutDetails/success'
+      response = instance.details 'token'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     it 'should call GetExpressCheckoutDetails' do
       lambda do
         instance.details 'token'
@@ -143,6 +132,12 @@ describe Paypal::Express::Request do
   end
 
   describe '#checkout!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'DoExpressCheckoutPayment/success'
+      response = instance.checkout! 'token', 'payer_id', instant_payment_request
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     it 'should call DoExpressCheckoutPayment' do
       lambda do
         instance.checkout! 'token', 'payer_id', instant_payment_request
@@ -158,6 +153,12 @@ describe Paypal::Express::Request do
   end
 
   describe '#subscribe!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'CreateRecurringPaymentsProfile/success'
+      response = instance.subscribe! 'token', recurring_profile
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     it 'should call CreateRecurringPaymentsProfile' do
       lambda do
         instance.subscribe! 'token', recurring_profile
@@ -183,6 +184,12 @@ describe Paypal::Express::Request do
   end
 
   describe '#subscription' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'GetRecurringPaymentsProfileDetails/success'
+      response = instance.subscription 'profile_id'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     it 'should call GetRecurringPaymentsProfileDetails' do
       lambda do
         instance.subscription 'profile_id'
@@ -195,6 +202,12 @@ describe Paypal::Express::Request do
   end
 
   describe '#renew!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'ManageRecurringPaymentsProfileStatus/success'
+      response = instance.renew! 'profile_id', :Cancel
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
     it 'should call ManageRecurringPaymentsProfileStatus' do
       lambda do
         instance.renew! 'profile_id', :Cancel
