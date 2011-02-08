@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Response < Base
-      attr_reader :amount, :ship_to, :insurance_option_offered, :currency_code, :error_code
+      attr_accessor :amount, :ship_to, :insurance_option_offered, :currency_code, :error_code
 
       def initialize(attributes = {})
         attrs = attributes.dup

@@ -1,8 +1,7 @@
 require 'spec_helper.rb'
 
-describe Paypal::Express::Request, '.new' do
-
-  let(:required_params) do
+describe Paypal::Express::Request do
+  let :attributes do
     {
       :username => 'nov',
       :password => 'password',
@@ -12,25 +11,26 @@ describe Paypal::Express::Request, '.new' do
     }
   end
 
-  context 'when any required parameters are missing' do
-    it 'should raise AttrMissing exception' do
-      required_params.keys.each do |missing_key|
-        insufficient_attributes = required_params.reject do |key, value|
-          key == missing_key
+  describe '.new' do
+    context 'when any required parameters are missing' do
+      it 'should raise AttrMissing exception' do
+        attributes.keys.each do |missing_key|
+          insufficient_attributes = attributes.reject do |key, value|
+            key == missing_key
+          end
+          lambda do
+            Paypal::Express::Request.new insufficient_attributes
+          end.should raise_error AttrRequired::AttrMissing
         end
+      end
+    end
+
+    context 'when all required parameters are given' do
+      it 'should succeed' do
         lambda do
-          Paypal::Express::Request.new insufficient_attributes
-        end.should raise_error AttrRequired::AttrMissing
+          Paypal::Express::Request.new attributes
+        end.should_not raise_error AttrRequired::AttrMissing
       end
     end
   end
-
-  context 'when all required parameters are given' do
-    it 'should succeed' do
-      lambda do
-        Paypal::Express::Request.new required_params
-      end.should_not raise_error AttrRequired::AttrMissing
-    end
-  end
-
 end

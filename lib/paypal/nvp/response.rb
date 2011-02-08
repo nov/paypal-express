@@ -1,6 +1,7 @@
 module Paypal
   module NVP
     class Response < Base
+      cattr_reader :attribute_mapping
       @@attribute_mapping = {
         :ACK => :ack,
         :ADDRESSSTATUS => :address_status,

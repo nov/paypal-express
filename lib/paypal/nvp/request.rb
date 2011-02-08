@@ -2,7 +2,7 @@ module Paypal
   module NVP
     class Request < Base
       attr_required :username, :password, :signature
-      attr_reader :version, :endpoint
+      attr_accessor :version, :endpoint
 
       ENDPOINT = {
         :production => 'https://api-3t.paypal.com/nvp',

@@ -1,6 +1,7 @@
 module Paypal
   module Payment
     class Response::Info < Base
+      cattr_reader :attribute_mapping
       @@attribute_mapping = {
         :ACK => :ack,
         :CURRENCYCODE => :currency_code,
@@ -16,7 +17,7 @@ module Paypal
         :TRANSACTIONTYPE => :transaction_type
       }
       attr_accessor *@@attribute_mapping.values
-      attr_reader :amount, :currency_code
+      attr_accessor :amount
 
       def initialize(attributes = {})
         attrs = attributes.dup

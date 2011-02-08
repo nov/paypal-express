@@ -1,22 +1,10 @@
 require 'spec_helper.rb'
 
-describe Paypal::Payment::Response::Info, '.new' do
+describe Paypal::Payment::Response::Info do
   let :attribute_mapping do
-    {
-      :ACK => :ack,
-      :CURRENCYCODE => :currency_code,
-      :ERRORCODE => :error_code,
-      :ORDERTIME => :order_time,
-      :PAYMENTSTATUS => :payment_status,
-      :PAYMENTTYPE => :payment_type,
-      :PENDINGREASON => :pending_reason,
-      :PROTECTIONELIGIBILITY => :protection_eligibility,
-      :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
-      :REASONCODE => :reason_code,
-      :TRANSACTIONID => :transaction_id,
-      :TRANSACTIONTYPE => :transaction_type
-    }
+    Paypal::Payment::Response::Info.attribute_mapping
   end
+
   let :attributes do
     {
       :ACK => 'Success',
@@ -37,35 +25,68 @@ describe Paypal::Payment::Response::Info, '.new' do
     }
   end
 
-  it 'should accept uppercase symbol as attribute keys' do
-    from_symbol_uppercase = Paypal::Payment::Response::Info.new attributes
-    attribute_mapping.values.each do |key|
-      from_symbol_uppercase.send(key).should_not be_nil
+  describe '.new' do
+    context 'when attribute keys are uppercase Symbol' do
+      it 'should accept all without any warning' do
+        Paypal.logger.should_not_receive(:warn)
+        from_symbol_uppercase = Paypal::Payment::Response::Info.new attributes
+        attribute_mapping.values.each do |key|
+          from_symbol_uppercase.send(key).should_not be_nil
+        end
+        from_symbol_uppercase.amount.should == Paypal::Payment::Response::Amount.new(
+          :total => 14,
+          :fee => 0.85
+        )
+      end
     end
-    from_symbol_uppercase.amount.should == Paypal::Payment::Response::Amount.new(
-      :total => 14,
-      :fee => 0.85
-    )
-  end
 
-  it 'should not accept lower symbol as attribute keys' do
-    _attrs_ = attributes.inject({}) do |attrs, (k, v)|
-      attrs[k.to_s.downcase.to_sym] = v
-      attrs
+    context 'when attribute keys are lowercase Symbol' do
+      it 'should ignore them and warn' do
+        _attrs_ = attributes.inject({}) do |_attrs_, (k, v)|
+          _attrs_.merge!(k.to_s.downcase.to_sym => v)
+        end
+        _attrs_.each do |key, value|
+          Paypal.logger.should_receive(:warn).with(
+            "Ignored Parameter (Paypal::Payment::Response::Info): #{key}=#{value}"
+          )
+        end
+        from_symbol_lowercase = Paypal::Payment::Response::Info.new _attrs_
+        attribute_mapping.values.each do |key|
+          from_symbol_lowercase.send(key).should be_nil
+        end
+        from_symbol_lowercase.amount.should == Paypal::Payment::Response::Amount.new
+      end
     end
-    from_symbol_lowercase = Paypal::Payment::Response::Info.new _attrs_
-    attribute_mapping.values.each do |key|
-      from_symbol_lowercase.send(key).should be_nil
-    end
-    from_symbol_lowercase.amount.should == Paypal::Payment::Response::Amount.new
-  end
 
-  it 'should not string as attribute keys' do
-    from_string = Paypal::Payment::Response::Info.new attributes.stringify_keys
-    attribute_mapping.values.each do |key|
-      from_string.send(key).should be_nil
+    context 'when attribute keys are String' do
+      it 'should ignore them and warn' do
+        attributes.stringify_keys.each do |key, value|
+          Paypal.logger.should_receive(:warn).with(
+            "Ignored Parameter (Paypal::Payment::Response::Info): #{key}=#{value}"
+          )
+        end
+        from_string = Paypal::Payment::Response::Info.new attributes.stringify_keys
+        attribute_mapping.values.each do |key|
+          from_string.send(key).should be_nil
+        end
+        from_string.amount.should == Paypal::Payment::Response::Amount.new
+      end
     end
-    from_string.amount.should == Paypal::Payment::Response::Amount.new
-  end
 
+    context 'when non supported attributes are given' do
+      it 'should ignore them and warn' do
+        _attr_ = attributes.merge(
+          :ignored_1 => 'Ignore me!',
+          :ignored_2 => 'HEYHEY'
+        )
+        Paypal.logger.should_receive(:warn).with(
+          "Ignored Parameter (Paypal::Payment::Response::Info): ignored_1=Ignore me!"
+        )
+        Paypal.logger.should_receive(:warn).with(
+          "Ignored Parameter (Paypal::Payment::Response::Info): ignored_2=HEYHEY"
+        )
+        Paypal::Payment::Response::Info.new _attr_
+      end
+    end
+  end
 end

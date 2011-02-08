@@ -15,7 +15,13 @@ module Paypal
     end
 
     def numeric_attribute?(key)
-      key.to_s =~ /(amount|frequency|cycles|paid)/
+      !!(key.to_s =~ /(amount|frequency|cycles|paid)/)
+    end
+
+    def ==(other)
+      instance_variables.all? do |key|
+        instance_variable_get(key) == other.instance_variable_get(key)
+      end
     end
 
   end

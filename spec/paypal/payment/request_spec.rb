@@ -9,6 +9,7 @@ describe Paypal::Payment::Request do
       :notify_url => 'http://marchant.example.com/notify'
     )
   end
+
   let :recurring_request do
     Paypal::Payment::Request.new(
       :currency_code => :JPY,
@@ -17,28 +18,38 @@ describe Paypal::Payment::Request do
     )
   end
 
-  it 'should handle Instant Payment parameters' do
-    instant_request.amount.should == 10
-    instant_request.currency_code.should == :JPY
-    instant_request.description.should == 'Instant Payment Request'
-    instant_request.notify_url.should == 'http://marchant.example.com/notify'
-    instant_request.to_params.should == {
-      :PAYMENTREQUEST_0_AMT => "10.00",
-      :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
-      :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
-      :PAYMENTREQUEST_0_NOTIFYURL => "http://marchant.example.com/notify"
-    }
+  describe '.new' do
+    it 'should handle Instant Payment parameters' do
+      instant_request.amount.should == 10
+      instant_request.currency_code.should == :JPY
+      instant_request.description.should == 'Instant Payment Request'
+      instant_request.notify_url.should == 'http://marchant.example.com/notify'
+    end
+
+    it 'should handle Recurring Payment parameters' do
+      recurring_request.currency_code.should == :JPY
+      recurring_request.billing_type.should == :RecurringPayments
+      recurring_request.billing_agreement_description.should == 'Recurring Payment Request'
+    end
   end
 
-  it 'should handle Recurring Payment parameters' do
-    recurring_request.currency_code.should == :JPY
-    recurring_request.billing_type.should == :RecurringPayments
-    recurring_request.billing_agreement_description.should == 'Recurring Payment Request'
-    recurring_request.to_params.should == {
-      :PAYMENTREQUEST_0_AMT => "0.00",
-      :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
-      :L_BILLINGTYPE0 => :RecurringPayments,
-      :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request"
-    }
+  describe '#to_params' do
+    it 'should handle Instant Payment parameters' do
+      instant_request.to_params.should == {
+        :PAYMENTREQUEST_0_AMT => "10.00",
+        :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
+        :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
+        :PAYMENTREQUEST_0_NOTIFYURL => "http://marchant.example.com/notify"
+      }
+    end
+
+    it 'should handle Recurring Payment parameters' do
+      recurring_request.to_params.should == {
+        :PAYMENTREQUEST_0_AMT => "0.00",
+        :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
+        :L_BILLINGTYPE0 => :RecurringPayments,
+        :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request"
+      }
+    end
   end
 end

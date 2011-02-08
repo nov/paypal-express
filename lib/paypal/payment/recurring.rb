@@ -6,19 +6,10 @@ module Paypal
 
       def initialize(attributes = {})
         super
-        {
-          :activation => Activation,
-          :billing => Billing,
-          :regular_billing => Billing,
-          :summary => Summary
-        }.each do |key, klass|
-          if attributes[key].present?
-            self.send "#{key}=", klass.new(attributes[key])
-          end
-        end
-        if @start_date.is_a?(Time)
-          @start_date = @start_date.to_s(:db)
-        end
+        @activation = Activation.new attributes[:activation]
+        @billing = Billing.new attributes[:billing]
+        @regular_billing = Billing.new attributes[:regular_billing]
+        @summary = Summary.new attributes[:summary]
       end
 
       def to_params
@@ -27,6 +18,9 @@ module Paypal
           self.activation
         ].compact.inject({}) do |params, attribute|
           params.merge! attribute.to_params
+        end
+        if self.start_date.is_a?(Time)
+          self.start_date = self.start_date.to_s(:db)
         end
         params.merge!(
           :DESC  => self.description,
