@@ -15,5 +15,11 @@ module Paypal
       end
       attr_missing!
     end
+
+    def ==(other)
+      instance_variables.all? do |key|
+        instance_variable_get(key) == other.instance_variable_get(key)
+      end
+    end
   end
 end

@@ -9,6 +9,9 @@ module Paypal
           :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
           :"PAYMENTREQUEST_#{index}_DESC" => self.description,
+          # NOTE:
+          #  notify_url works only when DoExpressCheckoutPayment called.
+          #  recurring payment doesn't support dynamic notify_url.
           :"PAYMENTREQUEST_#{index}_NOTIFYURL" => self.notify_url,
           :"L_BILLINGTYPE#{index}" => self.billing_type,
           :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description
