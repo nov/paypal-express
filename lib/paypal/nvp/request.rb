@@ -52,7 +52,7 @@ module Paypal
           raise APIError.new(response)
         end
       rescue RestClient::Exception => e
-        raise Exception.new(e.http_code, e.message, e.http_body)
+        raise HttpError.new(e.http_code, e.message, e.http_body)
       end
     end
   end

@@ -3,16 +3,11 @@ module Paypal
   class Exception < StandardError; end
 
   class HttpError < Exception
-    attr_accessor :code, :type, :message
+    attr_accessor :code, :message, :body
     def initialize(code, message, body = '')
       @code = code
-      if body.blank?
-        @message = message
-      else
-        response = JSON.parse(body).with_indifferent_access
-        @message = response[:error][:message]
-        @type = response[:error][:type]
-      end
+      @message = message
+      @body = body
     end
   end
 
