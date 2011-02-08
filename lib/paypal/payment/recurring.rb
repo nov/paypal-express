@@ -8,7 +8,9 @@ module Paypal
         super
         @activation = Activation.new attributes[:activation]
         @billing = Billing.new attributes[:billing]
-        @regular_billing = Billing.new attributes[:regular_billing]
+        if attributes[:regular_billing]
+          @regular_billing = Billing.new attributes[:regular_billing]
+        end
         @summary = Summary.new attributes[:summary]
       end
 

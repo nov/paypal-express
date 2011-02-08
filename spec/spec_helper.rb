@@ -9,6 +9,9 @@ RSpec.configure do |config|
   config.before do
     Paypal.logger = double("logger")
   end
+  config.after do
+    FakeWeb.clean_registry
+  end
 end
 
 def sandbox_mode(&block)
