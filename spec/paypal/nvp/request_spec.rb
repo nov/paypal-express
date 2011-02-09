@@ -15,7 +15,7 @@ describe Paypal::NVP::Request do
 
   describe '.new' do
     context 'when any required parameters are missing' do
-      it 'should raise AttrMissing exception' do
+      it 'should raise AttrRequired::AttrMissing' do
         attributes.keys.each do |missing_key|
           insufficient_attributes = attributes.reject do |key, value|
             key == missing_key
@@ -37,13 +37,13 @@ describe Paypal::NVP::Request do
       it 'should setup endpoint and version' do
         client = Paypal::NVP::Request.new attributes
         client.version.should == Paypal::API_VERSION
-        client.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
+        client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
       end
 
       it 'should support sandbox mode' do
         sandbox_mode do
           client = Paypal::NVP::Request.new attributes
-          client.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
+          client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
         end
       end
     end

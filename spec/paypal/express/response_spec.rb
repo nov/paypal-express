@@ -1,10 +1,6 @@
 require 'spec_helper.rb'
 
 describe Paypal::Express::Response do
-  before do
-    fake_response 'SetExpressCheckout/success'
-  end
-
   let :instance do
     request = Paypal::Express::Request.new(
       :username => 'nov',
@@ -21,11 +17,13 @@ describe Paypal::Express::Response do
 
   describe '#redirect_uri' do
     it 'should return express-checkout redirect endpoint with token' do
+      fake_response 'SetExpressCheckout/success'
       instance.redirect_uri.should == 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-5YJ90598G69065317'
     end
 
     it 'should support sandbox mode' do
       sandbox_mode do
+        fake_response 'SetExpressCheckout/success'
         instance.redirect_uri.should == 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=EC-5YJ90598G69065317'
       end
     end

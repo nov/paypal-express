@@ -2,20 +2,23 @@ module Paypal
   module NVP
     class Request < Base
       attr_required :username, :password, :signature
-      attr_accessor :version, :endpoint
+      attr_accessor :version
 
       ENDPOINT = {
         :production => 'https://api-3t.paypal.com/nvp',
         :sandbox => 'https://api-3t.sandbox.paypal.com/nvp'
       }
 
-      def initialize(attributes = {})
-        @version = API_VERSION
-        @endpoint = if Paypal.sandbox?
+      def self.endpoint
+        if Paypal.sandbox?
           ENDPOINT[:sandbox]
         else
           ENDPOINT[:production]
         end
+      end
+
+      def initialize(attributes = {})
+        @version = API_VERSION
         super
       end
 
@@ -37,7 +40,7 @@ module Paypal
       private
 
       def post(method, params)
-        RestClient.post(self.endpoint, common_params.merge(params).merge(:METHOD => method))
+        RestClient.post(self.class.endpoint, common_params.merge(params).merge(:METHOD => method))
       end
 
       def handle_response

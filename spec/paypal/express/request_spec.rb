@@ -53,7 +53,7 @@ describe Paypal::Express::Request do
 
   describe '.new' do
     context 'when any required parameters are missing' do
-      it 'should raise AttrMissing exception' do
+      it 'should raise AttrRequired::AttrMissing' do
         attributes.keys.each do |missing_key|
           insufficient_attributes = attributes.reject do |key, value|
             key == missing_key

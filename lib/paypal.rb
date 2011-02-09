@@ -12,6 +12,14 @@ module Paypal
     :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
   }
 
+  def self.endpoint
+    if sandbox?
+      Paypal::ENDPOINT[:sandbox]
+    else
+      Paypal::ENDPOINT[:production]
+    end
+  end
+
   def self.log(message, mode = :info)
     self.logger.send mode, message
   end
@@ -40,6 +48,7 @@ end
 require 'paypal/util'
 require 'paypal/exceptions'
 require 'paypal/base'
+require 'paypal/ipn'
 require 'paypal/nvp/request'
 require 'paypal/nvp/response'
 require 'paypal/express/request'
