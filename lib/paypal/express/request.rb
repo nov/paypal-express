@@ -3,7 +3,7 @@ module Paypal
     class Request < NVP::Request
       attr_required :return_url, :cancel_url
 
-      def setup(payment_requests)
+      def setup(payment_requests, options = {})
         params = {
           :RETURNURL => self.return_url,
           :CANCELURL => self.cancel_url
@@ -12,7 +12,7 @@ module Paypal
           params.merge! payment_request.to_params(index)
         end
         response = self.request :SetExpressCheckout, params
-        Response.new response
+        Response.new response, options
       end
 
       def details(token)
