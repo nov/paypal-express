@@ -15,6 +15,12 @@ module Paypal
         endpoint.to_s
       end
 
+      def popup_uri
+        endpoint = URI.parse Paypal.popup_endpoint
+        endpoint.query = {:token => self.token}.to_query
+        endpoint.to_s
+      end
+
       private
 
       def query

@@ -53,4 +53,19 @@ describe Paypal::Express::Response do
       end
     end
   end
+
+  describe '#popup_url' do
+    it 'should return express-checkout popup endpoint with token' do
+      fake_response 'SetExpressCheckout/success'
+      instance.popup_url.should == 'https://www.paypal.com/incontext?token=EC-5YJ90598G69065317'
+    end
+
+    it 'should support sandbox mode' do
+      sandbox_mode do
+        fake_response 'SetExpressCheckout/success'
+        instance.popup_url.should == 'https://www.sandbox.paypal.com/incontext?token=EC-5YJ90598G69065317'
+      end
+    end
+  end
+
 end

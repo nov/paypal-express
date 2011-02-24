@@ -11,12 +11,23 @@ module Paypal
     :production => 'https://www.paypal.com/cgi-bin/webscr',
     :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
   }
+  POPUP_ENDPOINT = {
+    :production => 'https://www.paypal.com/incontext',
+    :sandbox => 'https://www.sandbox.paypal.com/incontext'
+  }
 
   def self.endpoint
     if sandbox?
       Paypal::ENDPOINT[:sandbox]
     else
       Paypal::ENDPOINT[:production]
+    end
+  end
+  def self.popup_endpoint
+    if sandbox?
+      Paypal::POPUP_ENDPOINT[:sandbox]
+    else
+      Paypal::POPUP_ENDPOINT[:production]
     end
   end
 
