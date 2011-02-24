@@ -33,7 +33,7 @@ describe Paypal::Payment::Response::Info do
         attribute_mapping.values.each do |key|
           from_symbol_uppercase.send(key).should_not be_nil
         end
-        from_symbol_uppercase.amount.should == Paypal::Payment::Response::Amount.new(
+        from_symbol_uppercase.amount.should == Paypal::Payment::Common::Amount.new(
           :total => 14,
           :fee => 0.85
         )
@@ -54,7 +54,7 @@ describe Paypal::Payment::Response::Info do
         attribute_mapping.values.each do |key|
           from_symbol_lowercase.send(key).should be_nil
         end
-        from_symbol_lowercase.amount.should == Paypal::Payment::Response::Amount.new
+        from_symbol_lowercase.amount.should == Paypal::Payment::Common::Amount.new
       end
     end
 
@@ -69,7 +69,7 @@ describe Paypal::Payment::Response::Info do
         attribute_mapping.values.each do |key|
           from_string.send(key).should be_nil
         end
-        from_string.amount.should == Paypal::Payment::Response::Amount.new
+        from_string.amount.should == Paypal::Payment::Common::Amount.new
       end
     end
 

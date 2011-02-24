@@ -27,7 +27,7 @@ module Paypal
         @shipping_options_is_default = attrs.delete(:SHIPPINGOPTIONISDEFAULT) == 'true'
         @success_page_redirect_requested = attrs.delete(:SUCCESSPAGEREDIRECTREQUESTED) == 'true'
         @insurance_option_selected = attrs.delete(:INSURANCEOPTIONSELECTED) == 'true'
-        @amount = Payment::Response::Amount.new(
+        @amount = Payment::Common::Amount.new(
           :total => attrs.delete(:AMT),
           :handing => attrs.delete(:HANDLINGAMT),
           :insurance => attrs.delete(:INSURANCEAMT),

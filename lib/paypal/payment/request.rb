@@ -2,9 +2,18 @@ module Paypal
   module Payment
     class Request < Base
       attr_optional :amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
+      attr_accessor :items
+
+      def initialize(attributes = {})
+        @items = []
+        Array(attributes[:items]).each do |item_attrs|
+          @items << Item.new(item_attrs)
+        end
+        super
+      end
 
       def to_params(index = 0)
-        {
+        params = {
           :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.action,
           :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
@@ -18,6 +27,10 @@ module Paypal
         }.delete_if do |k, v|
           v.blank?
         end
+        self.items.each_with_index do |item, item_index|
+          params.merge! item.to_params(index, item_index)
+        end
+        params
       end
     end
   end

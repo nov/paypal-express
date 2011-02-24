@@ -6,7 +6,12 @@ describe Paypal::Payment::Request do
       :amount => 10,
       :currency_code => :JPY,
       :description => 'Instant Payment Request',
-      :notify_url => 'http://merchant.example.com/notify'
+      :notify_url => 'http://merchant.example.com/notify',
+      :items => [{
+        :name => 'Item1',
+        :description => 'Awesome Item!',
+        :amount => 10
+      }]
     )
   end
 
@@ -39,7 +44,10 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_AMT => "10.00",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
-        :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify"
+        :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
+        :L_PAYMENTREQUEST_0_NAME0 => "Item1",
+        :L_PAYMENTREQUEST_0_DESC0 => "Awesome Item!",
+        :L_PAYMENTREQUEST_0_AMT0 => "10.00"
       }
     end
 

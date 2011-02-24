@@ -18,7 +18,7 @@ describe Paypal::Payment::Recurring do
       :aggregate_optional_amount => '0',
       :final_payment_date => '1970-01-01T00:00:00Z',
       :billing => {
-        :amount => Paypal::Payment::Response::Amount.new(
+        :amount => Paypal::Payment::Common::Amount.new(
           :total => '1000',
           :shipping => '0',
           :tax => '0'

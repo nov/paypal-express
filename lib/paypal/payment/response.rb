@@ -5,7 +5,7 @@ module Paypal
 
       def initialize(attributes = {})
         attrs = attributes.dup
-        @amount = Amount.new(
+        @amount = Common::Amount.new(
           :total => attrs.delete(:AMT),
           :handing => attrs.delete(:HANDLINGAMT),
           :insurance => attrs.delete(:INSURANCEAMT),

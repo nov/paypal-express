@@ -5,10 +5,10 @@ module Paypal
       attr_accessor :amount
 
       def initialize(attributes = {})
-        @amount = if attributes[:amount].is_a?(Response::Amount)
+        @amount = if attributes[:amount].is_a?(Common::Amount)
           attributes[:amount]
         else
-          Response::Amount.new(
+          Common::Amount.new(
             :total => attributes[:amount],
             :tax => attributes[:tax_amount],
             :shipping => attributes[:shipping_amount]

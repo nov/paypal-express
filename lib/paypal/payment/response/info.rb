@@ -24,7 +24,7 @@ module Paypal
         @@attribute_mapping.each do |key, value|
           self.send "#{value}=", attrs.delete(key)
         end
-        @amount = Response::Amount.new(
+        @amount = Common::Amount.new(
           :total => attrs.delete(:AMT),
           :fee => attrs.delete(:FEEAMT),
           :tax => attrs.delete(:TAXAMT)
