@@ -4,6 +4,7 @@ module Paypal
       attr_optional :name, :description, :amount, :quantity, :category
 
       def initialize(attributes = {})
+        super
         @quantity ||= 1
       end
 
