@@ -45,9 +45,11 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
+        :PAYMENTREQUEST_0_ITEMAMT => "10.00",
         :L_PAYMENTREQUEST_0_NAME0 => "Item1",
         :L_PAYMENTREQUEST_0_DESC0 => "Awesome Item!",
-        :L_PAYMENTREQUEST_0_AMT0 => "10.00"
+        :L_PAYMENTREQUEST_0_AMT0 => "10.00",
+        :L_PAYMENTREQUEST_0_QTY0 => 1
       }
     end
 
