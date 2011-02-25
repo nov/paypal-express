@@ -6,7 +6,7 @@ require 'restclient_with_ssl_support'
 
 module Paypal
 
-  API_VERSION = '66.0'
+  API_VERSION = '67.0'
   ENDPOINT = {
     :production => 'https://www.paypal.com/cgi-bin/webscr',
     :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
