@@ -81,6 +81,21 @@ describe Paypal::Express::Request do
       response.should be_instance_of(Paypal::Express::Response)
     end
 
+    it 'should support no_shipping option' do
+      lambda do
+        instance.setup instant_payment_request, :no_shipping => true
+      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      instance._method_.should == :SetExpressCheckout
+      instance._sent_params_.should == {
+        :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
+        :RETURNURL => 'http://example.com/success',
+        :CANCELURL => 'http://example.com/cancel',
+        :PAYMENTREQUEST_0_AMT => '1000.00',
+        :REQCONFIRMSHIPPING => 0,
+        :NOSHIPPING => 1
+      }
+    end
+
     context 'when instance payment request given' do
       it 'should call SetExpressCheckout' do
         lambda do
