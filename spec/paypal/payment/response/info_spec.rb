@@ -21,7 +21,8 @@ describe Paypal::Payment::Response::Info do
       :TRANSACTIONTYPE => 'expresscheckout',
       :AMT => '14.00',
       :FEEAMT => '0.85',
-      :TAXAMT => '0.00'
+      :TAXAMT => '0.00',
+      :RECEIPTID => '12345'
     }
   end
 
