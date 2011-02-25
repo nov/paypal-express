@@ -27,8 +27,11 @@ module Paypal
         }.delete_if do |k, v|
           v.blank?
         end
-        self.items.each_with_index do |item, item_index|
-          params.merge! item.to_params(index, item_index)
+        if self.items.present?
+          params[:"PAYMENTREQUEST_#{index}_ITEMAMT"] = items.sum(&:amount)
+          self.items.each_with_index do |item, item_index|
+            params.merge! item.to_params(index, item_index)
+          end
         end
         params
       end

@@ -11,24 +11,29 @@ module Paypal
 
       def redirect_uri
         endpoint = URI.parse Paypal.endpoint
-        endpoint.query = query.to_query
+        endpoint.query = query(:redirect).to_query
         endpoint.to_s
       end
 
       def popup_uri
         endpoint = URI.parse Paypal.popup_endpoint
-        endpoint.query = {:token => self.token}.to_query
+        endpoint.query = query(:popup).to_query
         endpoint.to_s
       end
 
       private
 
-      def query
+      def query(mode)
         _query_ = {:token => self.token}
-        if self.on_mobile
-          _query_.merge!(:cmd => '_express-checkout-mobile')
-        else
-          _query_.merge!(:cmd => '_express-checkout')
+        case mode
+        when :redirect
+          if self.on_mobile
+            _query_.merge!(:cmd => '_express-checkout-mobile')
+          else
+            _query_.merge!(:cmd => '_express-checkout')
+          end
+        when :popup
+          # No popup specific params for now
         end
         if self.pay_on_paypal
           _query_.merge!(:useraction => 'commit')

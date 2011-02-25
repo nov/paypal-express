@@ -3,6 +3,10 @@ module Paypal
     class Request::Item < Base
       attr_optional :name, :description, :amount, :quantity, :category
 
+      def initialize(attributes = {})
+        @quantity ||= 1
+      end
+
       def to_params(parent_index, index = 0)
         {
           :"L_PAYMENTREQUEST_#{parent_index}_NAME#{index}" => self.name,

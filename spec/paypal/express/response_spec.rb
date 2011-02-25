@@ -30,13 +30,14 @@ describe Paypal::Express::Response do
     it 'should support on_mobile option' do
       response = request.setup payment_request, :on_mobile => true
       response.on_mobile.should be_true
-      response.send(:query)[:cmd].should == '_express-checkout-mobile'
+      response.send(:query, :redirect)[:cmd].should == '_express-checkout-mobile'
     end
 
     it 'should support pay_on_paypal option' do
       response = request.setup payment_request, :pay_on_paypal => true
       response.pay_on_paypal.should be_true
-      response.send(:query)[:useraction].should == 'commit'
+      response.send(:query, :popup)[:useraction].should == 'commit'
+      response.send(:query, :redirect)[:useraction].should == 'commit'
     end
   end
 
