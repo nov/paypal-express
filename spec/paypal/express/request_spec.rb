@@ -58,7 +58,7 @@ describe Paypal::Express::Request do
           insufficient_attributes = attributes.reject do |key, value|
             key == missing_key
           end
-          lambda do
+          expect do
             Paypal::Express::Request.new insufficient_attributes
           end.should raise_error AttrRequired::AttrMissing
         end
@@ -67,7 +67,7 @@ describe Paypal::Express::Request do
 
     context 'when all required parameters are given' do
       it 'should succeed' do
-        lambda do
+        expect do
           Paypal::Express::Request.new attributes
         end.should_not raise_error AttrRequired::AttrMissing
       end
@@ -82,7 +82,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should support no_shipping option' do
-      lambda do
+      expect do
         instance.setup instant_payment_request, :no_shipping => true
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :SetExpressCheckout
@@ -98,7 +98,7 @@ describe Paypal::Express::Request do
 
     context 'when instance payment request given' do
       it 'should call SetExpressCheckout' do
-        lambda do
+        expect do
           instance.setup instant_payment_request
         end.should request_to 'https://api-3t.paypal.com/nvp', :post
         instance._method_.should == :SetExpressCheckout
@@ -113,7 +113,7 @@ describe Paypal::Express::Request do
 
     context 'when recurring payment request given' do
       it 'should call SetExpressCheckout' do
-        lambda do
+        expect do
           instance.setup recurring_payment_request
         end.should request_to 'https://api-3t.paypal.com/nvp', :post
         instance._method_.should == :SetExpressCheckout
@@ -136,7 +136,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should call GetExpressCheckoutDetails' do
-      lambda do
+      expect do
         instance.details 'token'
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :GetExpressCheckoutDetails
@@ -154,7 +154,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should call DoExpressCheckoutPayment' do
-      lambda do
+      expect do
         instance.checkout! 'token', 'payer_id', instant_payment_request
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :DoExpressCheckoutPayment
@@ -175,7 +175,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should call CreateRecurringPaymentsProfile' do
-      lambda do
+      expect do
         instance.subscribe! 'token', recurring_profile
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :CreateRecurringPaymentsProfile
@@ -205,7 +205,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should call GetRecurringPaymentsProfileDetails' do
-      lambda do
+      expect do
         instance.subscription 'profile_id'
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :GetRecurringPaymentsProfileDetails
@@ -223,7 +223,7 @@ describe Paypal::Express::Request do
     end
 
     it 'should call ManageRecurringPaymentsProfileStatus' do
-      lambda do
+      expect do
         instance.renew! 'profile_id', :Cancel
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :ManageRecurringPaymentsProfileStatus

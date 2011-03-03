@@ -20,7 +20,7 @@ describe Paypal::NVP::Request do
           insufficient_attributes = attributes.reject do |key, value|
             key == missing_key
           end
-          lambda do
+          expect do
             Paypal::NVP::Request.new insufficient_attributes
           end.should raise_error AttrRequired::AttrMissing
         end
@@ -29,7 +29,7 @@ describe Paypal::NVP::Request do
 
     context 'when all required parameters are given' do
       it 'should succeed' do
-        lambda do
+        expect do
           Paypal::NVP::Request.new attributes
         end.should_not raise_error AttrRequired::AttrMissing
       end
@@ -51,7 +51,7 @@ describe Paypal::NVP::Request do
 
   describe '#request' do
     it 'should POST to NPV endpoint' do
-      lambda do
+      expect do
         instance.request :RPCMethod
       end.should request_to Paypal::NVP::Request::ENDPOINT[:production], :post
     end
@@ -62,7 +62,7 @@ describe Paypal::NVP::Request do
       end
 
       it 'should raise Paypal::Exception::APIError' do
-        lambda do
+        expect do
           instance.request :SetExpressCheckout
         end.should raise_error(Paypal::Exception::APIError)
       end
@@ -79,7 +79,7 @@ describe Paypal::NVP::Request do
       end
 
       it 'should raise Paypal::Exception::APIError' do
-        lambda do
+        expect do
           instance.request :SetExpressCheckout
         end.should raise_error(Paypal::Exception::HttpError)
       end

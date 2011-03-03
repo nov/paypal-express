@@ -18,7 +18,7 @@ describe Paypal::IPN do
       end
 
       it 'should raise Paypal::Exception::APIError' do
-        lambda do
+        expect do
           Paypal::IPN.verify!("raw-post-body")
         end.should raise_error(Paypal::Exception::APIError)
       end
