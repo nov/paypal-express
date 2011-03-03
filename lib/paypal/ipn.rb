@@ -16,7 +16,7 @@ module Paypal
       when 'VERIFIED'
         true
       else
-        raise APIError.new(response.body)
+        raise Exception::APIError.new(response.body)
       end
     end
   end

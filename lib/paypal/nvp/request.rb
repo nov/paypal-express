@@ -52,10 +52,10 @@ module Paypal
         when 'Success', 'SuccessWithWarning'
           response
         else
-          raise APIError.new(response)
+          raise Exception::APIError.new(response)
         end
       rescue RestClient::Exception => e
-        raise HttpError.new(e.http_code, e.message, e.http_body)
+        raise Exception::HttpError.new(e.http_code, e.message, e.http_body)
       end
     end
   end

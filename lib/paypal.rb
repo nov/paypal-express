@@ -57,7 +57,9 @@ module Paypal
 end
 
 require 'paypal/util'
-require 'paypal/exceptions'
+require 'paypal/exception'
+require 'paypal/exception/http_error'
+require 'paypal/exception/api_error'
 require 'paypal/base'
 require 'paypal/ipn'
 require 'paypal/nvp/request'

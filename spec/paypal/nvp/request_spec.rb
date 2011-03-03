@@ -61,10 +61,10 @@ describe Paypal::NVP::Request do
         fake_response 'SetExpressCheckout/failure'
       end
 
-      it 'should raise Paypal::APIError' do
+      it 'should raise Paypal::Exception::APIError' do
         lambda do
           instance.request :SetExpressCheckout
-        end.should raise_error(Paypal::APIError)
+        end.should raise_error(Paypal::Exception::APIError)
       end
     end
 
@@ -78,10 +78,10 @@ describe Paypal::NVP::Request do
         )
       end
 
-      it 'should raise Paypal::APIError' do
+      it 'should raise Paypal::Exception::APIError' do
         lambda do
           instance.request :SetExpressCheckout
-        end.should raise_error(Paypal::HttpError)
+        end.should raise_error(Paypal::Exception::HttpError)
       end
     end
   end

@@ -17,10 +17,10 @@ describe Paypal::IPN do
         fake_response 'IPN/invalid', :IPN
       end
 
-      it 'should raise Paypal::APIError' do
+      it 'should raise Paypal::Exception::APIError' do
         lambda do
           Paypal::IPN.verify!("raw-post-body")
-        end.should raise_error(Paypal::APIError)
+        end.should raise_error(Paypal::Exception::APIError)
       end
     end
   end
