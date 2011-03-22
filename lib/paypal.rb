@@ -2,11 +2,11 @@ require 'logger'
 require 'active_support/core_ext'
 require 'attr_required'
 require 'attr_optional'
-require 'restclient_with_ssl_support'
+require 'restclient_with_cert'
 
 module Paypal
 
-  API_VERSION = '66.0'
+  API_VERSION = '69.0'
   ENDPOINT = {
     :production => 'https://www.paypal.com/cgi-bin/webscr',
     :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
