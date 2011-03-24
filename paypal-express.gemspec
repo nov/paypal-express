@@ -3,8 +3,8 @@ Gem::Specification.new do |s|
   s.version = File.read(File.join(File.dirname(__FILE__), "VERSION"))
   s.required_rubygems_version = Gem::Requirement.new(">= 1.3.6") if s.respond_to? :required_rubygems_version=
   s.authors = ["nov matake"]
-  s.description = %q{Rugy Gem for PayPal Express Checkout API}
-  s.summary = %q{PayPal Express Checkout API Client Supporting Both Instant and Recurring Payment}
+  s.description = %q{PayPal Express Checkout API Client for Instance, Recurring and Digital Goods Payment.}
+  s.summary = %q{PayPal Express Checkout API Client for Instance, Recurring and Digital Goods Payment.}
   s.email = "nov@matake.jp"
   s.extra_rdoc_files = ["LICENSE", "README.rdoc"]
   s.rdoc_options = ["--charset=UTF-8"]

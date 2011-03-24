@@ -1,7 +1,8 @@
 = paypal-express
 
 Handle PayPal Express Checkout.
-Both instance payment and recurring payment are supported.
+Both Instance Payment and Recurring Payment are supported.
+Express Checkout for Digital Goods is also supported.
 
 == Installation
 
