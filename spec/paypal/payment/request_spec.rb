@@ -3,14 +3,14 @@ require 'spec_helper.rb'
 describe Paypal::Payment::Request do
   let :instant_request do
     Paypal::Payment::Request.new(
-      :amount => 10,
+      :amount => 10.25,
       :currency_code => :JPY,
       :description => 'Instant Payment Request',
       :notify_url => 'http://merchant.example.com/notify',
       :items => [{
         :name => 'Item1',
         :description => 'Awesome Item!',
-        :amount => 10
+        :amount => 10.25
       }]
     )
   end
@@ -25,7 +25,7 @@ describe Paypal::Payment::Request do
 
   describe '.new' do
     it 'should handle Instant Payment parameters' do
-      instant_request.amount.should == 10
+      instant_request.amount.should == 10.25
       instant_request.currency_code.should == :JPY
       instant_request.description.should == 'Instant Payment Request'
       instant_request.notify_url.should == 'http://merchant.example.com/notify'
@@ -41,14 +41,14 @@ describe Paypal::Payment::Request do
   describe '#to_params' do
     it 'should handle Instant Payment parameters' do
       instant_request.to_params.should == {
-        :PAYMENTREQUEST_0_AMT => "10.00",
+        :PAYMENTREQUEST_0_AMT => "10.25",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
-        :PAYMENTREQUEST_0_ITEMAMT => "10.00",
+        :PAYMENTREQUEST_0_ITEMAMT => "10.25",
         :L_PAYMENTREQUEST_0_NAME0 => "Item1",
         :L_PAYMENTREQUEST_0_DESC0 => "Awesome Item!",
-        :L_PAYMENTREQUEST_0_AMT0 => "10.00",
+        :L_PAYMENTREQUEST_0_AMT0 => "10.25",
         :L_PAYMENTREQUEST_0_QTY0 => 1
       }
     end
