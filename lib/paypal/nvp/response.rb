@@ -11,13 +11,14 @@ module Paypal
         :CORRELATIONID => :colleration_id,
         :COUNTRYCODE => :country_code,
         :CURRENCYCODE => :currency_code,
+        :DESC => :description,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
         :VERSION => :version
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :ship_to, :payer, :recurring, :payment_responses, :payment_info
+      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -61,7 +62,7 @@ module Paypal
             # NOTE:
             #  CreateRecurringPaymentsProfile returns PROFILESTATUS
             #  GetRecurringPaymentsProfileDetails returns STATUS
-            :description => attrs.delete(:DESC),
+            :description => @description,
             :status => attrs.delete(:STATUS) || attrs.delete(:PROFILESTATUS),
             :start_date => attrs.delete(:PROFILESTARTDATE),
             :name => attrs.delete(:SUBSCRIBERNAME),
