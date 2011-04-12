@@ -14,6 +14,7 @@ module Paypal
         :DESC => :description,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
+        :NOTIFYURL => :notify_url,
         :VERSION => :version
       }
       attr_accessor *@@attribute_mapping.values
@@ -30,6 +31,7 @@ module Paypal
         @insurance_option_selected = attrs.delete(:INSURANCEOPTIONSELECTED) == 'true'
         @amount = Payment::Common::Amount.new(
           :total => attrs.delete(:AMT),
+          :item => attrs.delete(:ITEMAMT),
           :handing => attrs.delete(:HANDLINGAMT),
           :insurance => attrs.delete(:INSURANCEAMT),
           :ship_disc => attrs.delete(:SHIPDISCAMT),
@@ -109,9 +111,13 @@ module Paypal
         # payment_responses
         payment_responses = []
         attrs.keys.each do |attribute|
-          prefix, index, key = attribute.to_s.split('_')
-          case prefix
-          when 'PAYMENTREQUEST', 'PAYMENTREQUESTINFO'
+          prefix, index, key = case attribute.to_s
+          when /^PAYMENTREQUEST/, /^PAYMENTREQUESTINFO/
+            attribute.to_s.split('_')
+          when /^L_PAYMENTREQUEST/
+            attribute.to_s.split('_')[1..-1]
+          end
+          if prefix
             payment_responses[index.to_i] ||= {}
             payment_responses[index.to_i][key.to_sym] = attrs.delete(attribute)
           end
@@ -131,6 +137,14 @@ module Paypal
         end
         @payment_info = payment_info.collect do |_attrs_|
           Payment::Response::Info.new _attrs_
+        end
+
+        # payment_info
+        attrs.keys.each do |_attr_|
+          prefix, key_with_index = _attr_.to_s.split('_', 2)
+          if prefix == 'L'
+            key, index = key_with_index.scan(/(.+)(\d)$/).flatten
+          end
         end
 
         # remove duplicated parameters
