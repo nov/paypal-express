@@ -7,7 +7,7 @@ module Paypal
       def initialize(attributes = {})
         @items = []
         Array(attributes[:items]).each do |item_attrs|
-          @items << Common::Item.new(item_attrs)
+          @items << Item.new(item_attrs)
         end
         super
       end

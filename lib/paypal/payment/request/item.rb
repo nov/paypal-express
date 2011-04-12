@@ -1,6 +1,6 @@
 module Paypal
   module Payment
-    class Common::Item < Base
+    class Request::Item < Base
       attr_optional :name, :description, :amount, :quantity, :category
 
       def initialize(attributes = {})

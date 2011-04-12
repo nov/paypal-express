@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Response < Base
-      attr_accessor :amount, :ship_to, :description, :notify_url, :insurance_option_offered, :currency_code, :error_code
+      attr_accessor :amount, :ship_to, :description, :items, :notify_url, :insurance_option_offered, :currency_code, :error_code
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -30,10 +30,19 @@ module Paypal
         @error_code = attrs.delete(:ERRORCODE)
 
         # items
-        
+        items = []
+        attrs.keys.each do |_attr_|
+          key, index = _attr_.to_s.scan(/^(.+)(\d)$/).flatten
+          if index
+            items[index.to_i] ||= {}
+            items[index.to_i][key.to_sym] = attrs.delete(:"#{key}#{index}")
+          end
+        end 
+        @items = items.collect do |_attr_|
+          Item.new(_attr_)
+        end
 
         # warn ignored params
-        p attrs
         attrs.each do |key, value|
           Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
         end

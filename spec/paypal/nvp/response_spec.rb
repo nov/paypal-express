@@ -62,7 +62,7 @@ describe Paypal::NVP::Response do
       it 'should handle all attributes' do
         Paypal.logger.should_not_receive(:warn)
         response = request.details 'token'
-        response.payer.identifier.should == 'PRT3TZ6MCBCNC'
+        response.payer.identifier.should == '9RWDTMRKKHQ8S'
         response.payment_responses.size.should == 1
         response.payment_info.size.should == 0
         response.payment_responses.first.should be_instance_of(Paypal::Payment::Response)

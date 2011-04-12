@@ -19,7 +19,7 @@ module Paypal
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info
+      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info, :items
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -110,16 +110,16 @@ module Paypal
 
         # payment_responses
         payment_responses = []
-        attrs.keys.each do |attribute|
-          prefix, index, key = case attribute.to_s
+        attrs.keys.each do |_attr_|
+          prefix, index, key = case _attr_.to_s
           when /^PAYMENTREQUEST/, /^PAYMENTREQUESTINFO/
-            attribute.to_s.split('_')
+            _attr_.to_s.split('_')
           when /^L_PAYMENTREQUEST/
-            attribute.to_s.split('_')[1..-1]
+            _attr_.to_s.split('_')[1..-1]
           end
           if prefix
             payment_responses[index.to_i] ||= {}
-            payment_responses[index.to_i][key.to_sym] = attrs.delete(attribute)
+            payment_responses[index.to_i][key.to_sym] ||= attrs.delete(_attr_)
           end
         end
         @payment_responses = payment_responses.collect do |_attrs_|
@@ -140,11 +140,16 @@ module Paypal
         end
 
         # payment_info
+        items = []
         attrs.keys.each do |_attr_|
-          prefix, key_with_index = _attr_.to_s.split('_', 2)
-          if prefix == 'L'
-            key, index = key_with_index.scan(/(.+)(\d)$/).flatten
+          key, index = _attr_.to_s.scan(/^L_(.+)(\d)$/).flatten
+          if index
+            items[index.to_i] ||= {}
+            items[index.to_i][key.to_sym] = attrs.delete(_attr_)
           end
+        end
+        @items = items.collect do |_attrs_|
+          Payment::Response::Item.new _attrs_
         end
 
         # remove duplicated parameters

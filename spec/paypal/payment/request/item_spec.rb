@@ -1,8 +1,8 @@
 require 'spec_helper.rb'
 
-describe Paypal::Payment::Common::Item do
+describe Paypal::Payment::Request::Item do
   let :instance do
-    Paypal::Payment::Common::Item.new(
+    Paypal::Payment::Request::Item.new(
       :name => 'Name',
       :description => 'Description',
       :amount => 10,
