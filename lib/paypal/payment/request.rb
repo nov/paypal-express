@@ -28,12 +28,16 @@ module Paypal
           v.blank?
         end
         if self.items.present?
-          params[:"PAYMENTREQUEST_#{index}_ITEMAMT"] = Util.formatted_amount(items.sum(&:quantity) * items.sum(&:amount).to_f)
+          params[:"PAYMENTREQUEST_#{index}_ITEMAMT"] = Util.formatted_amount(self.items_amount)
           self.items.each_with_index do |item, item_index|
             params.merge! item.to_params(index, item_index)
           end
         end
         params
+      end
+      
+      def items_amount
+        total = 0.0; self.items.each {|item| total += item.quantity * item.amount.to_f }; total
       end
     end
   end
