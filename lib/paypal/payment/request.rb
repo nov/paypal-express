@@ -35,9 +35,11 @@ module Paypal
         end
         params
       end
-      
+
       def items_amount
-        total = 0.0; self.items.each {|item| total += item.quantity * item.amount.to_f }; total
+        self.items.inject(0.0) do |total, item|
+          total += item.quantity * item.amount.to_f
+        end
       end
     end
   end
