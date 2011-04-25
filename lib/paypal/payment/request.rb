@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Request < Base
-      attr_optional :tax_amount, :shipping_amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
+      attr_optional :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
       attr_accessor :amount, :items
 
       def initialize(attributes = {})
