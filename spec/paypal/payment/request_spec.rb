@@ -33,9 +33,9 @@ describe Paypal::Payment::Request do
 
   describe '.new' do
     it 'should handle Instant Payment parameters' do
-      instant_request.amount.should == 25.7
-      instant_request.tax_amount.should == 0.4
-      instant_request.shipping_amount.should == 1.5
+      instant_request.amount.total.should == 25.7
+      instant_request.amount.tax.should == 0.4
+      instant_request.amount.shipping.should == 1.5
       instant_request.currency_code.should == :JPY
       instant_request.description.should == 'Instant Payment Request'
       instant_request.notify_url.should == 'http://merchant.example.com/notify'

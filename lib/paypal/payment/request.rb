@@ -1,10 +1,19 @@
 module Paypal
   module Payment
     class Request < Base
-      attr_optional :amount, :tax_amount, :shipping_amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
-      attr_accessor :items
+      attr_optional :tax_amount, :shipping_amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
+      attr_accessor :amount, :items
 
       def initialize(attributes = {})
+        @amount = if attributes[:amount].is_a?(Common::Amount)
+          attributes[:amount]
+        else
+          Common::Amount.new(
+            :total => attributes[:amount],
+            :tax => attributes[:tax_amount],
+            :shipping => attributes[:shipping_amount]
+          )
+        end
         @items = []
         Array(attributes[:items]).each do |item_attrs|
           @items << Item.new(item_attrs)
@@ -15,9 +24,9 @@ module Paypal
       def to_params(index = 0)
         params = {
           :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.action,
-          :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount),
-          :"PAYMENTREQUEST_#{index}_TAXAMT" => Util.formatted_amount(self.tax_amount),
-          :"PAYMENTREQUEST_#{index}_SHIPPINGAMT" => Util.formatted_amount(self.shipping_amount),
+          :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount.total),
+          :"PAYMENTREQUEST_#{index}_TAXAMT" => Util.formatted_amount(self.amount.tax),
+          :"PAYMENTREQUEST_#{index}_SHIPPINGAMT" => Util.formatted_amount(self.amount.shipping),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
           :"PAYMENTREQUEST_#{index}_DESC" => self.description,
           # NOTE:
@@ -25,7 +34,7 @@ module Paypal
           #  recurring payment doesn't support dynamic notify_url.
           :"PAYMENTREQUEST_#{index}_NOTIFYURL" => self.notify_url,
           :"L_BILLINGTYPE#{index}" => self.billing_type,
-          :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description,
+          :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description
         }.delete_if do |k, v|
           v.blank?
         end

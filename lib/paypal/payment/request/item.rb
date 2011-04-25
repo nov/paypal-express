@@ -14,7 +14,7 @@ module Paypal
           :"L_PAYMENTREQUEST_#{parent_index}_DESC#{index}" => self.description,
           :"L_PAYMENTREQUEST_#{parent_index}_AMT#{index}" => Util.formatted_amount(self.amount),
           :"L_PAYMENTREQUEST_#{parent_index}_QTY#{index}" => self.quantity,
-          :"L_PAYMENTREQUEST_#{parent_index}_ITEMCATEGORY#{index}" => self.category          
+          :"L_PAYMENTREQUEST_#{parent_index}_ITEMCATEGORY#{index}" => self.category
         }.delete_if do |k, v|
           v.blank?
         end
