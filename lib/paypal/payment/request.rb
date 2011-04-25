@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Request < Base
-      attr_optional :amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
+      attr_optional :amount, :tax_amount, :shipping_amount, :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description
       attr_accessor :items
 
       def initialize(attributes = {})
@@ -16,6 +16,8 @@ module Paypal
         params = {
           :"PAYMENTREQUEST_#{index}_PAYMENTACTION" => self.action,
           :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount),
+          :"PAYMENTREQUEST_#{index}_TAXAMT" => Util.formatted_amount(self.tax_amount),
+          :"PAYMENTREQUEST_#{index}_SHIPPINGAMT" => Util.formatted_amount(self.shipping_amount),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
           :"PAYMENTREQUEST_#{index}_DESC" => self.description,
           # NOTE:
@@ -23,7 +25,7 @@ module Paypal
           #  recurring payment doesn't support dynamic notify_url.
           :"PAYMENTREQUEST_#{index}_NOTIFYURL" => self.notify_url,
           :"L_BILLINGTYPE#{index}" => self.billing_type,
-          :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description
+          :"L_BILLINGAGREEMENTDESCRIPTION#{index}" => self.billing_agreement_description,
         }.delete_if do |k, v|
           v.blank?
         end

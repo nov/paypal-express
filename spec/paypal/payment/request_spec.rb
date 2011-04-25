@@ -3,7 +3,9 @@ require 'spec_helper.rb'
 describe Paypal::Payment::Request do
   let :instant_request do
     Paypal::Payment::Request.new(
-      :amount => 23.8,
+      :amount => 24.2,
+      :tax_amount => 0.4,
+      :shipping_amount => 1.5,
       :currency_code => :JPY,
       :description => 'Instant Payment Request',
       :notify_url => 'http://merchant.example.com/notify',
@@ -16,7 +18,7 @@ describe Paypal::Payment::Request do
         :quantity => 3,
         :name => 'Item2',
         :description => 'Awesome Item 2!',
-        :amount => 1.1        
+        :amount => 1.1
       }]
     )
   end
@@ -31,7 +33,9 @@ describe Paypal::Payment::Request do
 
   describe '.new' do
     it 'should handle Instant Payment parameters' do
-      instant_request.amount.should == 23.8
+      instant_request.amount.should == 24.2
+      instant_request.tax_amount.should == 0.4
+      instant_request.shipping_amount.should == 1.5
       instant_request.currency_code.should == :JPY
       instant_request.description.should == 'Instant Payment Request'
       instant_request.notify_url.should == 'http://merchant.example.com/notify'
@@ -47,7 +51,9 @@ describe Paypal::Payment::Request do
   describe '#to_params' do
     it 'should handle Instant Payment parameters' do
       instant_request.to_params.should == {
-        :PAYMENTREQUEST_0_AMT => "23.80",
+        :PAYMENTREQUEST_0_AMT => "24.20",
+        :PAYMENTREQUEST_0_TAXAMT => "0.40",
+        :PAYMENTREQUEST_0_SHIPPINGAMT => "1.50",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
@@ -66,6 +72,8 @@ describe Paypal::Payment::Request do
     it 'should handle Recurring Payment parameters' do
       recurring_request.to_params.should == {
         :PAYMENTREQUEST_0_AMT => "0.00",
+        :PAYMENTREQUEST_0_TAXAMT => "0.00",
+        :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :L_BILLINGTYPE0 => :RecurringPayments,
         :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request"

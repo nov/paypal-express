@@ -91,6 +91,8 @@ describe Paypal::Express::Request do
         :RETURNURL => 'http://example.com/success',
         :CANCELURL => 'http://example.com/cancel',
         :PAYMENTREQUEST_0_AMT => '1000.00',
+        :PAYMENTREQUEST_0_TAXAMT => "0.00",
+        :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
         :REQCONFIRMSHIPPING => 0,
         :NOSHIPPING => 1
       }
@@ -106,7 +108,9 @@ describe Paypal::Express::Request do
           :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
           :RETURNURL => 'http://example.com/success',
           :CANCELURL => 'http://example.com/cancel',
-          :PAYMENTREQUEST_0_AMT => '1000.00'
+          :PAYMENTREQUEST_0_AMT => '1000.00',
+          :PAYMENTREQUEST_0_TAXAMT => "0.00",
+          :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
         }
       end
     end
@@ -122,7 +126,9 @@ describe Paypal::Express::Request do
           :L_BILLINGAGREEMENTDESCRIPTION0 => 'Recurring Payment Request',
           :RETURNURL => 'http://example.com/success',
           :CANCELURL => 'http://example.com/cancel',
-          :PAYMENTREQUEST_0_AMT => '0.00'
+          :PAYMENTREQUEST_0_AMT => '0.00',
+          :PAYMENTREQUEST_0_TAXAMT => "0.00",
+          :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
         }
       end
     end
@@ -162,7 +168,9 @@ describe Paypal::Express::Request do
         :PAYERID => 'payer_id',
         :TOKEN => 'token',
         :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
-        :PAYMENTREQUEST_0_AMT => '1000.00'
+        :PAYMENTREQUEST_0_AMT => '1000.00',
+        :PAYMENTREQUEST_0_TAXAMT => "0.00",
+        :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
       }
     end
   end
