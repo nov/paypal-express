@@ -3,7 +3,7 @@ require 'spec_helper.rb'
 describe Paypal::Payment::Request do
   let :instant_request do
     Paypal::Payment::Request.new(
-      :amount => 24.2,
+      :amount => 25.7,
       :tax_amount => 0.4,
       :shipping_amount => 1.5,
       :currency_code => :JPY,
@@ -33,7 +33,7 @@ describe Paypal::Payment::Request do
 
   describe '.new' do
     it 'should handle Instant Payment parameters' do
-      instant_request.amount.should == 24.2
+      instant_request.amount.should == 25.7
       instant_request.tax_amount.should == 0.4
       instant_request.shipping_amount.should == 1.5
       instant_request.currency_code.should == :JPY
@@ -51,7 +51,7 @@ describe Paypal::Payment::Request do
   describe '#to_params' do
     it 'should handle Instant Payment parameters' do
       instant_request.to_params.should == {
-        :PAYMENTREQUEST_0_AMT => "24.20",
+        :PAYMENTREQUEST_0_AMT => "25.70",
         :PAYMENTREQUEST_0_TAXAMT => "0.40",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "1.50",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
