@@ -13,6 +13,9 @@ Express Checkout for Digital Goods is also supported.
 See Wiki on Github
 https://github.com/nov/paypal-express/wiki
 
+Play with Sample Rails App
+https://github.com/nov/paypal-express-sample
+
 == Note on Patches/Pull Requests
 
 * Fork the project.
