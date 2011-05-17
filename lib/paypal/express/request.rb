@@ -12,9 +12,6 @@ module Paypal
           params[:REQCONFIRMSHIPPING] = 0
           params[:NOSHIPPING] = 1
         end
-        if options[:allow_note]
-          params[:ALLOWNOTE] = 1
-        end
         Array(payment_requests).each_with_index do |payment_request, index|
           params.merge! payment_request.to_params(index)
         end
