@@ -25,7 +25,7 @@ module Paypal
         params.merge!(
           :DESC  => self.description,
           :MAXFAILEDPAYMENTS => self.max_fails,
-          :AUTOBILLAMT => self.auto_bill,
+          :AUTOBILLOUTAMT => self.auto_bill,
           :PROFILESTARTDATE => self.start_date,
           :SUBSCRIBERNAME => self.name,
           :PROFILEREFERENCE => self.reference
