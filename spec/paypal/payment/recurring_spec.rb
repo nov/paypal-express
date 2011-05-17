@@ -67,7 +67,7 @@ describe Paypal::Payment::Recurring do
   describe '#to_params' do
     it 'should handle Recurring Profile parameters' do
       instance.to_params.should == {
-        :AUTOBILLAMT => 'NoAutoBill',
+        :AUTOBILLOUTAMT => 'NoAutoBill',
         :BILLINGFREQUENCY => 1,
         :TRIALTOTALBILLINGCYCLES => 0,
         :SHIPPINGAMT => '0.00',
