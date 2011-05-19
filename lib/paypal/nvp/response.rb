@@ -44,6 +44,7 @@ module Paypal
           :name => attrs.delete(:SHIPTONAME),
           :zip => attrs.delete(:SHIPTOZIP),
           :street => attrs.delete(:SHIPTOSTREET),
+          :street2 => attrs.delete(:SHIPTOSTREET2),
           :city => attrs.delete(:SHIPTOCITY),
           :state => attrs.delete(:SHIPTOSTATE),
           :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
