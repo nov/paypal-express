@@ -13,9 +13,10 @@ module Paypal
         :PROTECTIONELIGIBILITY => :protection_eligibility,
         :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
         :REASONCODE => :reason_code,
+        :RECEIPTID => :receipt_id,
+        :SECUREMERCHANTACCOUNTID => :secure_merchant_account_id,
         :TRANSACTIONID => :transaction_id,
         :TRANSACTIONTYPE => :transaction_type,
-        :RECEIPTID => :receipt_id
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :amount

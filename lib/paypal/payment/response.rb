@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Response < Base
-      attr_accessor :amount, :ship_to, :description, :note, :items, :notify_url, :insurance_option_offered, :currency_code, :error_code
+      attr_accessor :amount, :ship_to, :description, :note, :items, :notify_url, :insurance_option_offered, :currency_code, :error_code, :transaction_id
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -30,6 +30,7 @@ module Paypal
         @insurance_option_offered = attrs.delete(:INSURANCEOPTIONOFFERED) == 'true'
         @currency_code = attrs.delete(:CURRENCYCODE)
         @error_code = attrs.delete(:ERRORCODE)
+        @transaction_id = attrs.delete(:TRANSACTIONID)
 
         # items
         items = []

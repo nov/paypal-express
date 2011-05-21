@@ -52,13 +52,35 @@ module Paypal
         Response.new response
       end
 
-      def renew!(profile_id, action, note = '')
+      def renew!(profile_id, action, options = {})
         params = {
           :PROFILEID => profile_id,
-          :ACTION => action,
-          :NOTE => note
+          :ACTION => action
         }
+        if options[:note]
+          params[:NOTE] = options[:note]
+        end
         response = self.request :ManageRecurringPaymentsProfileStatus, params
+        Response.new response
+      end
+
+      def refund!(transaction_id, options = {})
+        params = {
+          :TRANSACTIONID => transaction_id,
+          :REFUNDTYPE => :Full
+        }
+        if options[:invoice_id]
+          params[:INVOICEID] = options[:invoice_id]
+        end
+        if options[:type]
+          params[:REFUNDTYPE] = options[:type]
+          params[:AMT] = options[:amount]
+          params[:CURRENCYCODE] = options[:currency_code]
+        end
+        if options[:note]
+          params[:NOTE] = options[:note]
+        end
+        response = self.request :RefundTransaction, params
         Response.new response
       end
 

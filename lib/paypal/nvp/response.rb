@@ -12,14 +12,14 @@ module Paypal
         :COUNTRYCODE => :country_code,
         :CURRENCYCODE => :currency_code,
         :DESC => :description,
+        :NOTIFYURL => :notify_url,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
-        :NOTIFYURL => :notify_url,
         :VERSION => :version
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info, :items
+      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info, :items, :refund
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -57,6 +57,17 @@ module Paypal
             :first_name => attrs.delete(:FIRSTNAME),
             :last_name => attrs.delete(:LASTNAME),
             :email => attrs.delete(:EMAIL)
+          )
+        end
+        if attrs[:REFUNDTRANSACTIONID]
+          @refund = Payment::Response::Refund.new(
+            :transaction_id => attrs.delete(:REFUNDTRANSACTIONID),
+            :amount => {
+              :total => attrs.delete(:TOTALREFUNDEDAMOUNT),
+              :fee => attrs.delete(:FEEREFUNDAMT),
+              :gross => attrs.delete(:GROSSREFUNDAMT),
+              :net => attrs.delete(:NETREFUNDAMT)
+            }
           )
         end
         if attrs[:PROFILEID]
@@ -120,7 +131,7 @@ module Paypal
           end
           if prefix
             payment_responses[index.to_i] ||= {}
-            payment_responses[index.to_i][key.to_sym] ||= attrs.delete(_attr_)
+            payment_responses[index.to_i][key.to_sym] = attrs.delete(_attr_)
           end
         end
         @payment_responses = payment_responses.collect do |_attrs_|

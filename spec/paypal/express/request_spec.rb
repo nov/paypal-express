@@ -238,8 +238,7 @@ describe Paypal::Express::Request do
       instance._method_.should == :ManageRecurringPaymentsProfileStatus
       instance._sent_params_.should == {
         :ACTION => :Cancel,
-        :PROFILEID => 'profile_id',
-        :NOTE => ''
+        :PROFILEID => 'profile_id'
       }
     end
   end
