@@ -13,6 +13,7 @@ describe Paypal::Express::Request do
 
   let(:return_url) { 'http://example.com/success' }
   let(:cancel_url) { 'http://example.com/cancel' }
+  let(:nvp_endpoint) { Paypal::NVP::Request::ENDPOINT[:production] }
   let :attributes do
     {
       :username => 'nov',
@@ -84,12 +85,12 @@ describe Paypal::Express::Request do
     it 'should support no_shipping option' do
       expect do
         instance.setup instant_payment_request, return_url, cancel_url, :no_shipping => true
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :SetExpressCheckout
       instance._sent_params_.should == {
         :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
-        :RETURNURL => 'http://example.com/success',
-        :CANCELURL => 'http://example.com/cancel',
+        :RETURNURL => return_url,
+        :CANCELURL => cancel_url,
         :PAYMENTREQUEST_0_AMT => '1000.00',
         :PAYMENTREQUEST_0_TAXAMT => "0.00",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
@@ -102,12 +103,12 @@ describe Paypal::Express::Request do
       it 'should call SetExpressCheckout' do
         expect do
           instance.setup instant_payment_request, return_url, cancel_url
-        end.should request_to 'https://api-3t.paypal.com/nvp', :post
+        end.should request_to nvp_endpoint, :post
         instance._method_.should == :SetExpressCheckout
         instance._sent_params_.should == {
           :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
-          :RETURNURL => 'http://example.com/success',
-          :CANCELURL => 'http://example.com/cancel',
+          :RETURNURL => return_url,
+          :CANCELURL => cancel_url,
           :PAYMENTREQUEST_0_AMT => '1000.00',
           :PAYMENTREQUEST_0_TAXAMT => "0.00",
           :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
@@ -119,13 +120,13 @@ describe Paypal::Express::Request do
       it 'should call SetExpressCheckout' do
         expect do
           instance.setup recurring_payment_request, return_url, cancel_url
-        end.should request_to 'https://api-3t.paypal.com/nvp', :post
+        end.should request_to nvp_endpoint, :post
         instance._method_.should == :SetExpressCheckout
         instance._sent_params_.should == {
           :L_BILLINGTYPE0 => :RecurringPayments,
           :L_BILLINGAGREEMENTDESCRIPTION0 => 'Recurring Payment Request',
-          :RETURNURL => 'http://example.com/success',
-          :CANCELURL => 'http://example.com/cancel',
+          :RETURNURL => return_url,
+          :CANCELURL => cancel_url,
           :PAYMENTREQUEST_0_AMT => '0.00',
           :PAYMENTREQUEST_0_TAXAMT => "0.00",
           :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
@@ -144,7 +145,7 @@ describe Paypal::Express::Request do
     it 'should call GetExpressCheckoutDetails' do
       expect do
         instance.details 'token'
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :GetExpressCheckoutDetails
       instance._sent_params_.should == {
         :TOKEN => 'token'
@@ -162,7 +163,7 @@ describe Paypal::Express::Request do
     it 'should call DoExpressCheckoutPayment' do
       expect do
         instance.checkout! 'token', 'payer_id', instant_payment_request
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :DoExpressCheckoutPayment
       instance._sent_params_.should == {
         :PAYERID => 'payer_id',
@@ -185,7 +186,7 @@ describe Paypal::Express::Request do
     it 'should call CreateRecurringPaymentsProfile' do
       expect do
         instance.subscribe! 'token', recurring_profile
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :CreateRecurringPaymentsProfile
       instance._sent_params_.should == {
         :DESC => 'Recurring Profile',
@@ -215,7 +216,7 @@ describe Paypal::Express::Request do
     it 'should call GetRecurringPaymentsProfileDetails' do
       expect do
         instance.subscription 'profile_id'
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :GetRecurringPaymentsProfileDetails
       instance._sent_params_.should == {
         :PROFILEID => 'profile_id'
@@ -233,7 +234,7 @@ describe Paypal::Express::Request do
     it 'should call ManageRecurringPaymentsProfileStatus' do
       expect do
         instance.renew! 'profile_id', :Cancel
-      end.should request_to 'https://api-3t.paypal.com/nvp', :post
+      end.should request_to nvp_endpoint, :post
       instance._method_.should == :ManageRecurringPaymentsProfileStatus
       instance._sent_params_.should == {
         :ACTION => :Cancel,
