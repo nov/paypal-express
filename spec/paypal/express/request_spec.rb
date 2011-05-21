@@ -243,4 +243,23 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe '#refund!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'RefundTransaction/full'
+      response = instance.refund! 'transaction_id'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
+    it 'should call RefundTransaction' do
+      expect do
+        instance.refund! 'transaction_id'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :RefundTransaction
+      instance._sent_params_.should == {
+        :TRANSACTIONID => 'transaction_id',
+        :REFUNDTYPE => :Full
+      }
+    end
+  end
+
 end
