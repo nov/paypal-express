@@ -1,12 +1,11 @@
 module Paypal
   module Express
     class Request < NVP::Request
-      attr_required :return_url, :cancel_url
 
-      def setup(payment_requests, options = {})
+      def setup(payment_requests, return_url, cancel_url, options = {})
         params = {
-          :RETURNURL => self.return_url,
-          :CANCELURL => self.cancel_url
+          :RETURNURL => return_url,
+          :CANCELURL => cancel_url
         }
         if options[:no_shipping]
           params[:REQCONFIRMSHIPPING] = 0
