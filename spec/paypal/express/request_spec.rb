@@ -11,13 +11,13 @@ describe Paypal::Express::Request do
     alias_method_chain :post, :logging
   end
 
+  let(:return_url) { 'http://example.com/success' }
+  let(:cancel_url) { 'http://example.com/cancel' }
   let :attributes do
     {
       :username => 'nov',
       :password => 'password',
-      :signature => 'sig',
-      :return_url => 'http://example.com/success',
-      :cancel_url => 'http://example.com/cancel'
+      :signature => 'sig'
     }
   end
 
@@ -77,13 +77,13 @@ describe Paypal::Express::Request do
   describe '#setup' do
     it 'should return Paypal::Express::Response' do
       fake_response 'SetExpressCheckout/success'
-      response = instance.setup recurring_payment_request
+      response = instance.setup recurring_payment_request, return_url, cancel_url
       response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should support no_shipping option' do
       expect do
-        instance.setup instant_payment_request, :no_shipping => true
+        instance.setup instant_payment_request, return_url, cancel_url, :no_shipping => true
       end.should request_to 'https://api-3t.paypal.com/nvp', :post
       instance._method_.should == :SetExpressCheckout
       instance._sent_params_.should == {
@@ -101,7 +101,7 @@ describe Paypal::Express::Request do
     context 'when instance payment request given' do
       it 'should call SetExpressCheckout' do
         expect do
-          instance.setup instant_payment_request
+          instance.setup instant_payment_request, return_url, cancel_url
         end.should request_to 'https://api-3t.paypal.com/nvp', :post
         instance._method_.should == :SetExpressCheckout
         instance._sent_params_.should == {
@@ -118,7 +118,7 @@ describe Paypal::Express::Request do
     context 'when recurring payment request given' do
       it 'should call SetExpressCheckout' do
         expect do
-          instance.setup recurring_payment_request
+          instance.setup recurring_payment_request, return_url, cancel_url
         end.should request_to 'https://api-3t.paypal.com/nvp', :post
         instance._method_.should == :SetExpressCheckout
         instance._sent_params_.should == {

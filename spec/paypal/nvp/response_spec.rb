@@ -1,13 +1,13 @@
 require 'spec_helper.rb'
 
 describe Paypal::NVP::Response do
+  let(:return_url) { 'http://example.com/success' }
+  let(:cancel_url) { 'http://example.com/cancel' }
   let :request do
     Paypal::Express::Request.new(
       :username => 'nov',
       :password => 'password',
-      :signature => 'sig',
-      :return_url => 'http://example.com/success',
-      :cancel_url => 'http://example.com/cancel'
+      :signature => 'sig'
     )
   end
 
@@ -49,7 +49,7 @@ describe Paypal::NVP::Response do
 
       it 'should handle all attributes' do
         Paypal.logger.should_not_receive(:warn)
-        response = request.setup payment_request
+        response = request.setup payment_request, return_url, cancel_url
         response.token.should == 'EC-5YJ90598G69065317'
       end
     end
