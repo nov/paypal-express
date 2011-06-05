@@ -15,6 +15,7 @@ https://github.com/nov/paypal-express/wiki
 
 Play with Sample Rails App
 https://github.com/nov/paypal-express-sample
+https://paypal-express-sample.heroku.com
 
 == Note on Patches/Pull Requests
 
