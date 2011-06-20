@@ -31,6 +31,15 @@ describe Paypal::Payment::Request do
     )
   end
 
+  let :recurring_request_with_reference_transaction do
+    Paypal::Payment::Request.new(
+      :currency_code => :JPY,
+      :billing_type => :RecurringPayments,
+      :billing_agreement_description => 'Recurring Payment Request',
+      :reference_transactions_billing_type => :MerchantInitiatedBillingSingleAgreement
+    )
+  end
+
   describe '.new' do
     it 'should handle Instant Payment parameters' do
       instant_request.amount.total.should == 25.7
@@ -45,6 +54,12 @@ describe Paypal::Payment::Request do
       recurring_request.currency_code.should == :JPY
       recurring_request.billing_type.should == :RecurringPayments
       recurring_request.billing_agreement_description.should == 'Recurring Payment Request'
+    end
+
+    it 'should handle Recurring Payment parameters' do
+      recurring_request_with_reference_transaction.currency_code.should == :JPY
+      recurring_request_with_reference_transaction.billing_type.should == :RecurringPayments
+      recurring_request_with_reference_transaction.billing_agreement_description.should == 'Recurring Payment Request'
     end
   end
 
@@ -77,6 +92,18 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :L_BILLINGTYPE0 => :RecurringPayments,
         :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request"
+      }
+    end
+
+    it 'should handle Recurring Payment with Reference Transactions parameters' do
+      recurring_request_with_reference_transaction.to_params.should == {
+        :PAYMENTREQUEST_0_AMT => "0.00",
+        :PAYMENTREQUEST_0_TAXAMT => "0.00",
+        :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
+        :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
+        :L_BILLINGTYPE0 => :RecurringPayments,
+        :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request",
+        :BILLINGTYPE => :MerchantInitiatedBillingSingleAgreement,
       }
     end
   end
