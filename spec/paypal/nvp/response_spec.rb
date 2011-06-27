@@ -79,6 +79,7 @@ describe Paypal::NVP::Response do
         response = request.checkout! 'token', 'payer_id', payment_request
         response.payment_responses.size.should == 0
         response.payment_info.size.should == 1
+        response.billing_agreement_id.should == 'B-1XR87946TC504770W'
         response.payment_info.first.should be_instance_of(Paypal::Payment::Response::Info)
       end
     end

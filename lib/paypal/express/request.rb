@@ -63,6 +63,18 @@ module Paypal
         response = self.request :ManageRecurringPaymentsProfileStatus, params
         Response.new response
       end
+      
+      def suspend!(profile_id, options = {})
+        renew!(profile_id, :Suspend, options)
+      end
+
+      def cancel!(profile_id, options = {})
+        renew!(profile_id, :Cancel, options)
+      end
+
+      def reactivate!(profile_id, options = {})
+        renew!(profile_id, :Reactivate, options)
+      end
 
       def refund!(transaction_id, options = {})
         params = {
