@@ -15,7 +15,8 @@ module Paypal
         :NOTIFYURL => :notify_url,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
-        :VERSION => :version
+        :VERSION => :version,
+        :BILLINGAGREEMENTID => :billing_agreement_id
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
