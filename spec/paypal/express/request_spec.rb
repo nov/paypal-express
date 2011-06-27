@@ -243,6 +243,63 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe '#cancel!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'ManageRecurringPaymentsProfileStatus/success'
+      response = instance.cancel! 'profile_id'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
+    it 'should call ManageRecurringPaymentsProfileStatus' do
+      expect do
+        instance.cancel! 'profile_id'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :ManageRecurringPaymentsProfileStatus
+      instance._sent_params_.should == {
+        :ACTION => :Cancel,
+        :PROFILEID => 'profile_id'
+      }
+    end
+  end
+
+  describe '#suspend!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'ManageRecurringPaymentsProfileStatus/success'
+      response = instance.cancel! 'profile_id'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
+    it 'should call ManageRecurringPaymentsProfileStatus' do
+      expect do
+        instance.suspend! 'profile_id'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :ManageRecurringPaymentsProfileStatus
+      instance._sent_params_.should == {
+        :ACTION => :Suspend,
+        :PROFILEID => 'profile_id'
+      }
+    end
+  end
+
+  describe '#reactivate!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'ManageRecurringPaymentsProfileStatus/success'
+      response = instance.cancel! 'profile_id'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
+    it 'should call ManageRecurringPaymentsProfileStatus' do
+      expect do
+        instance.reactivate! 'profile_id'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :ManageRecurringPaymentsProfileStatus
+      instance._sent_params_.should == {
+        :ACTION => :Reactivate,
+        :PROFILEID => 'profile_id'
+      }
+    end
+  end
+
   describe '#refund!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'RefundTransaction/full'
