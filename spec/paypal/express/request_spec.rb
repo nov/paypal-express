@@ -34,9 +34,16 @@ describe Paypal::Express::Request do
   end
 
   let :recurring_payment_request do
-    Paypal::Payment::Request.new( 
+    Paypal::Payment::Request.new(
       :billing_type => :RecurringPayments,
       :billing_agreement_description => 'Recurring Payment Request'
+    )
+  end
+
+  let :reference_transaction_request do
+    Paypal::Payment::Request.new(
+      :amount => 1000,
+      :currency_code => 'JPY'
     )
   end
 
@@ -315,6 +322,30 @@ describe Paypal::Express::Request do
       instance._sent_params_.should == {
         :TRANSACTIONID => 'transaction_id',
         :REFUNDTYPE => :Full
+      }
+    end
+  end
+
+  describe '#reference_transaction!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'DoReferenceTransaction/success'
+      response = instance.reference_transaction! 'billing_agreement_id', :amount => 1000, :currency_code => 'JPY'
+      response.should be_instance_of(Paypal::Express::Response)
+    end
+
+    it 'should call DoExpressCheckoutPayment' do
+      expect do
+        instance.reference_transaction!('billing_agreement_id',
+                                        :amount => 1000,
+                                        :currency_code => 'JPY',
+                                        :payment_action => 'Sale')
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :DoReferenceTransaction
+      instance._sent_params_.should == {
+        :REFERENCEID => 'billing_agreement_id',
+        :AMT => '1000.00',
+        :CURRENCYCODE => 'JPY',
+        :PAYMENTACTION => 'Sale'
       }
     end
   end
