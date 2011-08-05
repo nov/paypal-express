@@ -333,7 +333,7 @@ describe Paypal::Express::Request do
       response.should be_instance_of(Paypal::Express::Response)
     end
 
-    it 'should call DoExpressCheckoutPayment' do
+    it 'should call DoReferenceTransaction' do
       expect do
         instance.reference_transaction!('billing_agreement_id',
                                         :amount => 1000,
