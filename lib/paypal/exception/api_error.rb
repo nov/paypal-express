@@ -18,7 +18,13 @@ module Paypal
           :BUILD => :build,
           :CORRELATIONID => :colleration_id,
           :TIMESTAMP => :timestamp,
-          :VERSION => :version
+          :VERSION => :version,
+          :ORDERTIME => :order_time,
+          :PENDINGREASON => :pending_reason,
+          :PAYMENTSTATUS => :payment_status,
+          :PAYMENTTYPE => :payment_type,
+          :REASONCODE => :reason_code,
+          :TRANSACTIONTYPE => :transaction_type
         }
         attr_accessor *@@attribute_mapping.values
         attr_accessor :raw, :details
