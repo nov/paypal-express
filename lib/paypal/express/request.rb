@@ -68,7 +68,7 @@ module Paypal
         response = self.request :ManageRecurringPaymentsProfileStatus, params
         Response.new response
       end
-      
+
       def suspend!(profile_id, options = {})
         renew!(profile_id, :Suspend, options)
       end
