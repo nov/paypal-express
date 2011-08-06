@@ -95,6 +95,14 @@ module Paypal
         Response.new response
       end
 
+      def agreement(reference_id)
+        params = {
+          :REFERENCEID => reference_id,
+        }
+        response = self.request :BillAgreementUpdate, params
+        Response.new response
+      end
+
       def charge!(reference_id, amount, options = {})
         params = {
           :REFERENCEID => reference_id,
@@ -105,6 +113,15 @@ module Paypal
           params[:CURRENCYCODE] = options[:currency_code]
         end
         response = self.request :DoReferenceTransaction, params
+        Response.new response
+      end
+
+      def revoke!(reference_id)
+        params = {
+          :REFERENCEID => reference_id,
+          :BillingAgreementStatus => :Canceled
+        }
+        response = self.request :BillAgreementUpdate, params
         Response.new response
       end
 
