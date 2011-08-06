@@ -117,6 +117,7 @@ module Paypal
             billing_agreement_info.merge! key => attrs.delete(key)
           end
           @billing_agreement.info = Payment::Response::Info.new billing_agreement_info
+          @billing_agreement.info.amount = @amount
         end
         if attrs[:REFUNDTRANSACTIONID]
           @refund = Payment::Response::Refund.new(
