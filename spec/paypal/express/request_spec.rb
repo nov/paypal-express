@@ -329,21 +329,24 @@ describe Paypal::Express::Request do
   describe '#reference_transaction!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoReferenceTransaction/success'
-      response = instance.reference_transaction! 'billing_agreement_id', :amount => 1000, :currency_code => 'JPY'
+      response = instance.reference_transaction! 'billing_agreement_id', :amount => 1000
       response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should call DoReferenceTransaction' do
       expect do
         instance.reference_transaction!(
-          'billing_agreement_id'
+          'billing_agreement_id',
+          :amount => 1000,
+          :currency_code => :JPY
         )
       end.should request_to nvp_endpoint, :post
       instance._method_.should == :DoReferenceTransaction
       instance._sent_params_.should == {
         :REFERENCEID => 'billing_agreement_id',
-        :AMT => '0.00',
-        :PAYMENTACTION => :Sale
+        :AMT => '1000.00',
+        :PAYMENTACTION => :Sale,
+        :CURRENCYCODE => :JPY
       }
     end
   end
