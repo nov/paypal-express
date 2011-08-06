@@ -335,17 +335,15 @@ describe Paypal::Express::Request do
 
     it 'should call DoReferenceTransaction' do
       expect do
-        instance.reference_transaction!('billing_agreement_id',
-                                        :amount => 1000,
-                                        :currency_code => 'JPY',
-                                        :payment_action => 'Sale')
+        instance.reference_transaction!(
+          'billing_agreement_id'
+        )
       end.should request_to nvp_endpoint, :post
       instance._method_.should == :DoReferenceTransaction
       instance._sent_params_.should == {
         :REFERENCEID => 'billing_agreement_id',
-        :AMT => '1000.00',
-        :CURRENCYCODE => 'JPY',
-        :PAYMENTACTION => 'Sale'
+        :AMT => '0.00',
+        :PAYMENTACTION => :Sale
       }
     end
   end

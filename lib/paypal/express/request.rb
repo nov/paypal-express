@@ -97,13 +97,17 @@ module Paypal
       end
 
       def reference_transaction!(billing_agreement_id, options = {})
-        params = {}
-        params[:REFERENCEID] = billing_agreement_id
-        params[:AMT] = Util.formatted_amount(options[:amount])
-
-        params[:CURRENCYCODE] = options[:currency_code]
-        params[:PAYMENTACTION] = options[:payment_action]
-
+        params = {
+          :REFERENCEID => billing_agreement_id,
+          :AMT => Util.formatted_amount(options[:amount]),
+          :PAYMENTACTION => :Sale
+        }
+        if options[:currency_code]
+          params[:CURRENCYCODE] = options[:currency_code]
+        end
+        if options[:payment_action]
+          params[:PAYMENTACTION] = options[:payment_action]
+        end
         response = self.request :DoReferenceTransaction, params
         Response.new response
       end
