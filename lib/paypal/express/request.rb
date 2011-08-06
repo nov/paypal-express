@@ -92,14 +92,12 @@ module Paypal
         Response.new response
       end
 
-      def charge!(billing_agreement_id, amount, options = {})
+      def charge!(billing_agreement_id, payment_requests, options = {})
         params = {
-          :REFERENCEID => billing_agreement_id,
-          :AMT => Util.formatted_amount(amount),
-          :PAYMENTACTION => options[:payment_action] || :Sale
+          :REFERENCEID => billing_agreement_id
         }
-        if options[:currency_code]
-          params[:CURRENCYCODE] = options[:currency_code]
+        Array(payment_requests).each_with_index do |payment_request, index|
+          params.merge! payment_request.to_params(index)
         end
         response = self.request :DoReferenceTransaction, params
         Response.new response
