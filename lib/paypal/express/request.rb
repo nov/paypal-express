@@ -2,6 +2,8 @@ module Paypal
   module Express
     class Request < NVP::Request
 
+      # Common
+
       def setup(payment_requests, return_url, cancel_url, options = {})
         params = {
           :RETURNURL => return_url,
@@ -34,6 +36,9 @@ module Paypal
         response = self.request :DoExpressCheckoutPayment, params
         Response.new response
       end
+
+
+      # Recurring Payment Specific
 
       def subscribe!(token, recurring_profile)
         params = {
@@ -76,6 +81,33 @@ module Paypal
         renew!(profile_id, :Reactivate, options)
       end
 
+
+      # Reference Transaction Specific
+
+      def agree!(token, options = {})
+        params = {
+          :TOKEN => token
+        }
+        response = self.request :CreateBillingAgreement, params
+        Response.new response
+      end
+
+      def charge!(billing_agreement_id, amount, options = {})
+        params = {
+          :REFERENCEID => billing_agreement_id,
+          :AMT => Util.formatted_amount(amount),
+          :PAYMENTACTION => options[:payment_action] || :Sale
+        }
+        if options[:currency_code]
+          params[:CURRENCYCODE] = options[:currency_code]
+        end
+        response = self.request :DoReferenceTransaction, params
+        Response.new response
+      end
+
+
+      # Refund Specific
+
       def refund!(transaction_id, options = {})
         params = {
           :TRANSACTIONID => transaction_id,
@@ -93,19 +125,6 @@ module Paypal
           params[:NOTE] = options[:note]
         end
         response = self.request :RefundTransaction, params
-        Response.new response
-      end
-
-      def reference_transaction!(billing_agreement_id, options = {})
-        params = {
-          :REFERENCEID => billing_agreement_id,
-          :AMT => Util.formatted_amount(options[:amount]),
-          :PAYMENTACTION => options[:payment_action] || :Sale
-        }
-        if options[:currency_code]
-          params[:CURRENCYCODE] = options[:currency_code]
-        end
-        response = self.request :DoReferenceTransaction, params
         Response.new response
       end
 
