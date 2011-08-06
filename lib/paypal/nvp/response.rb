@@ -36,7 +36,8 @@ module Paypal
           :insurance => attrs.delete(:INSURANCEAMT),
           :ship_disc => attrs.delete(:SHIPDISCAMT),
           :shipping => attrs.delete(:SHIPPINGAMT),
-          :tax => attrs.delete(:TAXAMT)
+          :tax => attrs.delete(:TAXAMT),
+          :fee => attrs.delete(:FEEAMT)
         )
         @ship_to = Payment::Response::ShipTo.new(
           :owner => attrs.delete(:SHIPADDRESSOWNER),
@@ -115,7 +116,6 @@ module Paypal
           billing_agreement_info = Payment::Response::Info.attribute_mapping.keys.inject({}) do |billing_agreement_info, key|
             billing_agreement_info.merge! key => attrs.delete(key)
           end
-          billing_agreement_info[:FEEAMT] = attrs.delete(:FEEAMT)
           @billing_agreement.info = Payment::Response::Info.new billing_agreement_info
         end
         if attrs[:REFUNDTRANSACTIONID]
