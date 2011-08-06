@@ -16,7 +16,17 @@ module Paypal
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
         :VERSION => :version,
-        :BILLINGAGREEMENTID => :billing_agreement_id
+        :BILLINGAGREEMENTID => :billing_agreement_id,
+        :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
+        :TRANSACTIONID => :transaction_id,
+        :ORDERTIME => :order_time,
+        :PENDINGREASON => :pending_reason,
+        :REASONCODE => :reason_code,
+        :TRANSACTIONTYPE => :transaction_type,
+        :PAYMENTSTATUS => :payment_status,
+        :PROTECTIONELIGIBILITY => :protection_eligibility,
+        :FEEAMT => :fee_amount,
+        :PAYMENTTYPE => :payment_type
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
