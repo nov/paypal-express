@@ -5,7 +5,6 @@ module Paypal
       @@attribute_mapping = {
         :ACK => :ack,
         :ADDRESSSTATUS => :address_status,
-        :BILLINGAGREEMENTACCEPTEDSTATUS => :billing_agreement_accepted_status,
         :BUILD => :build,
         :CHECKOUTSTATUS => :checkout_status,
         :CORRELATIONID => :colleration_id,
@@ -15,22 +14,12 @@ module Paypal
         :NOTIFYURL => :notify_url,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
-        :VERSION => :version,
-        :BILLINGAGREEMENTID => :billing_agreement_id,
-        :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
-        :TRANSACTIONID => :transaction_id,
-        :ORDERTIME => :order_time,
-        :PENDINGREASON => :pending_reason,
-        :REASONCODE => :reason_code,
-        :TRANSACTIONTYPE => :transaction_type,
-        :PAYMENTSTATUS => :payment_status,
-        :PROTECTIONELIGIBILITY => :protection_eligibility,
-        :FEEAMT => :fee_amount,
-        :PAYMENTTYPE => :payment_type
+        :VERSION => :version
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :payment_responses, :payment_info, :items, :refund
+      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :billing_agreement, :refund
+      attr_accessor :payment_responses, :payment_info, :items
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -68,17 +57,6 @@ module Paypal
             :first_name => attrs.delete(:FIRSTNAME),
             :last_name => attrs.delete(:LASTNAME),
             :email => attrs.delete(:EMAIL)
-          )
-        end
-        if attrs[:REFUNDTRANSACTIONID]
-          @refund = Payment::Response::Refund.new(
-            :transaction_id => attrs.delete(:REFUNDTRANSACTIONID),
-            :amount => {
-              :total => attrs.delete(:TOTALREFUNDEDAMOUNT),
-              :fee => attrs.delete(:FEEREFUNDAMT),
-              :gross => attrs.delete(:GROSSREFUNDAMT),
-              :net => attrs.delete(:NETREFUNDAMT)
-            }
           )
         end
         if attrs[:PROFILEID]
@@ -129,6 +107,26 @@ module Paypal
               :last_payment_amount => attrs.delete(:LASTPAYMENTAMT)
             )
           end
+        end
+        if attrs[:BILLINGAGREEMENTID]
+          @billing_agreement = Payment::Response::Reference.new(
+            :identifier => attrs.delete(:BILLINGAGREEMENTID)
+          )
+          billing_agreement_info = Payment::Response::Info.attribute_mapping.keys.inject({}) do |billing_agreement_info, key|
+            billing_agreement_info.merge! key => attrs.delete(key)
+          end
+          @billing_agreement.info = Payment::Response::Info.new billing_agreement_info
+        end
+        if attrs[:REFUNDTRANSACTIONID]
+          @refund = Payment::Response::Refund.new(
+            :transaction_id => attrs.delete(:REFUNDTRANSACTIONID),
+            :amount => {
+              :total => attrs.delete(:TOTALREFUNDEDAMOUNT),
+              :fee => attrs.delete(:FEEREFUNDAMT),
+              :gross => attrs.delete(:GROSSREFUNDAMT),
+              :net => attrs.delete(:NETREFUNDAMT)
+            }
+          )
         end
 
         # payment_responses

@@ -40,13 +40,6 @@ describe Paypal::Express::Request do
     )
   end
 
-  let :reference_transaction_request do
-    Paypal::Payment::Request.new(
-      :amount => 1000,
-      :currency_code => 'JPY'
-    )
-  end
-
   let :recurring_profile do
     Paypal::Payment::Recurring.new(
       :start_date => Time.utc(2011, 2, 8, 9, 0, 0),
@@ -56,6 +49,13 @@ describe Paypal::Express::Request do
         :frequency => 1,
         :amount => 1000
       }
+    )
+  end
+
+  let :reference_transaction_request do
+    Paypal::Payment::Request.new(
+      :billing_type => :MerchantInitiatedBilling,
+      :billing_agreement_description => 'Billing Agreement Request'
     )
   end
 
@@ -86,7 +86,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'SetExpressCheckout/success'
       response = instance.setup recurring_payment_request, return_url, cancel_url
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should support no_shipping option' do
@@ -140,13 +140,34 @@ describe Paypal::Express::Request do
         }
       end
     end
+
+    context 'when reference payment request given' do
+      it 'should call SetExpressCheckout' do
+        expect do
+          instance.setup reference_transaction_request, return_url, cancel_url
+        end.should request_to nvp_endpoint, :post
+        instance._method_.should == :SetExpressCheckout
+        instance._sent_params_.should == {
+          :BILLINGTYPE => :MerchantInitiatedBilling,
+          :BILLINGAGREEMENTDESCRIPTION => 'Recurring Payment Request',
+          :RETURNURL => return_url,
+          :CANCELURL => cancel_url
+        }
+      end
+
+      it 'should return Paypal::Express::Response' do
+        fake_response 'SetExpressCheckout/success_with_billing_agreement'
+        response = instance.setup reference_transaction_request, return_url, cancel_url
+        response.should be_instance_of Paypal::Express::Response
+      end
+    end
   end
 
   describe '#details' do
     it 'should return Paypal::Express::Response' do
       fake_response 'GetExpressCheckoutDetails/success'
       response = instance.details 'token'
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call GetExpressCheckoutDetails' do
@@ -164,7 +185,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoExpressCheckoutPayment/success'
       response = instance.checkout! 'token', 'payer_id', instant_payment_request
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call DoExpressCheckoutPayment' do
@@ -187,7 +208,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'CreateRecurringPaymentsProfile/success'
       response = instance.subscribe! 'token', recurring_profile
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call CreateRecurringPaymentsProfile' do
@@ -235,7 +256,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'ManageRecurringPaymentsProfileStatus/success'
       response = instance.renew! 'profile_id', :Cancel
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call ManageRecurringPaymentsProfileStatus' do
@@ -273,7 +294,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'ManageRecurringPaymentsProfileStatus/success'
       response = instance.cancel! 'profile_id'
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call ManageRecurringPaymentsProfileStatus' do
@@ -292,7 +313,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'ManageRecurringPaymentsProfileStatus/success'
       response = instance.cancel! 'profile_id'
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call ManageRecurringPaymentsProfileStatus' do
@@ -311,7 +332,7 @@ describe Paypal::Express::Request do
     it 'should return Paypal::Express::Response' do
       fake_response 'RefundTransaction/full'
       response = instance.refund! 'transaction_id'
-      response.should be_instance_of(Paypal::Express::Response)
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call RefundTransaction' do
@@ -326,16 +347,16 @@ describe Paypal::Express::Request do
     end
   end
 
-  describe '#reference_transaction!' do
+  describe '#charge!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoReferenceTransaction/success'
-      response = instance.reference_transaction! 'billing_agreement_id', :amount => 1000
-      response.should be_instance_of(Paypal::Express::Response)
+      response = instance.charge! 'billing_agreement_id', :amount => 1000
+      response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call DoReferenceTransaction' do
       expect do
-        instance.reference_transaction!(
+        instance.charge!(
           'billing_agreement_id',
           :amount => 1000,
           :currency_code => :JPY
