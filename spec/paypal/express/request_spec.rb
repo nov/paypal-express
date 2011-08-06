@@ -365,7 +365,7 @@ describe Paypal::Express::Request do
   describe '#charge!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoReferenceTransaction/success'
-      response = instance.charge! 'billing_agreement_id', :amount => 1000
+      response = instance.charge! 'billing_agreement_id', 1000
       response.should be_instance_of Paypal::Express::Response
     end
 

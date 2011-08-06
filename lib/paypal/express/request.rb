@@ -88,16 +88,21 @@ module Paypal
         params = {
           :TOKEN => token
         }
+        if options[:max_amount]
+          params[:MAXAMT] = Util.formatted_amount options[:max_amount]
+        end
         response = self.request :CreateBillingAgreement, params
         Response.new response
       end
 
-      def charge!(billing_agreement_id, payment_requests, options = {})
+      def charge!(billing_agreement_id, amount, options = {})
         params = {
-          :REFERENCEID => billing_agreement_id
+          :REFERENCEID => billing_agreement_id,
+          :AMT => Util.formatted_amount(amount),
+          :PAYMENTACTION => options[:payment_action] || :Sale
         }
-        Array(payment_requests).each_with_index do |payment_request, index|
-          params.merge! payment_request.to_params(index)
+        if options[:currency_code]
+          params[:CURRENCYCODE] = options[:currency_code]
         end
         response = self.request :DoReferenceTransaction, params
         Response.new response
