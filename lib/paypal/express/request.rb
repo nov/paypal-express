@@ -95,9 +95,9 @@ module Paypal
         Response.new response
       end
 
-      def charge!(billing_agreement_id, amount, options = {})
+      def charge!(reference_id, amount, options = {})
         params = {
-          :REFERENCEID => billing_agreement_id,
+          :REFERENCEID => reference_id,
           :AMT => Util.formatted_amount(amount),
           :PAYMENTACTION => options[:payment_action] || :Sale
         }
