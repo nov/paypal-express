@@ -141,24 +141,21 @@ describe Paypal::Express::Request do
       end
     end
 
-    context 'when reference payment request given' do
+    context 'when reference transaction request given' do
       it 'should call SetExpressCheckout' do
         expect do
           instance.setup reference_transaction_request, return_url, cancel_url
         end.should request_to nvp_endpoint, :post
         instance._method_.should == :SetExpressCheckout
         instance._sent_params_.should == {
-          :BILLINGTYPE => :MerchantInitiatedBilling,
-          :BILLINGAGREEMENTDESCRIPTION => 'Recurring Payment Request',
+          :L_BILLINGTYPE0 => :MerchantInitiatedBilling,
+          :L_BILLINGAGREEMENTDESCRIPTION0 => 'Billing Agreement Request',
           :RETURNURL => return_url,
-          :CANCELURL => cancel_url
+          :CANCELURL => cancel_url,
+          :PAYMENTREQUEST_0_AMT => '0.00',
+          :PAYMENTREQUEST_0_TAXAMT => "0.00",
+          :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
         }
-      end
-
-      it 'should return Paypal::Express::Response' do
-        fake_response 'SetExpressCheckout/success_with_billing_agreement'
-        response = instance.setup reference_transaction_request, return_url, cancel_url
-        response.should be_instance_of Paypal::Express::Response
       end
     end
   end
@@ -347,6 +344,24 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe '#agree!' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'CreateBillingAgreement/success'
+      response = instance.agree! 'token'
+      response.should be_instance_of Paypal::Express::Response
+    end
+
+    it 'should call CreateBillingAgreement' do
+      expect do
+        instance.agree! 'token'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :CreateBillingAgreement
+      instance._sent_params_.should == {
+        :TOKEN => 'token'
+      }
+    end
+  end
+
   describe '#charge!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoReferenceTransaction/success'
@@ -356,11 +371,7 @@ describe Paypal::Express::Request do
 
     it 'should call DoReferenceTransaction' do
       expect do
-        instance.charge!(
-          'billing_agreement_id',
-          :amount => 1000,
-          :currency_code => :JPY
-        )
+        instance.charge! 'billing_agreement_id', 1000, :currency_code => :JPY
       end.should request_to nvp_endpoint, :post
       instance._method_.should == :DoReferenceTransaction
       instance._sent_params_.should == {

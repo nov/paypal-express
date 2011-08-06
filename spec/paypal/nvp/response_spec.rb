@@ -79,8 +79,19 @@ describe Paypal::NVP::Response do
         response = request.checkout! 'token', 'payer_id', payment_request
         response.payment_responses.size.should == 0
         response.payment_info.size.should == 1
-        response.billing_agreement_id.should == 'B-1XR87946TC504770W'
         response.payment_info.first.should be_instance_of(Paypal::Payment::Response::Info)
+      end
+
+      context 'when billing_agreement is included' do
+        before do
+          fake_response 'DoExpressCheckoutPayment/success_with_billing_agreement'
+        end
+
+        it 'should have billing_agreement' do
+          Paypal.logger.should_not_receive(:warn)
+          response = request.checkout! 'token', 'payer_id', payment_request
+          response.billing_agreement.identifier.should == 'B-1XR87946TC504770W'
+        end
       end
     end
 

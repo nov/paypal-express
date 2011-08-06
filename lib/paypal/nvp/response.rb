@@ -115,6 +115,7 @@ module Paypal
           billing_agreement_info = Payment::Response::Info.attribute_mapping.keys.inject({}) do |billing_agreement_info, key|
             billing_agreement_info.merge! key => attrs.delete(key)
           end
+          billing_agreement_info[:FEEAMT] = attrs.delete(:FEEAMT)
           @billing_agreement.info = Payment::Response::Info.new billing_agreement_info
         end
         if attrs[:REFUNDTRANSACTIONID]
