@@ -6,6 +6,7 @@ module Paypal
         :ACK => :ack,
         :ADDRESSSTATUS => :address_status,
         :BUILD => :build,
+        :BILLINGAGREEMENTACCEPTEDSTATUS => :billing_agreement_accepted_status,
         :CHECKOUTSTATUS => :checkout_status,
         :CORRELATIONID => :colleration_id,
         :COUNTRYCODE => :country_code,

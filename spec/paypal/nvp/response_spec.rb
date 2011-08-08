@@ -67,6 +67,17 @@ describe Paypal::NVP::Response do
         response.payment_info.size.should == 0
         response.payment_responses.first.should be_instance_of(Paypal::Payment::Response)
       end
+
+      context 'when BILLINGAGREEMENTACCEPTEDSTATUS included' do
+        before do
+          fake_response 'GetExpressCheckoutDetails/with_billing_accepted_status'
+        end
+
+        it 'should handle all attributes' do
+          Paypal.logger.should_not_receive(:warn)
+          response = request.details 'token'
+        end
+      end
     end
 
     context 'when DoExpressCheckoutPayment response given' do
