@@ -8,7 +8,15 @@ module Paypal
         else
           response
         end
-        super 'PayPal API Error'
+      end
+
+      def message
+        if response.respond_to?(:short_messages) && response.short_messages.any?
+          "PayPal API Error: " <<
+            response.short_messages.map{ |m| "'#{m}'" }.join(", ")
+        else
+          "PayPal API Error"
+        end
       end
 
       class Response
@@ -74,6 +82,10 @@ module Paypal
           attrs.each do |key, value|
             Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
           end
+        end
+
+        def short_messages
+          details.map(&:short_message).compact
         end
       end
     end
