@@ -9,13 +9,24 @@ describe Paypal::Exception::APIError do
         :VERSION=>"66.0",
         :TIMESTAMP=>"2011-03-03T06:33:51Z",
         :CORRELATIONID=>"758ebdc546b9c",
+        :BUILD=>"1741654",
+        :ACK=>"Failure",
         :L_SEVERITYCODE0=>"Error",
         :L_ERRORCODE0=>"10411",
         :L_LONGMESSAGE0=>"This Express Checkout session has expired.  Token value is no longer valid.",
-        :BUILD=>"1741654",
-        :ACK=>"Failure",
-        :L_SHORTMESSAGE0=>"This Express Checkout session has expired."
+        :L_SHORTMESSAGE0=>"This Express Checkout session has expired.",
+        :L_SEVERITYCODE1=>"Error",
+        :L_ERRORCODE1=>"2468",
+        :L_LONGMESSAGE1=>"Sample of a long message for the second item.",
+        :L_SHORTMESSAGE1=>"Second short message.",
       }
+    end
+
+    describe "#message" do
+      it "aggregates short messages" do
+        error.message.should ==
+          "PayPal API Error: 'This Express Checkout session has expired.', 'Second short message.'"
+      end
     end
 
     describe '#subject' do
@@ -55,11 +66,13 @@ describe Paypal::Exception::APIError do
       subject { error.response }
       its(:raw) { should == params }
     end
+    its(:message) { should == "PayPal API Error" }
   end
 
   context 'otherwise' do
     subject { error }
     let(:params) { 'Failure' }
     its(:response) { should == params }
+    its(:message) { should == "PayPal API Error" }
   end
 end
