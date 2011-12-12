@@ -85,7 +85,16 @@ module Paypal
               :period => attrs.delete(:BILLINGPERIOD),
               :frequency => attrs.delete(:BILLINGFREQUENCY),
               :total_cycles => attrs.delete(:TOTALBILLINGCYCLES),
-              :trial_amount_paid => attrs.delete(:TRIALAMTPAID)
+              :trial => {
+                :period => attrs.delete(:TRIALBILLINGPERIOD),
+                :frequency => attrs.delete(:TRIALBILLINGFREQUENCY),
+                :total_cycles => attrs.delete(:TRIALTOTALBILLINGCYCLES),
+                :currency_code => attrs.delete(:TRIALCURRENCYCODE),
+                :amount => attrs.delete(:TRIALAMT),
+                :tax_amount => attrs.delete(:TRIALTAXAMT),
+                :shipping_amount => attrs.delete(:TRIALSHIPPINGAMT),
+                :paid => attrs.delete(:TRIALAMTPAID)
+              }
             )
           end
           if attrs[:REGULARAMT]

@@ -215,14 +215,11 @@ describe Paypal::Express::Request do
       instance._method_.should == :CreateRecurringPaymentsProfile
       instance._sent_params_.should == {
         :DESC => 'Recurring Profile',
-        :TRIALAMT => '0.00',
         :TOKEN => 'token',
         :SHIPPINGAMT => '0.00',
         :AMT => '1000.00',
-        :TRIALTOTALBILLINGCYCLES => 0,
         :BILLINGFREQUENCY => 1,
         :MAXFAILEDPAYMENTS => 0,
-        :TRIALBILLINGFREQUENCY => 0,
         :BILLINGPERIOD => :Month,
         :TAXAMT => '0.00',
         :PROFILESTARTDATE => '2011-02-08 09:00:00',

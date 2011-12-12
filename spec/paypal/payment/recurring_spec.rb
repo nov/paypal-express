@@ -27,7 +27,9 @@ describe Paypal::Payment::Recurring do
         :period => 'Month',
         :frequency => '1',
         :total_cycles => '0',
-        :trial_amount_paid => '0'
+        :trial => {
+          :paid => '0'
+        }
       },
       :regular_billing => {
         :amount => '1000',
@@ -69,7 +71,6 @@ describe Paypal::Payment::Recurring do
       instance.to_params.should == {
         :AUTOBILLOUTAMT => 'NoAutoBill',
         :BILLINGFREQUENCY => 1,
-        :TRIALTOTALBILLINGCYCLES => 0,
         :SHIPPINGAMT => '0.00',
         :DESC => 'Subscription Payment Profile',
         :SUBSCRIBERNAME => 'Nov Matake',
@@ -77,9 +78,7 @@ describe Paypal::Payment::Recurring do
         :AMT => '1000.00',
         :MAXFAILEDPAYMENTS => 0,
         :TOTALBILLINGCYCLES => 0,
-        :TRIALBILLINGFREQUENCY => 0,
         :TAXAMT => '0.00',
-        :TRIALAMT => '0.00',
         :PROFILESTARTDATE => '2011-02-03T15:00:00Z',
         :CURRENCYCODE => 'JPY'
       }

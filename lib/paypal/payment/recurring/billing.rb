@@ -1,8 +1,8 @@
 module Paypal
   module Payment
     class Recurring::Billing < Base
-      attr_optional :period, :frequency, :paid, :currency_code, :total_cycles, :trial_period, :trial_frequency, :trial_total_cycles, :trial_amount, :trial_amount_paid
-      attr_accessor :amount
+      attr_optional :period, :frequency, :paid, :currency_code, :total_cycles
+      attr_accessor :amount, :trial
 
       def initialize(attributes = {})
         @amount = if attributes[:amount].is_a?(Common::Amount)
@@ -14,23 +14,26 @@ module Paypal
             :shipping => attributes[:shipping_amount]
           )
         end
+        @trial = Recurring::Billing.new(attributes[:trial]) if attributes[:trial]
         super
       end
 
       def to_params
-        {
+        trial_params = trial.try(:to_params) || {}
+        trial_params.inject({}) do |trial_params, (key, value)|
+          trial_params.merge(
+            :"TRIAL#{key}" => value
+          )
+        end
+        trial_params.merge(
           :BILLINGPERIOD => self.period,
           :BILLINGFREQUENCY => self.frequency,
           :TOTALBILLINGCYCLES => self.total_cycles,
           :AMT => Util.formatted_amount(self.amount.total),
-          :TRIALBILLINGPERIOD => self.trial_period,
-          :TRIALBILLINGFREQUENCY => self.trial_frequency,
-          :TRIALTOTALBILLINGCYCLES => self.trial_total_cycles,
-          :TRIALAMT => Util.formatted_amount(self.trial_amount),
           :CURRENCYCODE => self.currency_code,
           :SHIPPINGAMT => Util.formatted_amount(self.amount.shipping),
           :TAXAMT => Util.formatted_amount(self.amount.tax)
-        }
+        )
       end
     end
   end
