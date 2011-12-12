@@ -5,6 +5,10 @@ describe Paypal::Payment::Recurring do
     Paypal::Payment::Recurring.optional_attributes
   end
 
+  let :trial_attributes do
+    {}
+  end
+
   let :attributes do
     {
       :identifier => '12345',
@@ -26,7 +30,8 @@ describe Paypal::Payment::Recurring do
         :currency_code => 'JPY',
         :period => 'Month',
         :frequency => '1',
-        :total_cycles => '0'
+        :total_cycles => '0',
+        :trial => trial_attributes
       },
       :regular_billing => {
         :amount => '1000',
@@ -60,6 +65,24 @@ describe Paypal::Payment::Recurring do
       instance.description.should == 'Subscription Payment Profile'
       instance.status.should == 'Active'
       instance.start_date.should == '2011-02-03T15:00:00Z'
+      instance.billing.trial.should be_nil
+    end
+
+    context 'when optional trial info given' do
+      let :trial_attributes do
+        {
+          :period => 'Month',
+          :frequency => '1',
+          :total_cycles => '0',
+          :currency_code => 'JPY',
+          :amount => '1000',
+          :shipping_amount => '0',
+          :tax_amount => '0'
+        }
+      end
+      it 'should setup trial billing info' do
+        instance.billing.trial.should == Paypal::Payment::Recurring::Billing.new(trial_attributes)
+      end
     end
   end
 
@@ -88,6 +111,43 @@ describe Paypal::Payment::Recurring do
         )
         instance.start_date.should be_instance_of(Time)
         instance.to_params[:PROFILESTARTDATE].should == '2011-02-08 15:00:00'
+      end
+    end
+
+    context 'when optional trial setting given' do
+      let :trial_attributes do
+        {
+          :period => 'Month',
+          :frequency => '1',
+          :total_cycles => '0',
+          :currency_code => 'JPY',
+          :amount => '1000',
+          :shipping_amount => '0',
+          :tax_amount => '0'
+        }
+      end
+      it 'should setup trial billing info' do
+        instance.to_params.should == {
+          :TRIALBILLINGPERIOD => "Month",
+          :TRIALBILLINGFREQUENCY => 1,
+          :TRIALTOTALBILLINGCYCLES => 0,
+          :TRIALAMT => "1000.00",
+          :TRIALCURRENCYCODE => "JPY",
+          :TRIALSHIPPINGAMT => "0.00",
+          :TRIALTAXAMT => "0.00",
+          :BILLINGPERIOD => "Month",
+          :BILLINGFREQUENCY => 1,
+          :TOTALBILLINGCYCLES => 0,
+          :AMT => "1000.00",
+          :CURRENCYCODE => "JPY",
+          :SHIPPINGAMT => "0.00",
+          :TAXAMT => "0.00",
+          :DESC => "Subscription Payment Profile",
+          :MAXFAILEDPAYMENTS => 0,
+          :AUTOBILLOUTAMT => "NoAutoBill",
+          :PROFILESTARTDATE => "2011-02-03T15:00:00Z",
+          :SUBSCRIBERNAME => "Nov Matake"
+        }
       end
     end
   end

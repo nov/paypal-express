@@ -19,8 +19,7 @@ module Paypal
       end
 
       def to_params
-        trial_params = trial.try(:to_params) || {}
-        trial_params.inject({}) do |trial_params, (key, value)|
+        trial_params = (trial.try(:to_params) || {}).inject({}) do |trial_params, (key, value)|
           trial_params.merge(
             :"TRIAL#{key}" => value
           )
