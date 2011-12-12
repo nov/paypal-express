@@ -26,10 +26,7 @@ describe Paypal::Payment::Recurring do
         :currency_code => 'JPY',
         :period => 'Month',
         :frequency => '1',
-        :total_cycles => '0',
-        :trial => {
-          :paid => '0'
-        }
+        :total_cycles => '0'
       },
       :regular_billing => {
         :amount => '1000',

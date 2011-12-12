@@ -14,7 +14,7 @@ module Paypal
             :shipping => attributes[:shipping_amount]
           )
         end
-        @trial = Recurring::Billing.new(attributes[:trial]) if attributes[:trial]
+        @trial = Recurring::Billing.new(attributes[:trial]) if attributes[:trial].present?
         super
       end
 
