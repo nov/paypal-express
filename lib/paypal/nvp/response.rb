@@ -177,7 +177,7 @@ module Paypal
         # payment_info
         items = []
         attrs.keys.each do |_attr_|
-          key, index = _attr_.to_s.scan(/^L_(.+)(\d)$/).flatten
+          key, index = _attr_.to_s.scan(/^L_(.+?)(\d+)$/).flatten
           if index
             items[index.to_i] ||= {}
             items[index.to_i][key.to_sym] = attrs.delete(_attr_)
