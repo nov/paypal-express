@@ -36,12 +36,12 @@ module Paypal
         # items
         items = []
         attrs.keys.each do |_attr_|
-          key, index = _attr_.to_s.scan(/^(.+)(\d)$/).flatten
+          key, index = _attr_.to_s.scan(/^(.+?)(\d+)$/).flatten
           if index
             items[index.to_i] ||= {}
             items[index.to_i][key.to_sym] = attrs.delete(:"#{key}#{index}")
           end
-        end 
+        end
         @items = items.collect do |_attr_|
           Item.new(_attr_)
         end

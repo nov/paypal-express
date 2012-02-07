@@ -33,6 +33,26 @@ describe Paypal::Express::Request do
     )
   end
 
+  let :many_items do
+    items = Array.new
+    (1..20).each do |index|
+      items << Paypal::Payment::Request::Item.new(
+		:name => "Item#{index.to_s}",
+		:description => "A new Item #{index.to_s}",
+		:amount => 50.00,
+		:quantity => 1,
+	      )
+    end
+  end
+
+  let :instant_payment_request_with_many_items do
+       Paypal::Payment::Request.new(
+      :amount => 1000,
+      :description => 'Instant Payment Request',
+      :items => many_items
+    )
+  end
+
   let :recurring_payment_request do
     Paypal::Payment::Request.new(
       :billing_type => :RecurringPayments,
@@ -198,6 +218,28 @@ describe Paypal::Express::Request do
         :PAYMENTREQUEST_0_TAXAMT => "0.00",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00"
       }
+    end
+
+    context "with many items" do
+      before do
+	fake_response 'DoExpressCheckoutPayment/success_with_many_items'
+      end
+
+      it 'should handle all attributes' do
+	Paypal.logger.should_not_receive(:warn)
+	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+      end
+
+      it 'should return Paypal::Express::Response' do
+	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+	response.should be_instance_of Paypal::Express::Response
+      end
+
+      it 'should return twenty items' do
+	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+	instance._method_.should == :DoExpressCheckoutPayment
+	response.items.count.should == 20
+      end
     end
   end
 
