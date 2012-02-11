@@ -37,11 +37,11 @@ describe Paypal::Express::Request do
     items = Array.new
     (1..20).each do |index|
       items << Paypal::Payment::Request::Item.new(
-		:name => "Item#{index.to_s}",
-		:description => "A new Item #{index.to_s}",
-		:amount => 50.00,
-		:quantity => 1,
-	      )
+        :name => "Item#{index.to_s}",
+        :description => "A new Item #{index.to_s}",
+        :amount => 50.00,
+        :quantity => 1
+      )
     end
   end
 
