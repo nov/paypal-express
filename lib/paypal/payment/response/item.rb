@@ -10,7 +10,11 @@ module Paypal
         :ITEMWIDTHVALUE => :width,
         :ITEMHEIGHTVALUE => :height,
         :ITEMLENGTHVALUE => :length,
-        :ITEMWEIGHTVALUE => :weight
+        :ITEMWEIGHTVALUE => :weight,
+        :SHIPPINGAMT => :shipping,
+        :HANDLINGAMT => :handling,
+        :CURRENCYCODE => :currency
+        
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :amount
