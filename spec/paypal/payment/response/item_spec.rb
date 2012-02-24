@@ -6,6 +6,7 @@ describe Paypal::Payment::Response::Info do
       :NAME => 'Item Name',
       :DESC => 'Item Description',
       :QTY => '1',
+      :NUMBER => '1',
       :ITEMCATEGORY => 'Digital',
       :ITEMWIDTHVALUE => '1.0',
       :ITEMHEIGHTVALUE => '2.0',
@@ -24,6 +25,7 @@ describe Paypal::Payment::Response::Info do
     its(:height) { should == '2.0' }
     its(:length) { should == '3.0' }
     its(:weight) { should == '4.0' }
+    its(:number) { should == '1' }
 
     context 'when non-supported attributes are given' do
       it 'should ignore them and warn' do
