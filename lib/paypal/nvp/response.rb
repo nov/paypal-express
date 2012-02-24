@@ -15,7 +15,26 @@ module Paypal
         :NOTIFYURL => :notify_url,
         :TIMESTAMP => :timestamp,
         :TOKEN => :token,
-        :VERSION => :version
+        :VERSION => :version,
+        # Some of the attributes below are duplicates of what
+        # exists in the payment response, but paypal doesn't
+        # prefix these with PAYMENTREQUEST when issuing a
+        # GetTransactionDetails response.
+        :RECEIVEREMAIL => :receiver_email,
+        :RECEIVERID => :receiver_id,
+        :ADDRESSOWNER => :address_owner,
+        :SUBJECT => :subject,
+        :TRANSACTIONID => :transaction_id,
+        :TRANSACTIONTYPE => :transaction_type,
+        :PAYMENTTYPE => :payment_type,
+        :ORDERTIME => :order_time,
+        :PAYMENTSTATUS => :payment_status,
+        :PENDINGREASON => :pending_reason,
+        :REASONCODE => :reason_code,
+        :PROTECTIONELIGIBILITY => :protection_eligibility,
+        :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
+        :ADDRESSOWNER => :address_owner,
+        :ADDRESSSTATUS => :address_status
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
@@ -189,6 +208,7 @@ module Paypal
 
         # remove duplicated parameters
         attrs.delete(:SHIPTOCOUNTRY) # NOTE: Same with SHIPTOCOUNTRYCODE
+        attrs.delete(:SALESTAX) # Same as TAXAMT
 
         # warn ignored attrs
         attrs.each do |key, value|

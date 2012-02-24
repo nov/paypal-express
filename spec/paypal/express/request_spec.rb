@@ -198,6 +198,37 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe '#transaction_details' do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'GetTransactionDetails/success'
+      response = instance.transaction_details 'transaction_id'
+      response.should be_instance_of Paypal::Express::Response
+    end
+    
+    it 'should call GetTransactionDetails' do
+      expect do
+	instance.transaction_details 'transaction_id'
+      end.should request_to nvp_endpoint, :post
+      instance._method_.should == :GetTransactionDetails
+      instance._sent_params_.should == {
+	  :TRANSACTIONID=> 'transaction_id'
+      }
+    end
+    
+    it 'should fail with bad transaction id' do
+      expect do
+	fake_response 'GetTransactionDetails/failure'
+	response = instance.transaction_details 'bad_transaction_id'
+      end.should raise_error(Paypal::Exception::APIError)
+    end
+    
+    it 'should handle all attributes' do
+      Paypal.logger.should_not_receive(:warn)
+      fake_response 'GetTransactionDetails/success'
+      response = instance.transaction_details 'transaction_id'
+    end
+  end
+  
   describe '#checkout!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoExpressCheckoutPayment/success'
