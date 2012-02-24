@@ -7,7 +7,8 @@ describe Paypal::Payment::Request::Item do
       :description => 'Description',
       :amount => 10,
       :quantity => 5,
-      :category => :Digital
+      :category => :Digital,
+      :number => '1'
     )
   end
 
@@ -18,7 +19,8 @@ describe Paypal::Payment::Request::Item do
         :L_PAYMENTREQUEST_1_DESC0 => 'Description',
         :L_PAYMENTREQUEST_1_AMT0 => '10.00',
         :L_PAYMENTREQUEST_1_QTY0 => 5,
-        :L_PAYMENTREQUEST_1_ITEMCATEGORY0 => :Digital
+        :L_PAYMENTREQUEST_1_ITEMCATEGORY0 => :Digital,
+        :L_PAYMENTREQUEST_1_NUMBER0 => '1'
       }
     end
   end
