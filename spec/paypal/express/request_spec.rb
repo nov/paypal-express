@@ -207,18 +207,18 @@ describe Paypal::Express::Request do
     
     it 'should call GetTransactionDetails' do
       expect do
-	instance.transaction_details 'transaction_id'
+        instance.transaction_details 'transaction_id'
       end.should request_to nvp_endpoint, :post
       instance._method_.should == :GetTransactionDetails
       instance._sent_params_.should == {
-	  :TRANSACTIONID=> 'transaction_id'
+        :TRANSACTIONID=> 'transaction_id'
       }
     end
     
     it 'should fail with bad transaction id' do
       expect do
-	fake_response 'GetTransactionDetails/failure'
-	response = instance.transaction_details 'bad_transaction_id'
+        fake_response 'GetTransactionDetails/failure'
+        response = instance.transaction_details 'bad_transaction_id'
       end.should raise_error(Paypal::Exception::APIError)
     end
     
@@ -253,23 +253,23 @@ describe Paypal::Express::Request do
 
     context "with many items" do
       before do
-	fake_response 'DoExpressCheckoutPayment/success_with_many_items'
+        fake_response 'DoExpressCheckoutPayment/success_with_many_items'
       end
 
       it 'should handle all attributes' do
-	Paypal.logger.should_not_receive(:warn)
-	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+        Paypal.logger.should_not_receive(:warn)
+        response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
       end
 
       it 'should return Paypal::Express::Response' do
-	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
-	response.should be_instance_of Paypal::Express::Response
+        response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+        response.should be_instance_of Paypal::Express::Response
       end
 
       it 'should return twenty items' do
-	response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
-	instance._method_.should == :DoExpressCheckoutPayment
-	response.items.count.should == 20
+        response = instance.checkout! 'token', 'payer_id', instant_payment_request_with_many_items
+        instance._method_.should == :DoExpressCheckoutPayment
+        response.items.count.should == 20
       end
     end
   end

@@ -26,8 +26,8 @@ module Paypal
       end
 
       def transaction_details( transaction_id )
-	response = self.request :GetTransactionDetails, {:TRANSACTIONID=> transaction_id}
-	Response.new response
+        response = self.request :GetTransactionDetails, {:TRANSACTIONID=> transaction_id}
+        Response.new response
       end
 
       def checkout!(token, payer_id, payment_requests)
