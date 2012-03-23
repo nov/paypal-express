@@ -120,7 +120,7 @@ describe Paypal::Payment::Request do
     end
 
     # NOTE:
-    # 391.35 * 3 => 391.34999999999997 (in ruby 1.9)
+    # 130.45 * 3 => 391.34999999999997 (in ruby 1.9)
     it 'should calculate total amount correctly' do
       instance.items_amount.should == 391.35
     end
