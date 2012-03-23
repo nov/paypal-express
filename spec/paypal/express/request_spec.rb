@@ -126,6 +126,21 @@ describe Paypal::Express::Request do
       }
     end
 
+    {
+      :solution_type => :SOLUTIONTYPE,
+      :landing_page => :LANDINGPAGE,
+      :email => :EMAIL
+    }.each do |option_key, param_key|
+      it "should support #{option_key} option" do
+        expect do
+          instance.setup instant_payment_request, return_url, cancel_url, option_key => 'some value'
+        end.should request_to nvp_endpoint, :post
+        instance._method_.should == :SetExpressCheckout
+        instance._sent_params_.should include param_key
+        instance._sent_params_[param_key].should == 'some value'
+      end
+    end
+
     context 'when instance payment request given' do
       it 'should call SetExpressCheckout' do
         expect do
