@@ -17,6 +17,8 @@ module Paypal
         :SECUREMERCHANTACCOUNTID => :secure_merchant_account_id,
         :TRANSACTIONID => :transaction_id,
         :TRANSACTIONTYPE => :transaction_type,
+        :PAYMENTREQUESTID => :request_id,
+        :SELLERPAYPALACCOUNTID => :seller_id
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :amount
