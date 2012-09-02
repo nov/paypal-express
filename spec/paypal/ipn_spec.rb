@@ -12,7 +12,7 @@ describe Paypal::IPN do
       before { fake_response 'IPN/invalid', :IPN }
       subject {}
       it do
-        expect { Paypal::IPN.verify!('raw-post-body') }.should raise_error(Paypal::Exception::APIError)
+        expect { Paypal::IPN.verify!('raw-post-body') }.to raise_error(Paypal::Exception::APIError)
       end
     end
   end
