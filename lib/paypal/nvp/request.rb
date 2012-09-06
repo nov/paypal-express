@@ -2,6 +2,7 @@ module Paypal
   module NVP
     class Request < Base
       attr_required :username, :password, :signature
+      attr_optional :subject
       attr_accessor :version
 
       ENDPOINT = {
@@ -27,6 +28,7 @@ module Paypal
           :USER => self.username,
           :PWD => self.password,
           :SIGNATURE => self.signature,
+          :SUBJECT => self.subject,
           :VERSION => self.version
         }
       end

@@ -47,6 +47,35 @@ describe Paypal::NVP::Request do
         end
       end
     end
+
+    context 'when optional parameters are given' do
+      let(:optional_attributes) do
+        { :subject => 'user@example.com' }
+      end
+
+      it 'should setup subject' do
+        client = Paypal::NVP::Request.new attributes.merge(optional_attributes)
+        client.subject.should == 'user@example.com'
+      end
+    end
+  end
+
+  describe '#common_params' do
+    {
+      :username => :USER,
+      :password => :PWD,
+      :signature => :SIGNATURE,
+      :subject => :SUBJECT,
+      :version => :VERSION
+    }.each do |option_key, param_key|
+      it "should include :#{param_key}" do
+        instance.common_params.should include(param_key)
+      end
+
+      it "should set :#{param_key} as #{option_key}" do
+        instance.common_params[param_key].should == instance.send(option_key)
+      end
+    end
   end
 
   describe '#request' do
