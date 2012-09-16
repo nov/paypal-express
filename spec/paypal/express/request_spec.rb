@@ -129,7 +129,9 @@ describe Paypal::Express::Request do
     {
       :solution_type => :SOLUTIONTYPE,
       :landing_page => :LANDINGPAGE,
-      :email => :EMAIL
+      :email => :EMAIL,
+      :brand => :BRANDNAME,
+      :locale => :LOCALECODE
     }.each do |option_key, param_key|
       it "should support #{option_key} option" do
         expect do
