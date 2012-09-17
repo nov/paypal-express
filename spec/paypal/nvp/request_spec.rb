@@ -107,7 +107,7 @@ describe Paypal::NVP::Request do
         )
       end
 
-      it 'should raise Paypal::Exception::APIError' do
+      it 'should raise Paypal::Exception::HttpError' do
         expect do
           instance.request :SetExpressCheckout
         end.to raise_error(Paypal::Exception::HttpError)
