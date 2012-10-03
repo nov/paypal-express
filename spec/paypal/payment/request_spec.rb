@@ -6,6 +6,7 @@ describe Paypal::Payment::Request do
       :amount => 25.7,
       :tax_amount => 0.4,
       :shipping_amount => 1.5,
+      :item_amount => 23.8,
       :currency_code => :JPY,
       :description => 'Instant Payment Request',
       :notify_url => 'http://merchant.example.com/notify',
@@ -44,6 +45,7 @@ describe Paypal::Payment::Request do
       instant_request.amount.total.should == 25.7
       instant_request.amount.tax.should == 0.4
       instant_request.amount.shipping.should == 1.5
+      instant_request.amount.item.should == 23.8
       instant_request.currency_code.should == :JPY
       instant_request.description.should == 'Instant Payment Request'
       instant_request.notify_url.should == 'http://merchant.example.com/notify'
@@ -68,6 +70,7 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_AMT => "25.70",
         :PAYMENTREQUEST_0_TAXAMT => "0.40",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "1.50",
+        :PAYMENTREQUEST_0_ITEMAMT => "23.80",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
@@ -88,6 +91,7 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_AMT => "0.00",
         :PAYMENTREQUEST_0_TAXAMT => "0.00",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
+        :PAYMENTREQUEST_0_ITEMAMT => "0.00",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :L_BILLINGTYPE0 => :RecurringPayments,
         :L_BILLINGAGREEMENTDESCRIPTION0 => "Recurring Payment Request"
@@ -99,6 +103,7 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_AMT => "0.00",
         :PAYMENTREQUEST_0_TAXAMT => "0.00",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "0.00",
+        :PAYMENTREQUEST_0_ITEMAMT => "0.00",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :L_BILLINGTYPE0 => :MerchantInitiatedBillingSingleAgreement,
         :L_BILLINGAGREEMENTDESCRIPTION0 => "Reference Transaction Request"

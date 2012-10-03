@@ -11,7 +11,8 @@ module Paypal
           Common::Amount.new(
             :total => attributes[:amount],
             :tax => attributes[:tax_amount],
-            :shipping => attributes[:shipping_amount]
+            :shipping => attributes[:shipping_amount],
+            :item => attributes[:item_amount]
           )
         end
         @items = []
@@ -27,6 +28,7 @@ module Paypal
           :"PAYMENTREQUEST_#{index}_AMT" => Util.formatted_amount(self.amount.total),
           :"PAYMENTREQUEST_#{index}_TAXAMT" => Util.formatted_amount(self.amount.tax),
           :"PAYMENTREQUEST_#{index}_SHIPPINGAMT" => Util.formatted_amount(self.amount.shipping),
+          :"PAYMENTREQUEST_#{index}_ITEMAMT" => Util.formatted_amount(self.amount.item),
           :"PAYMENTREQUEST_#{index}_CURRENCYCODE" => self.currency_code,
           :"PAYMENTREQUEST_#{index}_DESC" => self.description,
           # NOTE:
