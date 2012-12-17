@@ -19,7 +19,6 @@ module Paypal
           :email          => :EMAIL,
           :brand          => :BRANDNAME,
           :locale         => :LOCALECODE,
-          :invoice_number => :INVNUM
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
         end
