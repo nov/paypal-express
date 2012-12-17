@@ -14,11 +14,11 @@ module Paypal
           params[:NOSHIPPING] = 1
         end
         {
-          :solution_type  => :SOLUTIONTYPE,
-          :landing_page   => :LANDINGPAGE,
-          :email          => :EMAIL,
-          :brand          => :BRANDNAME,
-          :locale         => :LOCALECODE,
+          :solution_type => :SOLUTIONTYPE,
+          :landing_page  => :LANDINGPAGE,
+          :email         => :EMAIL,
+          :brand         => :BRANDNAME,
+          :locale        => :LOCALECODE
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
         end
