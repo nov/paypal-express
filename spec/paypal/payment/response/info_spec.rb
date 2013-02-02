@@ -25,7 +25,8 @@ describe Paypal::Payment::Response::Info do
       :RECEIPTID => '12345',
       :SECUREMERCHANTACCOUNTID => '123456789',
       :PAYMENTREQUESTID => '12345',
-      :SELLERPAYPALACCOUNTID => 'seller@shop.example.com'
+      :SELLERPAYPALACCOUNTID => 'seller@shop.example.com',
+      :EXCHANGERATE => '0.811965'
     }
   end
 
