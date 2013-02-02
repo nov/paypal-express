@@ -19,7 +19,11 @@ describe Paypal::Payment::Request do
         :name => 'Item2',
         :description => 'Awesome Item 2!',
         :amount => 1.1
-      }]
+      }],
+      :custom_fields => {
+        :NOSHIPPING => 1, # This is an arbitrary parameter accepted by the API
+        :L_SURVEYCHOICEn => 'abcd' # The 'n' will be replaced with the index
+      }
     )
   end
 
@@ -79,7 +83,9 @@ describe Paypal::Payment::Request do
         :L_PAYMENTREQUEST_0_NAME1 => "Item2",
         :L_PAYMENTREQUEST_0_DESC1 => "Awesome Item 2!",
         :L_PAYMENTREQUEST_0_AMT1 => "1.10",
-        :L_PAYMENTREQUEST_0_QTY1 => 3
+        :L_PAYMENTREQUEST_0_QTY1 => 3,
+        :NOSHIPPING => 1,
+        :L_SURVEYCHOICE0 => 'abcd' # Note the 'n' was replaced by the index
       }
     end
 
