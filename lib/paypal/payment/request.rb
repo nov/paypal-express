@@ -48,8 +48,9 @@ module Paypal
             params.merge! item.to_params(index, item_index)
           end
         end
-        self.custom_fields.each do |field, field_value|
-          params[field.to_s.gsub("n", index.to_s).to_sym] = field_value
+        self.custom_fields.each do |key, value|
+          field = key.to_s.upcase.gsub("{N}", index.to_s).to_sym
+          params[field] = value
         end
         params
       end

@@ -21,8 +21,7 @@ describe Paypal::Payment::Request do
         :amount => 1.1
       }],
       :custom_fields => {
-        :NOSHIPPING => 1, # This is an arbitrary parameter accepted by the API
-        :L_SURVEYCHOICEn => 'abcd' # The 'n' will be replaced with the index
+        "l_surveychoice{n}" => 'abcd' # The '{n}' will be replaced with the index
       }
     )
   end
@@ -73,7 +72,7 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_TAXAMT => "0.40",
         :PAYMENTREQUEST_0_SHIPPINGAMT => "1.50",
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
-        :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
+        :PAYMENTREQUEST_0_DESC => "Instant Payment Request",
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
         :PAYMENTREQUEST_0_ITEMAMT => "23.80",
         :L_PAYMENTREQUEST_0_NAME0 => "Item1",
@@ -84,7 +83,6 @@ describe Paypal::Payment::Request do
         :L_PAYMENTREQUEST_0_DESC1 => "Awesome Item 2!",
         :L_PAYMENTREQUEST_0_AMT1 => "1.10",
         :L_PAYMENTREQUEST_0_QTY1 => 3,
-        :NOSHIPPING => 1,
         :L_SURVEYCHOICE0 => 'abcd' # Note the 'n' was replaced by the index
       }
     end
