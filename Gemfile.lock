@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    paypal-express (0.5.2)
+    paypal-express (0.5.3)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
       i18n
