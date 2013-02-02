@@ -2,7 +2,7 @@ module Paypal
   module Payment
     class Request < Base
       attr_optional :action, :currency_code, :description, :notify_url, :billing_type, :billing_agreement_description, :billing_agreement_id, :request_id, :seller_id
-      attr_accessor :amount, :items
+      attr_accessor :amount, :items, :custom_fields
 
       def initialize(attributes = {})
         @amount = if attributes[:amount].is_a?(Common::Amount)
@@ -18,6 +18,7 @@ module Paypal
         Array(attributes[:items]).each do |item_attrs|
           @items << Item.new(item_attrs)
         end
+        @custom_fields = attributes[:custom_fields] || {}
         super
       end
 
@@ -46,6 +47,9 @@ module Paypal
           self.items.each_with_index do |item, item_index|
             params.merge! item.to_params(index, item_index)
           end
+        end
+        self.custom_fields.each do |field, field_value|
+          params[field.to_s.gsub("n", index.to_s).to_sym] = field_value
         end
         params
       end
