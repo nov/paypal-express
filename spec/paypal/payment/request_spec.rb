@@ -75,7 +75,7 @@ describe Paypal::Payment::Request do
         :PAYMENTREQUEST_0_CURRENCYCODE => :JPY,
         :PAYMENTREQUEST_0_DESC => "Instant Payment Request", 
         :PAYMENTREQUEST_0_NOTIFYURL => "http://merchant.example.com/notify",
-        :NOSHIPPING => 1,
+        :PAYMENTREQUEST_0_ITEMAMT => "23.80",
         :L_PAYMENTREQUEST_0_NAME0 => "Item1",
         :L_PAYMENTREQUEST_0_DESC0 => "Awesome Item 1!",
         :L_PAYMENTREQUEST_0_AMT0 => "10.25",
@@ -84,8 +84,8 @@ describe Paypal::Payment::Request do
         :L_PAYMENTREQUEST_0_DESC1 => "Awesome Item 2!",
         :L_PAYMENTREQUEST_0_AMT1 => "1.10",
         :L_PAYMENTREQUEST_0_QTY1 => 3,
-        :L_SURVEYCHOICE0 => 'abcd', # Note the 'n' was replaced by the index
-        :PAYMENTREQUEST_0_ITEMAMT => "23.80"
+        :NOSHIPPING => 1,
+        :L_SURVEYCHOICE0 => 'abcd' # Note the 'n' was replaced by the index
       }
     end
 
