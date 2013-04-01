@@ -5,7 +5,6 @@ Both Instance Payment and Recurring Payment are supported.
 Express Checkout for Digital Goods is also supported.
 
 {<img src="https://secure.travis-ci.org/nov/paypal-express.png" />}[http://travis-ci.org/nov/paypal-express]
-{<img src="http://www.pledgie.com/campaigns/19045.png?skin_name=chrome" />}[http://pledgie.com/campaigns/19045]
 
 == Installation
 
