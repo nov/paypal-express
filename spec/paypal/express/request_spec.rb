@@ -221,7 +221,7 @@ describe Paypal::Express::Request do
       response = instance.transaction_details 'transaction_id'
       response.should be_instance_of Paypal::Express::Response
     end
-    
+
     it 'should call GetTransactionDetails' do
       expect do
         instance.transaction_details 'transaction_id'
@@ -231,21 +231,43 @@ describe Paypal::Express::Request do
         :TRANSACTIONID=> 'transaction_id'
       }
     end
-    
+
     it 'should fail with bad transaction id' do
       expect do
         fake_response 'GetTransactionDetails/failure'
         response = instance.transaction_details 'bad_transaction_id'
       end.to raise_error(Paypal::Exception::APIError)
     end
-    
+
     it 'should handle all attributes' do
       Paypal.logger.should_not_receive(:warn)
       fake_response 'GetTransactionDetails/success'
       response = instance.transaction_details 'transaction_id'
     end
   end
-  
+
+  describe "#capture!" do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'DoCapture/success'
+      response = instance.capture! 'authorization_id', 181.98, :BRL
+      response.should be_instance_of Paypal::Express::Response
+    end
+
+    it 'should call DoExpressCheckoutPayment' do
+      expect do
+        instance.capture! 'authorization_id', 181.98, :BRL
+      end.to request_to nvp_endpoint, :post
+
+      instance._method_.should == :DoCapture
+      instance._sent_params_.should == {
+        :AUTHORIZATIONID => 'authorization_id',
+        :COMPLETETYPE => 'Complete',
+        :AMT => 181.98,
+        :CURRENCYCODE => :BRL
+      }
+    end
+  end
+
   describe '#checkout!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoExpressCheckoutPayment/success'
