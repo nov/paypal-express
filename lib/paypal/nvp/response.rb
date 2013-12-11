@@ -4,7 +4,6 @@ module Paypal
       cattr_reader :attribute_mapping
       @@attribute_mapping = {
         :ACK => :ack,
-        :ADDRESSSTATUS => :address_status,
         :BUILD => :build,
         :BILLINGAGREEMENTACCEPTEDSTATUS => :billing_agreement_accepted_status,
         :CHECKOUTSTATUS => :checkout_status,
@@ -22,7 +21,6 @@ module Paypal
         # GetTransactionDetails response.
         :RECEIVEREMAIL => :receiver_email,
         :RECEIVERID => :receiver_id,
-        :ADDRESSOWNER => :address_owner,
         :SUBJECT => :subject,
         :TRANSACTIONID => :transaction_id,
         :TRANSACTIONTYPE => :transaction_type,
@@ -34,7 +32,9 @@ module Paypal
         :PROTECTIONELIGIBILITY => :protection_eligibility,
         :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
         :ADDRESSOWNER => :address_owner,
-        :ADDRESSSTATUS => :address_status
+        :ADDRESSSTATUS => :address_status,
+        :INVNUM => :invoice_number,
+        :CUSTOM => :custom
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
