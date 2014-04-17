@@ -13,6 +13,9 @@ module Paypal
           params[:REQCONFIRMSHIPPING] = 0
           params[:NOSHIPPING] = 1
         end
+
+        params[:ALLOWNOTE] = 0 if options[:allow_note] == false
+
         {
           :solution_type => :SOLUTIONTYPE,
           :landing_page  => :LANDINGPAGE,
