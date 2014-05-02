@@ -1,7 +1,7 @@
 module Paypal
   module Payment
     class Response < Base
-      attr_accessor :amount, :ship_to, :description, :note, :items, :notify_url, :insurance_option_offered, :currency_code, :short_message, :long_message, :error_code, :severity_code, :ack, :transaction_id, :billing_agreement_id, :request_id, :seller_id
+      attr_accessor :amount, :ship_to, :bill_to, :description, :note, :items, :notify_url, :insurance_option_offered, :currency_code, :short_message, :long_message, :error_code, :severity_code, :ack, :transaction_id, :billing_agreement_id, :request_id, :seller_id
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -14,7 +14,7 @@ module Paypal
           :shipping => attrs.delete(:SHIPPINGAMT),
           :tax => attrs.delete(:TAXAMT)
         )
-        @ship_to = Payment::Response::ShipTo.new(
+        @ship_to = Payment::Response::Address.new(
           :name => attrs.delete(:SHIPTONAME),
           :zip => attrs.delete(:SHIPTOZIP),
           :street => attrs.delete(:SHIPTOSTREET),
@@ -23,6 +23,17 @@ module Paypal
           :state => attrs.delete(:SHIPTOSTATE),
           :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
           :country_name => attrs.delete(:SHIPTOCOUNTRYNAME)
+        )
+        @bill_to = Payment::Response::Address.new(
+          :owner => attrs.delete(:ADDRESSID),
+          :status => attrs.delete(:ADDRESSSTATUS),
+          :name => attrs.delete(:BILLINGNAME),
+          :zip => attrs.delete(:ZIP),
+          :street => attrs.delete(:STREET),
+          :street2 => attrs.delete(:STREET2),
+          :city => attrs.delete(:CITY),
+          :state => attrs.delete(:STATE),
+          :country_code => attrs.delete(:COUNTRY)
         )
         @description = attrs.delete(:DESC)
         @note = attrs.delete(:NOTETEXT)

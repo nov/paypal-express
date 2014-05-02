@@ -122,8 +122,7 @@ module Paypal
 
       def agreement(reference_id)
         params = {
-          :REFERENCEID => reference_id,
-          :BILLINGAGREEMENTSTATUS => ''
+          :REFERENCEID => reference_id
         }
         response = self.request :BillAgreementUpdate, params
         Response.new response
