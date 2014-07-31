@@ -21,7 +21,10 @@ module Paypal
           :landing_page  => :LANDINGPAGE,
           :email         => :EMAIL,
           :brand         => :BRANDNAME,
-          :locale        => :LOCALECODE
+          :locale        => :LOCALECODE,
+          :logo          => :LOGOIMG,
+          :cart_border_color => :CARTBORDERCOLOR,
+          :payflow_color => :PAYFLOWCOLOR
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
         end

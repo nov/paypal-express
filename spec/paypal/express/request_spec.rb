@@ -147,7 +147,10 @@ describe Paypal::Express::Request do
       :landing_page => :LANDINGPAGE,
       :email => :EMAIL,
       :brand => :BRANDNAME,
-      :locale => :LOCALECODE
+      :locale => :LOCALECODE,
+      :logo => :LOGOIMG,
+      :cart_border_color => :CARTBORDERCOLOR,
+      :payflow_color => :PAYFLOWCOLOR
     }.each do |option_key, param_key|
       it "should support #{option_key} option" do
         expect do
