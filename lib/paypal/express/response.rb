@@ -1,12 +1,12 @@
 module Paypal
   module Express
     class Response < NVP::Response
-      attr_accessor :pay_on_paypal
+      attr_accessor :pay_on_paypal, :mobile
 
       def initialize(response, options = {})
         super response
         @pay_on_paypal = options[:pay_on_paypal]
-        @mobile        = options[:mobile]
+        @mobile        = options[:mobile] || false
       end
 
       def redirect_uri
