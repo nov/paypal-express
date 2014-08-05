@@ -6,7 +6,7 @@ module Paypal
       def initialize(response, options = {})
         super response
         @pay_on_paypal = options[:pay_on_paypal]
-        @mobile        = options[:mobile] || false
+        @mobile        = options[:mobile]
       end
 
       def redirect_uri
