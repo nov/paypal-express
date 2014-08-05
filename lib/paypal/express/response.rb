@@ -6,6 +6,7 @@ module Paypal
       def initialize(response, options = {})
         super response
         @pay_on_paypal = options[:pay_on_paypal]
+        @mobile        = options[:mobile]
       end
 
       def redirect_uri
@@ -24,8 +25,9 @@ module Paypal
 
       def query(with_cmd = false)
         _query_ = {:token => self.token}
-        _query_.merge!(:cmd => '_express-checkout') if with_cmd
-        _query_.merge!(:useraction => 'commit')     if pay_on_paypal
+        _query_.merge!(:cmd => '_express-checkout')        if with_cmd
+        _query_.merge!(:cmd => '_express-checkout-mobile') if mobile
+        _query_.merge!(:useraction => 'commit')            if pay_on_paypal
         _query_
       end
     end
