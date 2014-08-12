@@ -18,6 +18,6 @@ Gem::Specification.new do |s|
   s.add_dependency "attr_required", ">= 0.0.5"
   s.add_development_dependency "rake", ">= 0.8"
   s.add_development_dependency "simplecov"
-  s.add_development_dependency "rspec", ">= 2"
+  s.add_development_dependency "rspec", "~> 2"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
 end
