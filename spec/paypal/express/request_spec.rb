@@ -287,6 +287,26 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe "#void!" do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'DoVoid/success'
+      response = instance.void! 'authorization_id', note: "note"
+      response.should be_instance_of Paypal::Express::Response
+    end
+
+    it 'should call DoVoid' do
+      expect do
+        instance.void! 'authorization_id', note: "note"
+      end.to request_to nvp_endpoint, :post
+
+      instance._method_.should == :DoVoid
+      instance._sent_params_.should == {
+        :AUTHORIZATIONID => 'authorization_id',
+        :NOTE => "note"
+      }
+    end
+  end
+
   describe '#checkout!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoExpressCheckoutPayment/success'
