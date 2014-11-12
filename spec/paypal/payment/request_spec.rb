@@ -3,9 +3,9 @@ require 'spec_helper.rb'
 describe Paypal::Payment::Request do
   let :instant_request do
     Paypal::Payment::Request.new(
-      :amount => 25.7,
-      :tax_amount => 0.4,
-      :shipping_amount => 1.5,
+      :amount => BigDecimal("25.7"),
+      :tax_amount => BigDecimal("0.4"),
+      :shipping_amount => BigDecimal("1.5"),
       :currency_code => :JPY,
       :description => 'Instant Payment Request',
       :notify_url => 'http://merchant.example.com/notify',
@@ -15,12 +15,12 @@ describe Paypal::Payment::Request do
         :quantity => 2,
         :name => 'Item1',
         :description => 'Awesome Item 1!',
-        :amount => 10.25
+        :amount => BigDecimal("10.25")
       }, {
         :quantity => 3,
         :name => 'Item2',
         :description => 'Awesome Item 2!',
-        :amount => 1.1
+        :amount => BigDecimal("1.1")
       }],
       :custom_fields => {
         "l_surveychoice{n}" => 'abcd' # The '{n}' will be replaced with the index
@@ -46,9 +46,9 @@ describe Paypal::Payment::Request do
 
   describe '.new' do
     it 'should handle Instant Payment parameters' do
-      instant_request.amount.total.should == 25.7
-      instant_request.amount.tax.should == 0.4
-      instant_request.amount.shipping.should == 1.5
+      instant_request.amount.total.should == BigDecimal("25.7")
+      instant_request.amount.tax.should == BigDecimal("0.4")
+      instant_request.amount.shipping.should == BigDecimal("1.5")
       instant_request.currency_code.should == :JPY
       instant_request.description.should == 'Instant Payment Request'
       instant_request.notify_url.should == 'http://merchant.example.com/notify'
@@ -115,22 +115,21 @@ describe Paypal::Payment::Request do
   end
 
   describe '#items_amount' do
-    context 'when BigDecimal'
     let(:instance) do
       Paypal::Payment::Request.new(
         :items => [{
           :quantity => 3,
           :name => 'Item1',
           :description => 'Awesome Item 1!',
-          :amount => 130.45
+          :amount => BigDecimal("130.45")
         }]
       )
     end
 
-    # NOTE:
+    # NOTE: with floats,
     # 130.45 * 3 => 391.34999999999997 (in ruby 1.9)
     it 'should calculate total amount correctly' do
-      instance.items_amount.should == 391.35
+      instance.items_amount.should == BigDecimal("391.35")
     end
   end
 end

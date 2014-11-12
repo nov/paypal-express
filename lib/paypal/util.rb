@@ -1,3 +1,5 @@
+require "bigdecimal"
+
 module Paypal
   module Util
 
@@ -7,10 +9,12 @@ module Paypal
     end
 
     def self.to_numeric(x)
-      if x.to_f == x.to_i
+      decimal = BigDecimal(x.to_s)
+
+      if decimal == x.to_i
         x.to_i
       else
-        x.to_f
+        decimal
       end
     end
 
