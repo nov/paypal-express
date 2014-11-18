@@ -24,7 +24,7 @@ module Paypal
         @@attribute_mapping = {
           :ACK => :ack,
           :BUILD => :build,
-          :CORRELATIONID => :colleration_id,
+          :CORRELATIONID => :correlation_id,
           :TIMESTAMP => :timestamp,
           :VERSION => :version,
           :ORDERTIME => :order_time,
