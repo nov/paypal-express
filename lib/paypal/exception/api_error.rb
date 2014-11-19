@@ -36,6 +36,7 @@ module Paypal
         }
         attr_accessor *@@attribute_mapping.values
         attr_accessor :raw, :details
+        alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
         class Detail
           cattr_reader :attribute_mapping

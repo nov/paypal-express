@@ -40,6 +40,7 @@ module Paypal
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
       attr_accessor :amount, :description, :ship_to, :bill_to, :payer, :recurring, :billing_agreement, :refund
       attr_accessor :payment_responses, :payment_info, :items
+      alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
       def initialize(attributes = {})
         attrs = attributes.dup
