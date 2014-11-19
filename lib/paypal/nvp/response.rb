@@ -7,7 +7,7 @@ module Paypal
         :BUILD => :build,
         :BILLINGAGREEMENTACCEPTEDSTATUS => :billing_agreement_accepted_status,
         :CHECKOUTSTATUS => :checkout_status,
-        :CORRELATIONID => :colleration_id,
+        :CORRELATIONID => :correlation_id,
         :COUNTRYCODE => :country_code,
         :CURRENCYCODE => :currency_code,
         :DESC => :description,
