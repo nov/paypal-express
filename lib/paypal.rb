@@ -2,7 +2,7 @@ require 'logger'
 require 'active_support/core_ext'
 require 'attr_required'
 require 'attr_optional'
-require 'restclient_with_cert'
+require 'rest_client'
 
 module Paypal
 
