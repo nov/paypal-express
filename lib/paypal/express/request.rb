@@ -57,10 +57,10 @@ module Paypal
         Response.new response
       end
 
-      def capture!(authorization_id, amount, currency_code)
+      def capture!(authorization_id, amount, currency_code, complete_type = 'Complete')
         params = {
           :AUTHORIZATIONID => authorization_id,
-          :COMPLETETYPE => "Complete",
+          :COMPLETETYPE => complete_type,
           :AMT => amount,
           :CURRENCYCODE => currency_code
         }

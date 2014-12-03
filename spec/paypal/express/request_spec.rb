@@ -285,6 +285,20 @@ describe Paypal::Express::Request do
         :CURRENCYCODE => :BRL
       }
     end
+
+    it 'should call DoExpressCheckoutPayment with NotComplete capture parameter' do
+      expect do
+        instance.capture! 'authorization_id', 181.98, :BRL, 'NotComplete'
+      end.to request_to nvp_endpoint, :post
+
+      instance._method_.should == :DoCapture
+      instance._sent_params_.should == {
+        :AUTHORIZATIONID => 'authorization_id',
+        :COMPLETETYPE => 'NotComplete',
+        :AMT => 181.98,
+        :CURRENCYCODE => :BRL
+      }
+    end
   end
 
   describe "#void!" do
