@@ -36,7 +36,6 @@ describe Paypal::NVP::Request do
 
       it 'should setup endpoint and version' do
         client = Paypal::NVP::Request.new attributes
-        client.version.should == Paypal::API_VERSION
         client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
       end
 

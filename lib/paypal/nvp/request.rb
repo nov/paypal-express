@@ -19,7 +19,7 @@ module Paypal
       end
 
       def initialize(attributes = {})
-        @version = API_VERSION
+        @version = Paypal.api_version
         super
       end
 
