@@ -5,7 +5,7 @@ require 'attr_optional'
 require 'rest_client'
 
 module Paypal
-  cattr_accessor :api_version
+  attr_accessor :api_version
   self.api_version = '88.0'
 
   ENDPOINT = {
