@@ -6,7 +6,7 @@ require 'rest_client'
 
 module Paypal
   attr_accessor :api_version
-  self.api_version = '88.0'
+  api_version = '88.0'
 
   ENDPOINT = {
     :production => 'https://www.paypal.com/cgi-bin/webscr',
