@@ -28,6 +28,7 @@ module Paypal
           :USER => self.username,
           :PWD => self.password,
           :SIGNATURE => self.signature,
+          :BUTTONSOURCE => 'AngellEYE_SP_Nov_Ruby_Gem_Express',
           :SUBJECT => self.subject,
           :VERSION => self.version
         }
