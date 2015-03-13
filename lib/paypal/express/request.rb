@@ -45,11 +45,17 @@ module Paypal
         Response.new response
       end
 
-      def checkout!(token, payer_id, payment_requests)
+      def checkout!(token, payer_id, payment_requests, opts = {})
         params = {
           :TOKEN => token,
           :PAYERID => payer_id
         }
+
+        # https://www.paypal-marketing.com/emarketing/partner/na/portal/integrate_bn_codes.html
+        if opts[:bn_code].present?
+          params[:BUTTONSOURCE] = opts[:bn_code]
+        end
+
         Array(payment_requests).each_with_index do |payment_request, index|
           params.merge! payment_request.to_params(index)
         end
