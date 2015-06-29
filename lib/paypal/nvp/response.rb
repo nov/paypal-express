@@ -4,11 +4,10 @@ module Paypal
       cattr_reader :attribute_mapping
       @@attribute_mapping = {
         :ACK => :ack,
-        :ADDRESSSTATUS => :address_status,
         :BUILD => :build,
         :BILLINGAGREEMENTACCEPTEDSTATUS => :billing_agreement_accepted_status,
         :CHECKOUTSTATUS => :checkout_status,
-        :CORRELATIONID => :colleration_id,
+        :CORRELATIONID => :correlation_id,
         :COUNTRYCODE => :country_code,
         :CURRENCYCODE => :currency_code,
         :DESC => :description,
@@ -22,7 +21,6 @@ module Paypal
         # GetTransactionDetails response.
         :RECEIVEREMAIL => :receiver_email,
         :RECEIVERID => :receiver_id,
-        :ADDRESSOWNER => :address_owner,
         :SUBJECT => :subject,
         :TRANSACTIONID => :transaction_id,
         :TRANSACTIONTYPE => :transaction_type,
@@ -34,12 +32,15 @@ module Paypal
         :PROTECTIONELIGIBILITY => :protection_eligibility,
         :PROTECTIONELIGIBILITYTYPE => :protection_eligibility_type,
         :ADDRESSOWNER => :address_owner,
-        :ADDRESSSTATUS => :address_status
+        :ADDRESSSTATUS => :address_status,
+        :INVNUM => :invoice_number,
+        :CUSTOM => :custom
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
-      attr_accessor :amount, :description, :ship_to, :payer, :recurring, :billing_agreement, :refund
+      attr_accessor :amount, :description, :ship_to, :bill_to, :payer, :recurring, :billing_agreement, :refund
       attr_accessor :payment_responses, :payment_info, :items
+      alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
       def initialize(attributes = {})
         attrs = attributes.dup
@@ -59,7 +60,7 @@ module Paypal
           :tax => attrs.delete(:TAXAMT),
           :fee => attrs.delete(:FEEAMT)
         )
-        @ship_to = Payment::Response::ShipTo.new(
+        @ship_to = Payment::Response::Address.new(
           :owner => attrs.delete(:SHIPADDRESSOWNER),
           :status => attrs.delete(:SHIPADDRESSSTATUS),
           :name => attrs.delete(:SHIPTONAME),
@@ -71,13 +72,25 @@ module Paypal
           :country_code => attrs.delete(:SHIPTOCOUNTRYCODE),
           :country_name => attrs.delete(:SHIPTOCOUNTRYNAME)
         )
+        @bill_to = Payment::Response::Address.new(
+          :owner => attrs.delete(:ADDRESSID),
+          :status => attrs.delete(:ADDRESSSTATUS),
+          :name => attrs.delete(:BILLINGNAME),
+          :zip => attrs.delete(:ZIP),
+          :street => attrs.delete(:STREET),
+          :street2 => attrs.delete(:STREET2),
+          :city => attrs.delete(:CITY),
+          :state => attrs.delete(:STATE),
+          :country_code => attrs.delete(:COUNTRY)
+        )
         if attrs[:PAYERID]
           @payer = Payment::Response::Payer.new(
             :identifier => attrs.delete(:PAYERID),
             :status => attrs.delete(:PAYERSTATUS),
             :first_name => attrs.delete(:FIRSTNAME),
             :last_name => attrs.delete(:LASTNAME),
-            :email => attrs.delete(:EMAIL)
+            :email => attrs.delete(:EMAIL),
+            :company => attrs.delete(:BUSINESS)
           )
         end
         if attrs[:PROFILEID]
