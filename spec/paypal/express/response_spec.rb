@@ -65,4 +65,16 @@ describe Paypal::Express::Response do
       it { should include 'https://www.sandbox.paypal.com/incontext?token=' }
     end
   end
+
+  context 'when mobile option is given' do
+    let(:response) { request.setup payment_request, return_url, cancel_url, :mobile => true }
+
+    subject { response }
+
+    describe '#redirect_uri' do
+      subject { response.redirect_uri }
+      it { should include 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout-mobile&token=' }
+    end
+  end
+
 end

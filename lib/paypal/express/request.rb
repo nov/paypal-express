@@ -13,12 +13,18 @@ module Paypal
           params[:REQCONFIRMSHIPPING] = 0
           params[:NOSHIPPING] = 1
         end
+
+        params[:ALLOWNOTE] = 0 if options[:allow_note] == false
+
         {
           :solution_type => :SOLUTIONTYPE,
           :landing_page  => :LANDINGPAGE,
           :email         => :EMAIL,
           :brand         => :BRANDNAME,
-          :locale        => :LOCALECODE
+          :locale        => :LOCALECODE,
+          :logo          => :LOGOIMG,
+          :cart_border_color => :CARTBORDERCOLOR,
+          :payflow_color => :PAYFLOWCOLOR
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
         end
@@ -51,15 +57,25 @@ module Paypal
         Response.new response
       end
 
-      def capture!(authorization_id, amount, currency_code)
+      def capture!(authorization_id, amount, currency_code, complete_type = 'Complete')
         params = {
           :AUTHORIZATIONID => authorization_id,
-          :COMPLETETYPE => "Complete",
+          :COMPLETETYPE => complete_type,
           :AMT => amount,
           :CURRENCYCODE => currency_code
         }
 
         response = self.request :DoCapture, params
+        Response.new response
+      end
+
+      def void!(authorization_id, params={})
+        params = {
+          :AUTHORIZATIONID => authorization_id,
+          :NOTE => params[:note]
+        }
+
+        response = self.request :DoVoid, params
         Response.new response
       end
 
@@ -122,7 +138,7 @@ module Paypal
 
       def agreement(reference_id)
         params = {
-          :REFERENCEID => reference_id,
+          :REFERENCEID => reference_id
         }
         response = self.request :BillAgreementUpdate, params
         Response.new response

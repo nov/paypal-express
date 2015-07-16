@@ -1,12 +1,14 @@
 require 'logger'
+require 'active_support'
 require 'active_support/core_ext'
 require 'attr_required'
 require 'attr_optional'
-require 'restclient_with_cert'
+require 'rest_client'
 
 module Paypal
+  mattr_accessor :api_version
+  self.api_version = '88.0'
 
-  API_VERSION = '88.0'
   ENDPOINT = {
     :production => 'https://www.paypal.com/cgi-bin/webscr',
     :sandbox => 'https://www.sandbox.paypal.com/cgi-bin/webscr'
@@ -75,7 +77,7 @@ require 'paypal/payment/response/item'
 require 'paypal/payment/response/payer'
 require 'paypal/payment/response/reference'
 require 'paypal/payment/response/refund'
-require 'paypal/payment/response/ship_to'
+require 'paypal/payment/response/address'
 require 'paypal/payment/recurring'
 require 'paypal/payment/recurring/activation'
 require 'paypal/payment/recurring/billing'
