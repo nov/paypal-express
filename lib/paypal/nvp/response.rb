@@ -34,12 +34,13 @@ module Paypal
         :ADDRESSOWNER => :address_owner,
         :ADDRESSSTATUS => :address_status,
         :INVNUM => :invoice_number,
-        :CUSTOM => :custom
+        :CUSTOM => :custom,
+        :RECEIVERBUSINESS => :receiver_business
       }
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
       attr_accessor :amount, :description, :ship_to, :bill_to, :payer, :recurring, :billing_agreement, :refund
-      attr_accessor :payment_responses, :payment_info, :items
+      attr_accessor :payment_responses, :payment_info, :items, :receiver_business
       alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
       def initialize(attributes = {})
