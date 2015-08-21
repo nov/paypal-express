@@ -34,8 +34,8 @@ module Paypal
           :REASONCODE => :reason_code,
           :TRANSACTIONTYPE => :transaction_type
         }
-        attr_accessor *@@attribute_mapping.values
-        attr_accessor :raw, :details
+        attr_accessor(*@@attribute_mapping.values)
+        attr_accessor(:raw, :details)
         alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
         class Detail
@@ -46,7 +46,7 @@ module Paypal
             :LONGMESSAGE => :long_message,
             :SHORTMESSAGE => :short_message
           }
-          attr_accessor *@@attribute_mapping.values
+          attr_accessor(*@@attribute_mapping.values)
 
           def initialize(attributes = {})
             @raw = attributes

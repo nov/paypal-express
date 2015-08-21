@@ -542,6 +542,28 @@ describe Paypal::Express::Request do
         :CURRENCYCODE => :JPY
       }
     end
+
+    it 'should allow you to pass additional params to PayPal' do
+      extra_params = {
+        :description => 'Super Important Purchase',
+        :invoice_number => '12345',
+        :msg_submission_id  => 'super-random-string',
+        :custom => 'A nice note from your mother'
+      }
+      expect do
+        instance.charge! 'billing_agreement_id', 1000, extra_params
+      end.to request_to nvp_endpoint, :post
+      instance._method_.should == :DoReferenceTransaction
+      instance._sent_params_.should == {
+        :REFERENCEID => 'billing_agreement_id',
+        :AMT => '1000.00',
+        :PAYMENTACTION => :Sale,
+        :DESC => 'Super Important Purchase',
+        :INVNUM => '12345',
+        :MSGSUBID  => 'super-random-string',
+        :CUSTOM => 'A nice note from your mother'
+      }
+    end
   end
 
   describe '#revoke!' do
