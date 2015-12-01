@@ -3,21 +3,23 @@ module Paypal
     class Request < NVP::Request
 
       ATTRIBUTES_TO_KEYS = {
-        :currency_code     => :CURRENCYCODE,
-        :invoice_number    => :INVNUM,
-        :description       => :DESC,
-        :msg_submission_id => :MSGSUBID,
-        :custom            => :CUSTOM,
-        :note              => :NOTE,
-        :invoice_id        => :INVOICEID,
-        :solution_type     => :SOLUTIONTYPE,
-        :landing_page      => :LANDINGPAGE,
-        :email             => :EMAIL,
-        :brand             => :BRANDNAME,
-        :locale            => :LOCALECODE,
-        :logo              => :LOGOIMG,
-        :cart_border_color => :CARTBORDERCOLOR,
-        :payflow_color     => :PAYFLOWCOLOR
+        :currency_code          => :CURRENCYCODE,
+        :invoice_number         => :INVNUM,
+        :description            => :DESC,
+        :msg_submission_id      => :MSGSUBID,
+        :custom                 => :CUSTOM,
+        :note                   => :NOTE,
+        :invoice_id             => :INVOICEID,
+        :solution_type          => :SOLUTIONTYPE,
+        :landing_page           => :LANDINGPAGE,
+        :email                  => :EMAIL,
+        :brand                  => :BRANDNAME,
+        :locale                 => :LOCALECODE,
+        :logo                   => :LOGOIMG,
+        :cart_border_color      => :CARTBORDERCOLOR,
+        :payflow_color          => :PAYFLOWCOLOR
+        :billing_agreement_desc => :BILLINGAGREEMENTDESCRIPTION
+        :button_source          => :BUTTONSOURCE
       }
 
       # Common
@@ -145,7 +147,7 @@ module Paypal
           :TOKEN => token
         }
 
-        response = self.request :CreateBillingAgreement, params
+        response = self.request :CreateBillingAgreement, params.merge(options)
         Response.new response
       end
 
