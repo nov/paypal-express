@@ -17,7 +17,7 @@ module Paypal
         :locale                 => :LOCALECODE,
         :logo                   => :LOGOIMG,
         :cart_border_color      => :CARTBORDERCOLOR,
-        :payflow_color          => :PAYFLOWCOLOR
+        :payflow_color          => :PAYFLOWCOLOR,
         :billing_agreement_desc => :BILLINGAGREEMENTDESCRIPTION,
         :button_source          => :BUTTONSOURCE
       }
