@@ -5,6 +5,8 @@ module Paypal
 
       def initialize(attributes = {})
         # payment_info
+        attrs = attributes.dup
+
         transactions = []
         attrs.keys.each do |_attr_|
           key, index = _attr_.to_s.scan(/^L_(.+?)(\d+)$/).flatten
