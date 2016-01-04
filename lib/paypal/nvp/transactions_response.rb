@@ -18,7 +18,7 @@ module Paypal
       attr_accessor :transactions
 
       def initialize(attributes = {})
-        # payment_info
+        puts attributes
         attrs = attributes.dup
 
         @@attribute_mapping.each do |key, value|
