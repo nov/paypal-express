@@ -267,9 +267,15 @@ describe Paypal::Express::Request do
 
   describe "#transaction_search" do
     it 'should return Paypal::Express::Response' do
-      fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_search Time.now.utc
+      fake_response 'TransactionSearch/success'
+      response = instance.transaction_search 1.day.ago
       response.should be_instance_of Paypal::Express::TransactionsResponse
+    end
+
+    it 'should handle all attributes' do
+      Paypal.logger.should_not_receive(:warn)
+      fake_response 'TransactionSearch/success'
+      response = instance.transaction_search 1.day.ago
     end
   end
 
