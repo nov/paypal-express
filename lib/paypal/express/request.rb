@@ -67,7 +67,7 @@ module Paypal
         end
 
         response = self.request :TransactionSearch, params
-        Response.new response
+        TransactionsResponse.new response
       end
 
       def checkout!(token, payer_id, payment_requests)

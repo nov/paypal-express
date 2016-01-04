@@ -268,7 +268,7 @@ describe Paypal::Express::Request do
   describe "#transaction_search" do
     it 'should return Paypal::Express::Response' do
       fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_details 'transaction_id'
+      response = instance.transaction_search Time.now.utc
       response.should be_instance_of Paypal::Express::Response
     end
   end
