@@ -265,6 +265,14 @@ describe Paypal::Express::Request do
     end
   end
 
+  describe "#transaction_search" do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'GetTransactionDetails/success'
+      response = instance.transaction_details 'transaction_id'
+      response.should be_instance_of Paypal::Express::Response
+    end
+  end
+
   describe "#capture!" do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoCapture/success'
