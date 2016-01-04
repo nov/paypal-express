@@ -97,7 +97,7 @@ describe Paypal::Express::Request do
       it 'should succeed' do
         expect do
           Paypal::Express::Request.new attributes
-        end.not_to raise_error AttrRequired::AttrMissing
+        end.not_to raise_error
       end
     end
   end
