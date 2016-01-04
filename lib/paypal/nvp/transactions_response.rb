@@ -1,11 +1,29 @@
 module Paypal
   module NVP
     class TransactionsResponse < Base
+      cattr_reader :attribute_mapping
+      @@attribute_mapping = {
+        :ACK => :ack,
+        :CORRELATIONID => :correlation_id,
+        :TIMESTAMP => :timestamp,
+        :VERSION => :version,
+        :CUSTOM => :custom,
+        :ERRORCODE => :error_code,
+        :SHORTMESSAGE => :short_message,
+        :LONGMESSAGE => :long_message,
+        :SEVERITYCODE => :severity_code,
+        :BUILD => :build
+      }
+      attr_accessor *@@attribute_mapping.values
       attr_accessor :transactions
 
       def initialize(attributes = {})
         # payment_info
         attrs = attributes.dup
+
+        @@attribute_mapping.each do |key, value|
+          self.send "#{value}=", attrs.delete(key)
+        end
 
         transactions = []
         attrs.keys.each do |_attr_|
