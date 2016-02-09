@@ -4,8 +4,7 @@ describe Paypal::NVP::Request do
   let :attributes do
     {
       :username => 'nov',
-      :password => 'password',
-      :signature => 'sig'
+      :password => 'password'
     }
   end
 
@@ -39,10 +38,26 @@ describe Paypal::NVP::Request do
         client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
       end
 
+      it 'should setup certificate endpoint and version' do
+        Paypal.certificate_auth = true
+        client = Paypal::NVP::Request.new attributes
+        client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production_cert]
+        Paypal.certificate_auth = false
+      end
+
       it 'should support sandbox mode' do
         sandbox_mode do
           client = Paypal::NVP::Request.new attributes
           client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
+        end
+      end
+
+      it 'should support cert sandbox mode' do
+        sandbox_mode do
+          Paypal.certificate_auth = true
+          client = Paypal::NVP::Request.new attributes.merge(certificate: '/path/to/cert.pem')
+          client.class.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox_cert]
+          Paypal.certificate_auth = false
         end
       end
     end
