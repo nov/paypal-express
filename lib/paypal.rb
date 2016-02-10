@@ -6,7 +6,7 @@ require 'attr_optional'
 require 'rest_client'
 
 module Paypal
-  mattr_accessor :api_version
+  mattr_accessor :api_version, :certificate_auth
   self.api_version = '88.0'
 
   ENDPOINT = {
@@ -20,7 +20,13 @@ module Paypal
 
   def self.endpoint
     if sandbox?
-      Paypal::ENDPOINT[:sandbox]
+      if certificate_auth?
+        Paypal::ENDPOINT[:sandbox_cert]
+      else
+        Paypal::ENDPOINT[:sandbox]
+      end
+    elsif certificate_auth?
+      Paypal::ENDPOINT[:production_cert]
     else
       Paypal::ENDPOINT[:production]
     end
@@ -55,6 +61,10 @@ module Paypal
     @@sandbox = boolean
   end
   self.sandbox = false
+
+  def self.certificate_auth?
+    @@certificate_auth
+  end
 
 end
 

@@ -17,8 +17,7 @@ describe Paypal::Express::Request do
   let :attributes do
     {
       :username => 'nov',
-      :password => 'password',
-      :signature => 'sig'
+      :password => 'password'
     }
   end
 
