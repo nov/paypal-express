@@ -37,13 +37,13 @@ module Paypal
     self.logger.send mode, message
   end
   def self.logger
-    @@logger
+    @@logger ||= Logger.new(STDERR).tap do |log|
+      log.progname = 'Paypal::Express'
+    end
   end
   def self.logger=(logger)
     @@logger = logger
   end
-  @@logger = Logger.new(STDERR)
-  @@logger.progname = 'Paypal::Express'
 
   def self.sandbox?
     @@sandbox
