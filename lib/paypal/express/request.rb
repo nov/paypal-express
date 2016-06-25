@@ -13,7 +13,6 @@ module Paypal
           params[:REQCONFIRMSHIPPING] = 0
           params[:NOSHIPPING] = 1
         end
-
         params[:ALLOWNOTE] = 0 if options[:allow_note] == false
 
         {
@@ -30,7 +29,8 @@ module Paypal
           :city => :PAYMENTREQUEST_0_SHIPTOCITY,
           :state => :PAYMENTREQUEST_0_SHIPTOSTATE,
           :zip => :PAYMENTREQUEST_0_SHIPTOZIP,
-          :country => :PAYMENTREQUEST_0_SHIPTOCOUNTRY
+          :country => :PAYMENTREQUEST_0_SHIPTOCOUNTRY,
+          :phone => :PAYMENTREQUEST_0_SHIPTOPHONENUM
 
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
