@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email = "hi@creative.gs"
   s.extra_rdoc_files = ["LICENSE", "README.rdoc"]
   s.rdoc_options = ["--charset=UTF-8"]
-  s.homepage = "http://github.com/nov/paypal-express"
+  s.homepage = "http://github.com/CreativeGS/paypal-express"
   s.require_paths = ["lib"]
   s.executables = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.files = `git ls-files`.split("\n")
