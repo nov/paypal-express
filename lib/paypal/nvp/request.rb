@@ -42,7 +42,8 @@ module Paypal
       private
 
       def post(method, params)
-        RestClient.post(self.class.endpoint, common_params.merge(params).merge(:METHOD => method))
+        rest_params = common_params.merge(params).merge(METHOD: method)
+        RestClient.post(self.class.endpoint, rest_params)
       end
 
       def handle_response
