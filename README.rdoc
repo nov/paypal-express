@@ -4,7 +4,7 @@ Handle PayPal Express Checkout.
 Both Instance Payment and Recurring Payment are supported.
 Express Checkout for Digital Goods is also supported.
 
-{<img src="https://secure.travis-ci.org/nov/paypal-express.png" />}[http://travis-ci.org/nov/paypal-express]
+{<img src="https://secure.travis-ci.org/justqyx/paypal-express.png" />}[https://travis-ci.org/justqyx/paypal-express]
 
 == Installation
 
