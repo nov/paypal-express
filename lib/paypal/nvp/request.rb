@@ -3,19 +3,26 @@ module Paypal
     class Request < Base
       attr_required :username, :password, :signature
       attr_optional :subject
+      attr_optional :environment
       attr_accessor :version
+
+      PRODUCTION_ENVIRONMENT = :production
 
       ENDPOINT = {
         :production => 'https://api-3t.paypal.com/nvp',
         :sandbox => 'https://api-3t.sandbox.paypal.com/nvp'
       }
 
-      def self.endpoint
-        if Paypal.sandbox?
-          ENDPOINT[:sandbox]
+      def self.endpoint(_env = nil)
+        if _env
+          _env == PRODUCTION_ENVIRONMENT ? ENDPOINT[:production] : ENDPOINT[:sandbox]
         else
-          ENDPOINT[:production]
+          Paypal.sandbox? ? ENDPOINT[:sandbox] : ENDPOINT[:production]
         end
+      end
+
+      def endpoint
+        self.class.endpoint(environment)
       end
 
       def initialize(attributes = {})
@@ -42,7 +49,7 @@ module Paypal
       private
 
       def post(method, params)
-        RestClient.post(self.class.endpoint, common_params.merge(params).merge(:METHOD => method))
+        RestClient.post(endpoint, common_params.merge(params).merge(:METHOD => method))
       end
 
       def handle_response

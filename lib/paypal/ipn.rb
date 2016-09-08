@@ -1,17 +1,15 @@
 module Paypal
   module IPN
-    def self.endpoint
-      _endpoint_ = URI.parse Paypal.endpoint
+    def self.endpoint(environment = nil)
+      _endpoint_ = URI.parse Paypal.endpoint(environment)
       _endpoint_.query = {
         :cmd => '_notify-validate'
       }.to_query
       _endpoint_.to_s
     end
 
-    def self.verify!(raw_post)
-      response = RestClient.post(
-        endpoint, raw_post
-      )
+    def self.verify!(raw_post, environment = nil)
+      response = RestClient.post(endpoint(environment), raw_post)
       case response.body
       when 'VERIFIED'
         true

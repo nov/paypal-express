@@ -100,6 +100,20 @@ describe Paypal::Express::Request do
         end.not_to raise_error AttrRequired::AttrMissing
       end
     end
+
+    context 'when the optional environment parameter are given' do
+      it 'should use production endpoint' do
+        attributes[:environment] = :production
+        express_request = Paypal::Express::Request.new(attributes)
+        express_request.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
+      end
+
+      it 'should use sandbox endpoint' do
+        attributes[:environment] = :sandbox
+        express_request = Paypal::Express::Request.new(attributes)
+        express_request.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
+      end
+    end
   end
 
   describe '#setup' do

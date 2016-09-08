@@ -77,4 +77,38 @@ describe Paypal::Express::Response do
     end
   end
 
+  context 'when environment option is sandbox' do
+    before { fake_response 'SetExpressCheckout/success', :NVP, :environment => :sandbox }
+
+    let(:request) { Paypal::Express::Request.new(:username => 'nov', :password => 'password', :signature => 'sig', :environment => :sandbox) }
+    let(:response) { request.setup payment_request, return_url, cancel_url }
+    subject { response }
+
+    describe '#redirect_uri' do
+      subject { response.redirect_uri }
+      it { should include 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' }
+    end
+
+    describe '#popup_uri' do
+      subject { response.popup_uri }
+      it { should include 'https://www.sandbox.paypal.com/incontext?token=' }
+    end
+  end
+
+  context 'when environment option is production' do
+    before { fake_response 'SetExpressCheckout/success', :NVP, :environment => :production }
+    let(:request) { Paypal::Express::Request.new(:username => 'nov', :password => 'password', :signature => 'sig', :environment => :production) }
+    let(:response) { request.setup payment_request, return_url, cancel_url }
+    subject { response }
+
+    describe '#redirect_uri' do
+      subject { response.redirect_uri }
+      it { should include 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' }
+    end
+
+    describe '#popup_uri' do
+      subject { response.popup_uri }
+      it { should include 'https://www.paypal.com/incontext?token=' }
+    end
+  end
 end

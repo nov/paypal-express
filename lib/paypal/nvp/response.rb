@@ -90,6 +90,7 @@ module Paypal
             :first_name => attrs.delete(:FIRSTNAME),
             :last_name => attrs.delete(:LASTNAME),
             :email => attrs.delete(:EMAIL),
+            :phone => attrs.delete(:PHONENUM),
             :company => attrs.delete(:BUSINESS)
           )
         end

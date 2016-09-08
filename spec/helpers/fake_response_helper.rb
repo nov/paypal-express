@@ -5,9 +5,9 @@ module FakeResponseHelper
   def fake_response(file_path, api = :NVP, options = {})
     endpoint = case api
     when :NVP
-      Paypal::NVP::Request.endpoint
+      Paypal::NVP::Request.endpoint(options[:environment])
     when :IPN
-      Paypal::IPN.endpoint
+      Paypal::IPN.endpoint(options[:environment])
     else
       raise "Non-supported API: #{api}"
     end

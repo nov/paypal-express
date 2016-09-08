@@ -15,5 +15,11 @@ describe Paypal::IPN do
         expect { Paypal::IPN.verify!('raw-post-body') }.to raise_error(Paypal::Exception::APIError)
       end
     end
+
+    context 'when environment parameter is given' do
+      before { fake_response 'IPN/valid', :IPN, environment: :sandbox }
+      subject { Paypal::IPN.verify!('raw-post-body', :sandbox) }
+      it { should be_true }
+    end
   end
 end
