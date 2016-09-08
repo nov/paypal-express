@@ -13,20 +13,16 @@ module Paypal
         :sandbox => 'https://api-3t.sandbox.paypal.com/nvp'
       }
 
-      def self.endpoint
-        if Paypal.sandbox?
-          ENDPOINT[:sandbox]
+      def self.endpoint(_env = nil)
+        if _env
+          _env == PRODUCTION_ENVIRONMENT ? ENDPOINT[:production] : ENDPOINT[:sandbox]
         else
-          ENDPOINT[:production]
+          Paypal.sandbox? ? ENDPOINT[:sandbox] : ENDPOINT[:production]
         end
       end
 
       def endpoint
-        if environment
-          environment.to_sym == PRODUCTION_ENVIRONMENT ? ENDPOINT[:production] : ENDPOINT[:sandbox]
-        else
-          self.class.endpoint
-        end
+        self.class.endpoint(environment)
       end
 
       def initialize(attributes = {})

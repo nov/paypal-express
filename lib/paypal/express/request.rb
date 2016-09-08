@@ -32,17 +32,17 @@ module Paypal
           params.merge! payment_request.to_params(index)
         end
         response = self.request :SetExpressCheckout, params
-        Response.new response, options
+        new_response response, options.merge(environment: environment)
       end
 
       def details(token)
         response = self.request :GetExpressCheckoutDetails, {:TOKEN => token}
-        Response.new response
+        new_response response
       end
 
       def transaction_details(transaction_id)
         response = self.request :GetTransactionDetails, {:TRANSACTIONID=> transaction_id}
-        Response.new response
+        new_response response
       end
 
       def checkout!(token, payer_id, payment_requests)
@@ -54,7 +54,7 @@ module Paypal
           params.merge! payment_request.to_params(index)
         end
         response = self.request :DoExpressCheckoutPayment, params
-        Response.new response
+        new_response response
       end
 
       def capture!(authorization_id, amount, currency_code, complete_type = 'Complete')
@@ -66,7 +66,7 @@ module Paypal
         }
 
         response = self.request :DoCapture, params
-        Response.new response
+        new_response response
       end
 
       def void!(authorization_id, params={})
@@ -76,7 +76,7 @@ module Paypal
         }
 
         response = self.request :DoVoid, params
-        Response.new response
+        new_response response
       end
 
       # Recurring Payment Specific
@@ -87,7 +87,7 @@ module Paypal
         }
         params.merge! recurring_profile.to_params
         response = self.request :CreateRecurringPaymentsProfile, params
-        Response.new response
+        new_response response
       end
 
       def subscription(profile_id)
@@ -95,7 +95,7 @@ module Paypal
           :PROFILEID => profile_id
         }
         response = self.request :GetRecurringPaymentsProfileDetails, params
-        Response.new response
+        new_response response
       end
 
       def renew!(profile_id, action, options = {})
@@ -107,7 +107,7 @@ module Paypal
           params[:NOTE] = options[:note]
         end
         response = self.request :ManageRecurringPaymentsProfileStatus, params
-        Response.new response
+        new_response response
       end
 
       def suspend!(profile_id, options = {})
@@ -133,7 +133,7 @@ module Paypal
           params[:MAXAMT] = Util.formatted_amount options[:max_amount]
         end
         response = self.request :CreateBillingAgreement, params
-        Response.new response
+        new_response response
       end
 
       def agreement(reference_id)
@@ -141,7 +141,7 @@ module Paypal
           :REFERENCEID => reference_id
         }
         response = self.request :BillAgreementUpdate, params
-        Response.new response
+        new_response response
       end
 
       def charge!(reference_id, amount, options = {})
@@ -154,7 +154,7 @@ module Paypal
           params[:CURRENCYCODE] = options[:currency_code]
         end
         response = self.request :DoReferenceTransaction, params
-        Response.new response
+        new_response response
       end
 
       def revoke!(reference_id)
@@ -163,7 +163,7 @@ module Paypal
           :BillingAgreementStatus => :Canceled
         }
         response = self.request :BillAgreementUpdate, params
-        Response.new response
+        new_response response
       end
 
 
@@ -186,7 +186,13 @@ module Paypal
           params[:NOTE] = options[:note]
         end
         response = self.request :RefundTransaction, params
-        Response.new response
+        new_response response
+      end
+
+      private
+
+      def new_response response, options = {}
+        Response.new response, options.merge(environment: environment)
       end
 
     end

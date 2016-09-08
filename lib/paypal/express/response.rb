@@ -1,22 +1,28 @@
 module Paypal
   module Express
     class Response < NVP::Response
-      attr_accessor :pay_on_paypal, :mobile
+      attr_accessor :pay_on_paypal, :mobile, :environment
 
       def initialize(response, options = {})
         super response
         @pay_on_paypal = options[:pay_on_paypal]
         @mobile        = options[:mobile]
+
+        if options[:environment]
+          @environment = (options[:environment] == :production) ? :production : :sandbox
+        else
+          @environment = nil
+        end
       end
 
       def redirect_uri
-        endpoint = URI.parse Paypal.endpoint
+        endpoint = URI.parse(Paypal.endpoint(environment))
         endpoint.query = query(:with_cmd).to_query
         endpoint.to_s
       end
 
       def popup_uri
-        endpoint = URI.parse Paypal.popup_endpoint
+        endpoint = URI.parse(Paypal.popup_endpoint(environment))
         endpoint.query = query.to_query
         endpoint.to_s
       end
