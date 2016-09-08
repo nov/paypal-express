@@ -57,6 +57,28 @@ describe Paypal::NVP::Request do
         client.subject.should == 'user@example.com'
       end
     end
+
+    context 'when the environment optional parameter is production' do
+      before do
+        attributes[:environment] = :production
+      end
+
+      it 'should use production endpoint' do
+        client = Paypal::NVP::Request.new(attributes)
+        client.endpoint.should == Paypal::NVP::Request::ENDPOINT[:production]
+      end
+    end
+
+    context 'when the environment optional parameter is not production' do
+      before do
+        attributes[:environment] = :sandbox
+      end
+
+      it 'should use production endpoint' do
+        client = Paypal::NVP::Request.new(attributes)
+        client.endpoint.should == Paypal::NVP::Request::ENDPOINT[:sandbox]
+      end
+    end
   end
 
   describe '#common_params' do
