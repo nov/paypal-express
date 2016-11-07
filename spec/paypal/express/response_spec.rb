@@ -1,5 +1,4 @@
-require 'spec_helper.rb'
-
+# rspec spec/paypal/express/response_spec.rb
 describe Paypal::Express::Response do
   before { fake_response 'SetExpressCheckout/success' }
 
@@ -13,7 +12,7 @@ describe Paypal::Express::Response do
     )
   end
   let :payment_request do
-    Paypal::Payment::Request.new( 
+    Paypal::Payment::Request.new(
       :billing_type => :RecurringPayments,
       :billing_agreement_description => 'Recurring Payment Request'
     )
@@ -22,7 +21,9 @@ describe Paypal::Express::Response do
 
   describe '#redirect_uri' do
     subject { response.redirect_uri }
-    it { should include 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token=' }
+    it do
+      should include 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='
+    end
   end
 
   describe '#popup_uri' do

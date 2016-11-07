@@ -6,6 +6,7 @@ end
 
 require 'paypal'
 require 'rspec'
+require 'pry'
 require 'helpers/fake_response_helper'
 
 RSpec.configure do |config|

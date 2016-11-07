@@ -24,4 +24,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "simplecov"
   s.add_development_dependency "rspec", "< 2.99"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
+  s.add_development_dependency "pry"
 end
