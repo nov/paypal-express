@@ -25,6 +25,7 @@ module Paypal
       Paypal::ENDPOINT[:production]
     end
   end
+
   def self.popup_endpoint
     if sandbox?
       Paypal::POPUP_ENDPOINT[:sandbox]

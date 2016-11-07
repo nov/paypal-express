@@ -3,6 +3,15 @@ module Paypal
     class Response < NVP::Response
       attr_accessor :pay_on_paypal, :mobile
 
+      # Paypal::Express::Response.new()
+      # response = {
+      #   :ACK=>"Success",
+      #   :BUILD=>"1721431",
+      #   :CORRELATIONID=>"5549ea3a78af1",
+      #   :TIMESTAMP=>"2011-02-02T02:02:18Z",
+      #   :TOKEN=>"EC-5YJ90598G69065317",
+      #   :VERSION=>"66.0"
+      # }
       def initialize(response, options = {})
         super response
         @pay_on_paypal = options[:pay_on_paypal]
