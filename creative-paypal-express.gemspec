@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.description = %q{PayPal Express Checkout API Client for Instance, Recurring and Digital Goods Payment.}
   s.summary = %q{PayPal Express Checkout API Client for Instance, Recurring and Digital Goods Payment.}
   s.email = "hi@creative.gs"
-  s.extra_rdoc_files = ["LICENSE", "README.rdoc"]
+  s.extra_rdoc_files = ["LICENSE", "README.md"]
   s.rdoc_options = ["--charset=UTF-8"]
   s.homepage = "http://github.com/CreativeGS/paypal-express"
   s.require_paths = ["lib"]
