@@ -21,7 +21,7 @@ describe Paypal::Express::Response do
 
   describe '#redirect_uri' do
     subject { response.redirect_uri }
-    it do      
+    it do
       should include 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&token='
     end
   end
