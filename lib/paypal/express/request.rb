@@ -13,6 +13,9 @@ module Paypal
           params[:REQCONFIRMSHIPPING] = 0
           params[:NOSHIPPING] = 1
         end
+        if options[:max_amount]
+          params[:MAXAMT] = Util.formatted_amount options[:max_amount]
+        end
 
         params[:ALLOWNOTE] = 0 if options[:allow_note] == false
 
@@ -129,9 +132,6 @@ module Paypal
         params = {
           :TOKEN => token
         }
-        if options[:max_amount]
-          params[:MAXAMT] = Util.formatted_amount options[:max_amount]
-        end
         response = self.request :CreateBillingAgreement, params
         Response.new response
       end
