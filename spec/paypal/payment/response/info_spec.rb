@@ -40,7 +40,7 @@ describe Paypal::Payment::Response::Info do
         end
         from_symbol_uppercase.amount.should == Paypal::Payment::Common::Amount.new(
           :total => 14,
-          :fee => 0.85
+          :fee => BigDecimal("0.85")
         )
       end
     end

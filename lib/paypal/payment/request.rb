@@ -59,7 +59,7 @@ module Paypal
 
       def items_amount
         self.items.sum do |item|
-          item.quantity * BigDecimal.new(item.amount.to_s)
+          item.quantity * BigDecimal(item.amount.to_s)
         end
       end
     end
