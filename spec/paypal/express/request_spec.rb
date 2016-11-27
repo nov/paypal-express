@@ -97,7 +97,7 @@ describe Paypal::Express::Request do
       it 'should succeed' do
         expect do
           Paypal::Express::Request.new attributes
-        end.not_to raise_error AttrRequired::AttrMissing
+        end.not_to raise_error
       end
     end
   end
@@ -262,6 +262,20 @@ describe Paypal::Express::Request do
       Paypal.logger.should_not_receive(:warn)
       fake_response 'GetTransactionDetails/success'
       response = instance.transaction_details 'transaction_id'
+    end
+  end
+
+  describe "#transaction_search" do
+    it 'should return Paypal::Express::Response' do
+      fake_response 'TransactionSearch/success'
+      response = instance.transaction_search 1.day.ago
+      response.should be_instance_of Paypal::Express::TransactionsResponse
+    end
+
+    it 'should handle all attributes' do
+      Paypal.logger.should_not_receive(:warn)
+      fake_response 'TransactionSearch/success'
+      response = instance.transaction_search 1.day.ago
     end
   end
 

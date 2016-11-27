@@ -45,6 +45,31 @@ module Paypal
         Response.new response
       end
 
+      # https://developer.paypal.com/docs/classic/api/merchant/TransactionSearch_API_Operation_NVP/
+      def transaction_search(start_date, options = {})
+        # Required params
+        params = {
+          :STARTDATE => start_date
+        }
+
+        # HM - Not all searchable params present here, I only put those that are needed here.
+        {
+          :end_date       => :ENDDATE,
+          :payer_email    => :EMAIL,
+          :receiver_email => :RECEIVER,
+          :transaction_id => :TRANSACTIONID,
+          :amount         => :AMT,
+          :currency_code  => :CURRENCYCODE,
+          :status         => :STATUS,
+          :profile_id     => :PROFILEID
+        }.each do |option_key, param_key|
+          params[param_key] = options[option_key] if options[option_key]
+        end
+
+        response = self.request :TransactionSearch, params
+        TransactionsResponse.new response
+      end
+
       def checkout!(token, payer_id, payment_requests)
         params = {
           :TOKEN => token,
