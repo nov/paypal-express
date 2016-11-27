@@ -60,11 +60,10 @@ module Paypal
       def capture!(authorization_id, amount, currency_code, complete_type = 'Complete')
         params = {
           :AUTHORIZATIONID => authorization_id,
-          :COMPLETETYPE => complete_type,
           :AMT => amount,
           :CURRENCYCODE => currency_code
         }
-
+        params[:COMPLETETYPE] = complete_type unless complete_type.nil?
         response = self.request :DoCapture, params
         Response.new response
       end
