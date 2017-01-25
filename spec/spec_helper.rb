@@ -50,6 +50,7 @@ def expected_recurring_profile_parameters(options={})
     # :TOTALBILLINGCYCLES => "0", # optional field, '0' value makes profile last forever
     # :MAXFAILEDPAYMENTS => "3",
     # :AUTOBILLAMT => "AddToNextBilling",
+    # :AUTOBILLOUTAMT => "AddToNextBilling",
     #
     # # Digital goods fields
     # :L_PAYMENTREQUEST_0_ITEMCATEGORY0 => "Digital",
@@ -94,10 +95,7 @@ def auxilary_profile_parameters(options={})
     :TOTALBILLINGCYCLES => "0", # optional field, '0' value makes profile last forever
     :MAXFAILEDPAYMENTS => "3",
     :AUTOBILLAMT => "AddToNextBilling",
+    :AUTOBILLOUTAMT => "AddToNextBilling",
 
-    :L_PAYMENTREQUEST_0_ITEMCATEGORY0 => "Digital",
-    :L_PAYMENTREQUEST_0_NAME0 => "Cat Clip Collection",
-    :L_PAYMENTREQUEST_0_AMT0 => "9.00",
-    :L_PAYMENTREQUEST_0_QTY0 => "1",
   }.merge(options)
 end
