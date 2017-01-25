@@ -24,14 +24,18 @@ module Paypal
           :locale        => :LOCALECODE,
           :logo          => :LOGOIMG,
           :cart_border_color => :CARTBORDERCOLOR,
-          :payflow_color => :PAYFLOWCOLOR
+          :payflow_color => :PAYFLOWCOLOR,
+          :receiver_email => :PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID
         }.each do |option_key, param_key|
           params[param_key] = options[option_key] if options[option_key]
         end
+
         Array(payment_requests).each_with_index do |payment_request, index|
           params.merge! payment_request.to_params(index)
         end
-        response = self.request :SetExpressCheckout, params
+
+        response = request(:SetExpressCheckout, params)
+
         Response.new response, options
       end
 
@@ -85,9 +89,9 @@ module Paypal
         params = {
           :TOKEN => token
         }
-        params.merge! recurring_profile.to_params
-        response = self.request :CreateRecurringPaymentsProfile, params
-        Response.new response
+        params.merge!(recurring_profile.to_params)
+        response = self.request(:CreateRecurringPaymentsProfile, params)
+        Response.new(response)
       end
 
       def subscription(profile_id)
@@ -106,7 +110,8 @@ module Paypal
         if options[:note]
           params[:NOTE] = options[:note]
         end
-        response = self.request :ManageRecurringPaymentsProfileStatus, params
+
+        response = request(:ManageRecurringPaymentsProfileStatus, params)
         Response.new response
       end
 
@@ -167,8 +172,7 @@ module Paypal
       end
 
 
-      # Refund Specific
-
+      #== Refund Specific
       def refund!(transaction_id, options = {})
         params = {
           :TRANSACTIONID => transaction_id,

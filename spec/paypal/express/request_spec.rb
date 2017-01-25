@@ -68,7 +68,8 @@ describe Paypal::Express::Request do
         :period => :Month,
         :frequency => 1,
         :amount => 1000
-      }
+      },
+      raw: {:CURRENCYCODE => "EUR"},
     )
   end
 
@@ -369,20 +370,21 @@ describe Paypal::Express::Request do
   describe '#subscribe!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'CreateRecurringPaymentsProfile/success'
-      response = instance.subscribe! 'token', recurring_profile
+      response = instance.subscribe!('token', recurring_profile)
       response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call CreateRecurringPaymentsProfile' do
       expect do
-        instance.subscribe! 'token', recurring_profile
-      end.to request_to nvp_endpoint, :post
+        instance.subscribe!('token', recurring_profile)
+      end.to request_to(nvp_endpoint, :post)
       instance._method_.should == :CreateRecurringPaymentsProfile
       instance._sent_params_.should == {
         :DESC => 'Recurring Profile',
         :TOKEN => 'token',
         :SHIPPINGAMT => '0.00',
         :AMT => '1000.00',
+        :CURRENCYCODE => "EUR",
         :BILLINGFREQUENCY => 1,
         :MAXFAILEDPAYMENTS => 0,
         :BILLINGPERIOD => :Month,
@@ -433,7 +435,7 @@ describe Paypal::Express::Request do
   describe '#cancel!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'ManageRecurringPaymentsProfileStatus/success'
-      response = instance.cancel! 'profile_id'
+      response = instance.cancel!('profile_id')
       response.should be_instance_of(Paypal::Express::Response)
     end
 
