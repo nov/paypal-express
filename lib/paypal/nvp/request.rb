@@ -41,25 +41,36 @@ module Paypal
 
       private
 
-      def post(method, params)
-        rest_params = common_params.merge(params).merge(METHOD: method)
-        RestClient.post(self.class.endpoint, rest_params)
-      end
+        def post(method, params)
+          rest_params = common_params.merge(params).merge(METHOD: method)
 
-      def handle_response
-        response = yield
-        response = CGI.parse(response).inject({}) do |res, (k, v)|
-          res.merge!(k.to_sym => v.first)
+          response = RestClient.post(self.class.endpoint, rest_params)
+
+          puts ">> Paypal::NVP Got response to POST request <<"
+          puts "Request arguments:\nendpoint: #{self.class.endpoint}\nparams: #{rest_params})\n"
+          puts "Response string:\n#{response}"
+          puts "=============================================="
+
+          return response
         end
-        case response[:ACK]
-        when 'Success', 'SuccessWithWarning'
-          response
-        else
-          raise Exception::APIError.new(response)
+
+        def handle_response
+          response = yield
+          response = CGI.parse(response).inject({}) do |res, (k, v)|
+            res.merge!(k.to_sym => v.first)
+          end
+
+          case response[:ACK]
+          when 'Success', 'SuccessWithWarning'
+            response
+          else
+            raise Exception::APIError.new(response)
+          end
+
+        rescue RestClient::Exception => e
+          raise Exception::HttpError.new(e.http_code, e.message, e.http_body)
         end
-      rescue RestClient::Exception => e
-        raise Exception::HttpError.new(e.http_code, e.message, e.http_body)
-      end
+
     end
   end
 end
