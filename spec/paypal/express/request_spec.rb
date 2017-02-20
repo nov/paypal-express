@@ -1,5 +1,4 @@
-require 'spec_helper.rb'
-
+# rspec spec/paypal/express/request_spec.rb
 describe Paypal::Express::Request do
   class Paypal::Express::Request
     attr_accessor :_sent_params_, :_method_
@@ -486,6 +485,27 @@ describe Paypal::Express::Request do
         :ACTION => :Reactivate,
         :PROFILEID => 'profile_id'
       }
+    end
+  end
+
+  describe "#amend!(profile_id, options={})" do
+    it "should raise ArgumentError if :amount not passed" do
+      expect{instance.amend!('profile_id')}.to raise_error(ArgumentError, ":amount option missing!")
+    end
+
+    it "should call UpdateRecurringPaymentsProfile" do
+      expect{instance.amend!('profile_id', {note: "test changes", amount: 19.95})}.
+        to request_to(nvp_endpoint, :post)
+
+      expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
+      expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', :NOTE => "test changes", :AMT => 19.95})
+    end
+
+    it 'should return Paypal::Express::Response' do
+      fake_response 'UpdateRecurringPaymentsProfile/success'
+      response = instance.amend!('profile_id', {note: "test changes", amount: 19.95})
+
+      expect(response.class).to eq Paypal::Express::Response
     end
   end
 

@@ -127,6 +127,19 @@ module Paypal
         renew!(profile_id, :Reactivate, options)
       end
 
+      # Expects optional :note option and mandatory :amount option
+      def amend!(profile_id, options={})
+        # Developed according to https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECRecurringPayments/#modifying-a-recurring-payments-profile
+        # and https://developer.paypal.com/docs/classic/api/merchant/UpdateRecurringPaymentsProfile_API_Operation_NVP/
+        params = {
+          :PROFILEID => profile_id,
+          :NOTE => options[:note],
+          :AMT => options[:amount].presence || (raise ArgumentError.new(":amount option missing!")), # Paypal accepts 19.95 type decimals
+        }
+
+        response = request(:UpdateRecurringPaymentsProfile, params)
+        return Response.new(response)
+      end
 
       # Reference Transaction Specific
 
