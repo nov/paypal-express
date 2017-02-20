@@ -1,16 +1,16 @@
-= paypal-express
+# paypal-express
 
 Handle PayPal Express Checkout.
 Both Instance Payment and Recurring Payment are supported.
 Express Checkout for Digital Goods is also supported.
 
-{<img src="https://secure.travis-ci.org/nov/paypal-express.png" />}[http://travis-ci.org/nov/paypal-express]
+## Installation
 
-== Installation
+```rb
+gem "creative-paypal-express", "~> 1.2.0"
+```
 
-  gem install paypal-express
-
-== Usage
+## Usage
 
 See Wiki on Github
 https://github.com/nov/paypal-express/wiki
@@ -19,7 +19,7 @@ Play with Sample Rails App
 https://github.com/nov/paypal-express-sample
 https://paypal-express-sample.heroku.com
 
-== Note on Patches/Pull Requests
+## Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -29,6 +29,6 @@ https://paypal-express-sample.heroku.com
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+## Copyright
 
 Copyright (c) 2011 nov matake. See LICENSE for details.

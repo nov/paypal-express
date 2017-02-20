@@ -1,5 +1,4 @@
-require 'spec_helper.rb'
-
+# rspec spec/paypal/nvp/response_spec.rb
 describe Paypal::NVP::Response do
   let(:return_url) { 'http://example.com/success' }
   let(:cancel_url) { 'http://example.com/cancel' }
@@ -143,4 +142,17 @@ describe Paypal::NVP::Response do
       end
     end
   end
+
+  describe "#to_s" do
+    before do
+      fake_response 'SetExpressCheckout/success'
+    end
+
+    it "should return a stringified hash of POST request response that instantiated the object" do
+      response = request.setup(payment_request, return_url, cancel_url)
+
+      expect(response.to_s).to eq("{:ACK=>\"Success\", :BUILD=>\"1721431\", :CORRELATIONID=>\"5549ea3a78af1\", :TIMESTAMP=>\"2011-02-02T02:02:18Z\", :TOKEN=>\"EC-5YJ90598G69065317\", :VERSION=>\"66.0\"}")
+    end
+  end
+
 end

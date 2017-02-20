@@ -7,7 +7,7 @@ require 'rest_client'
 
 module Paypal
   mattr_accessor :api_version
-  self.api_version = '88.0'
+  self.api_version = '95.0'
 
   ENDPOINT = {
     :production => 'https://www.paypal.com/cgi-bin/webscr',
@@ -25,6 +25,7 @@ module Paypal
       Paypal::ENDPOINT[:production]
     end
   end
+
   def self.popup_endpoint
     if sandbox?
       Paypal::POPUP_ENDPOINT[:sandbox]
