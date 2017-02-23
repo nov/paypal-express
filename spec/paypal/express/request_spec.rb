@@ -489,21 +489,36 @@ describe Paypal::Express::Request do
   end
 
   describe "#amend!(profile_id, options={})" do
-    it "should raise ArgumentError if :amount not passed" do
-      expect{instance.amend!('profile_id')}.to raise_error(ArgumentError, ":amount option missing!")
+    context "when calling with mandatory options missing" do
+      it "should raise ArgumentError" do
+        expect{instance.amend!('profile_id', {currency_code: "EUR"})}.to raise_error(ArgumentError, ":amount option missing!")
+        expect{instance.amend!('profile_id', {amount: 19.95})}.to raise_error(ArgumentError, ":currency_code option missing!")
+      end
     end
 
-    it "should call UpdateRecurringPaymentsProfile" do
-      expect{instance.amend!('profile_id', {note: "test changes", amount: 19.95})}.
-        to request_to(nvp_endpoint, :post)
+    context "when calling with note option" do
+      it "should call UpdateRecurringPaymentsProfile with correct method and params" do
+        expect{instance.amend!('profile_id', {note: "test changes", amount: 19.95, currency_code: "EUR"})}.
+          to request_to(nvp_endpoint, :post)
 
-      expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
-      expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', :NOTE => "test changes", :AMT => 19.95})
+        expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
+        expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', :NOTE => "test changes", CURRENCYCODE: "EUR", :AMT => 19.95})
+      end
+    end
+
+    context "when calling without note option" do
+      it "should call UpdateRecurringPaymentsProfile with correct method and params" do
+        expect{instance.amend!('profile_id', {amount: 19.95, currency_code: "EUR"})}.
+          to request_to(nvp_endpoint, :post)
+
+        expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
+        expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', CURRENCYCODE: "EUR", :AMT => 19.95})
+      end
     end
 
     it 'should return Paypal::Express::Response' do
       fake_response 'UpdateRecurringPaymentsProfile/success'
-      response = instance.amend!('profile_id', {note: "test changes", amount: 19.95})
+      response = instance.amend!('profile_id', {note: "test changes", currency_code: "EUR", amount: 19.95})
 
       expect(response.class).to eq Paypal::Express::Response
     end

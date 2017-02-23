@@ -1,3 +1,11 @@
+## v1.2.1
+__Updated:__
+- Subscription amendment now takes mandatory currency_code option.
+
+```rb
+Paypal::Express::Request.new(params).amend!("profile_id", {amount: 19.95, currency_code: "EUR", note: "will show up in email and profile logs"})
+```
+
 ## v1.2.0
 __Added:__
 - Ability to amend a created paypal subscription (its amount)

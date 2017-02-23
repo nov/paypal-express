@@ -135,7 +135,8 @@ module Paypal
           :PROFILEID => profile_id,
           :NOTE => options[:note],
           :AMT => options[:amount].presence || (raise ArgumentError.new(":amount option missing!")), # Paypal accepts 19.95 type decimals
-        }
+          :CURRENCYCODE => options[:currency_code].presence || (raise ArgumentError.new(":currency_code option missing!")),  # "EUR"
+        }.select{|k, v| v.present?}
 
         response = request(:UpdateRecurringPaymentsProfile, params)
         return Response.new(response)

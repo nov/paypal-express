@@ -7,7 +7,7 @@ Express Checkout for Digital Goods is also supported.
 ## Installation
 
 ```rb
-gem "creative-paypal-express", "~> 1.2.0"
+gem "creative-paypal-express", "~> 1.2.1"
 ```
 
 ## Usage
