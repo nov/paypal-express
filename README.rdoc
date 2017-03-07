@@ -5,6 +5,7 @@ Both Instance Payment and Recurring Payment are supported.
 Express Checkout for Digital Goods is also supported.
 
 {<img src="https://secure.travis-ci.org/nov/paypal-express.png" />}[http://travis-ci.org/nov/paypal-express]
+{<img src="https://img.shields.io/badge/API%20Test-RapidAPI-blue.svg" />}[hhttps://rapidapi.com/package/PayPal/functions?utm_source=PaypalGithub&utm_medium=button&utm_content=Vender_GitHub]
 
 == Installation
 
