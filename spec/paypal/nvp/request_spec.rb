@@ -57,6 +57,13 @@ describe Paypal::NVP::Request do
         client.subject.should == 'user@example.com'
       end
     end
+
+    context 'when optional parameters are not given' do
+      it 'subject is empty' do
+        client = Paypal::NVP::Request.new attributes
+        client.subject.should be_empty
+      end
+    end
   end
 
   describe '#common_params' do

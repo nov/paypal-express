@@ -21,6 +21,7 @@ module Paypal
       def initialize(attributes = {})
         @version = Paypal.api_version
         super
+        self.subject ||= ''
       end
 
       def common_params
