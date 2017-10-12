@@ -1,5 +1,3 @@
-require 'spec_helper.rb'
-
 describe Paypal::Util do
   describe '.formatted_amount' do
     it 'should return String in "xx.yy" format' do

@@ -124,7 +124,7 @@ describe Paypal::NVP::Response do
 
       it 'should handle all attributes' do
         Paypal.logger.should_not_receive(:warn)
-        response = request.subscription 'profile_id'
+        response = request.subscription('profile_id')
         response.recurring.billing.amount.total.should == 1000
         response.recurring.regular_billing.paid.should == 1000
         response.recurring.summary.next_billing_date.should == '2011-03-04T10:00:00Z'
@@ -148,10 +148,24 @@ describe Paypal::NVP::Response do
       fake_response 'SetExpressCheckout/success'
     end
 
-    it "should return a stringified hash of POST request response that instantiated the object" do
+    it "returns a stringified representation of the response->hash conversion" do
       response = request.setup(payment_request, return_url, cancel_url)
 
       expect(response.to_s).to eq("{:ACK=>\"Success\", :BUILD=>\"1721431\", :CORRELATIONID=>\"5549ea3a78af1\", :TIMESTAMP=>\"2011-02-02T02:02:18Z\", :TOKEN=>\"EC-5YJ90598G69065317\", :VERSION=>\"66.0\"}")
+    end
+  end
+
+  describe "#to_json" do
+    before do
+      fake_response 'SetExpressCheckout/success'
+    end
+
+    it "returns a JSON representation of the response->hash conversion" do
+      response = request.setup(payment_request, return_url, cancel_url)
+
+      expect(response.to_json).to eq(
+        "{\"ACK\":\"Success\",\"BUILD\":\"1721431\",\"CORRELATIONID\":\"5549ea3a78af1\",\"TIMESTAMP\":\"2011-02-02T02:02:18Z\",\"TOKEN\":\"EC-5YJ90598G69065317\",\"VERSION\":\"66.0\"}"
+      )
     end
   end
 

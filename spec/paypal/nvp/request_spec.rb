@@ -1,5 +1,3 @@
-require 'spec_helper.rb'
-
 describe Paypal::NVP::Request do
   let :attributes do
     {

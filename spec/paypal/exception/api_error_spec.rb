@@ -1,5 +1,3 @@
-require 'spec_helper.rb'
-
 describe Paypal::Exception::APIError do
   let(:error) { Paypal::Exception::APIError.new(params) }
 

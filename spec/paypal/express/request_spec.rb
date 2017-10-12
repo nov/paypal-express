@@ -2,13 +2,20 @@
 describe Paypal::Express::Request do
   class Paypal::Express::Request
     attr_accessor :_sent_params_, :_method_
-    def post_with_logging(method, params)
+  end
+
+  module Verbose
+    def request(method, params = {})
       self._method_ = method
       self._sent_params_ = params
-      post_without_logging method, params
+
+      handle_response do
+        post(method, params)
+      end
     end
-    alias_method_chain :post, :logging
   end
+
+  Paypal::Express::Request.include(Verbose)
 
   let(:return_url) { 'http://example.com/success' }
   let(:cancel_url) { 'http://example.com/cancel' }
@@ -103,16 +110,17 @@ describe Paypal::Express::Request do
   end
 
   describe '#setup' do
-    it 'should return Paypal::Express::Response' do
+    it 'returns Paypal::Express::Response' do
       fake_response 'SetExpressCheckout/success'
-      response = instance.setup recurring_payment_request, return_url, cancel_url
+      response = instance.setup(recurring_payment_request, return_url, cancel_url)
       response.should be_instance_of Paypal::Express::Response
     end
 
-    it 'should support no_shipping option' do
-      expect do
-        instance.setup instant_payment_request, return_url, cancel_url, :no_shipping => true
-      end.to request_to nvp_endpoint, :post
+    it 'supports no_shipping option' do
+      expect {
+        instance.setup(instant_payment_request, return_url, cancel_url, :no_shipping => true)
+      }.to(request_to(nvp_endpoint, :post))
+
       instance._method_.should == :SetExpressCheckout
       instance._sent_params_.should == {
         :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',

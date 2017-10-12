@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
 
   s.add_dependency "activesupport", ">= 4"
-  s.add_dependency "rest-client"
+  s.add_dependency "rest-client", "~> 2.0.0"
   s.add_dependency "attr_required", ">= 0.0.5"
 
   # s.add_development_dependency "activesupport", "4.1" # uses this for development, but will probably work with higher versions
@@ -24,5 +24,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "simplecov"
   s.add_development_dependency "rspec", "< 2.99"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
+  # s.add_development_dependency "webmock", "~> 2.3.1"
   s.add_development_dependency "pry"
 end

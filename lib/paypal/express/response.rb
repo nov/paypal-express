@@ -19,7 +19,7 @@ module Paypal
       end
 
       def redirect_uri
-        endpoint = URI.parse Paypal.endpoint
+        endpoint = URI.parse(Paypal.endpoint)
         endpoint.query = query(:with_cmd).to_query
         endpoint.to_s
       end

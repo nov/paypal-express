@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Paypal::IPN do
   describe '.verify!' do
     context 'when valid' do

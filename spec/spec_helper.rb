@@ -1,3 +1,7 @@
+abort(
+  "Please use Ruby 2.3.5 or less in specs, fakeweb breaks on 2.4.0"
+) if RUBY_VERSION[%r'\A2\.[4-9]']
+
 require 'simplecov'
 
 SimpleCov.start do

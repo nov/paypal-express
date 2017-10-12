@@ -193,8 +193,9 @@ module Paypal
             payment_responses[index.to_i][key.to_sym] = attrs.delete(_attr_)
           end
         end
+
         @payment_responses = payment_responses.collect do |_attrs_|
-          Payment::Response.new _attrs_
+          Payment::Response.new(_attrs_)
         end
 
         # payment_info
@@ -234,7 +235,11 @@ module Paypal
       end
 
       def to_s
-        return @raw_response.to_s
+        @raw_response.to_s
+      end
+
+      def to_json
+        @raw_response.to_json
       end
     end
   end

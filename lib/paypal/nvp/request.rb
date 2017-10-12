@@ -44,20 +44,20 @@ module Paypal
         def post(method, params)
           rest_params = common_params.merge(params).merge(METHOD: method)
 
-          response = RestClient.post(self.class.endpoint, rest_params)
+          response = RestClient.post(send(:class).endpoint, rest_params)
 
           puts ">> Paypal::NVP Got response to POST request <<"
           puts "Request arguments:\nendpoint: #{self.class.endpoint}\nparams: #{rest_params})\n"
           puts "Response string:\n#{response}"
           puts "=============================================="
 
-          return response
+          response
         end
 
         def handle_response
           response = yield
           response = CGI.parse(response).inject({}) do |res, (k, v)|
-            res.merge!(k.to_sym => v.first)
+            res.merge!(k.to_sym => v.first.to_s)
           end
 
           case response[:ACK]
