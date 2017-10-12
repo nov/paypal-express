@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "attr_required", ">= 0.0.5"
 
   # s.add_development_dependency "activesupport", "4.1" # uses this for development, but will probably work with higher versions
-  s.add_development_dependency "rake", ">= 0.8"
+  s.add_development_dependency "rake", "~> 10.5.0"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "rspec", "< 2.99"
   s.add_development_dependency "fakeweb", ">= 1.3.0"
