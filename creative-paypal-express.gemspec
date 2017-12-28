@@ -15,11 +15,11 @@ Gem::Specification.new do |s|
   s.files = `git ls-files`.split("\n")
   s.test_files = `git ls-files -- {test,spec,features}/*`.split("\n")
 
-  s.add_dependency "activesupport", ">= 4"
+  # s.add_dependency "activesupport", ">= 4"
   s.add_dependency "rest-client", "~> 2.0.0"
   s.add_dependency "attr_required", ">= 0.0.5"
 
-  # s.add_development_dependency "activesupport", "4.1" # uses this for development, but will probably work with higher versions
+  s.add_development_dependency "activesupport", "~> 4.2" # uses this for development, but will probably work with higher versions
   s.add_development_dependency "rake", "~> 10.5.0"
   s.add_development_dependency "simplecov"
   s.add_development_dependency "rspec", "< 2.99"

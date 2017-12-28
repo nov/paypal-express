@@ -59,14 +59,6 @@ module Paypal
           response = CGI.parse(response).inject({}) do |res, (k, v)|
             res.merge!(k.to_sym => v.first.to_s)
           end
-
-          case response[:ACK]
-          when 'Success', 'SuccessWithWarning'
-            response
-          else
-            raise Exception::APIError.new(response)
-          end
-
         rescue RestClient::Exception => e
           raise Exception::HttpError.new(e.http_code, e.message, e.http_body)
         end

@@ -245,8 +245,8 @@ describe Paypal::Express::Request do
   describe '#transaction_details' do
     it 'should return Paypal::Express::Response' do
       fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_details 'transaction_id'
-      response.should be_instance_of Paypal::Express::Response
+      response = instance.transaction_details('transaction_id')
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should call GetTransactionDetails' do
@@ -259,25 +259,24 @@ describe Paypal::Express::Request do
       }
     end
 
-    it 'should fail with bad transaction id' do
-      expect do
-        fake_response 'GetTransactionDetails/failure'
-        response = instance.transaction_details 'bad_transaction_id'
-      end.to raise_error(Paypal::Exception::APIError)
+    it 'does not fail with bad transaction id' do
+      fake_response 'GetTransactionDetails/failure'
+      response = instance.transaction_details('bad_transaction_id')
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should handle all attributes' do
       Paypal.logger.should_not_receive(:warn)
       fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_details 'transaction_id'
+      response = instance.transaction_details('transaction_id')
     end
   end
 
   describe "#capture!" do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoCapture/success'
-      response = instance.capture! 'authorization_id', 181.98, :BRL
-      response.should be_instance_of Paypal::Express::Response
+      response = instance.capture!('authorization_id', 181.98, :BRL)
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should call DoExpressCheckoutPayment' do

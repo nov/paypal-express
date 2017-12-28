@@ -1,3 +1,7 @@
+## v1.4.0
+__Updated:__
+- Responses no longer raise if ACK is not success, allows you to inspect and handle fails yourself.
+
 ## v1.2.1
 __Updated:__
 - Subscription amendment now takes mandatory currency_code option.
