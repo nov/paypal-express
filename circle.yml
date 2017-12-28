@@ -1,0 +1,6 @@
+machine:
+  ruby:
+    version: 2.3.5
+  timezone: "Europe/Riga"
+  environment:
+    COV: 'false'

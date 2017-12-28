@@ -1,15 +1,21 @@
-require 'spec_helper.rb'
-
+# rspec spec/paypal/express/request_spec.rb
 describe Paypal::Express::Request do
   class Paypal::Express::Request
     attr_accessor :_sent_params_, :_method_
-    def post_with_logging(method, params)
+  end
+
+  module Verbose
+    def request(method, params = {})
       self._method_ = method
       self._sent_params_ = params
-      post_without_logging method, params
+
+      handle_response do
+        post(method, params)
+      end
     end
-    alias_method_chain :post, :logging
   end
+
+  Paypal::Express::Request.include(Verbose)
 
   let(:return_url) { 'http://example.com/success' }
   let(:cancel_url) { 'http://example.com/cancel' }
@@ -68,7 +74,8 @@ describe Paypal::Express::Request do
         :period => :Month,
         :frequency => 1,
         :amount => 1000
-      }
+      },
+      raw: {:CURRENCYCODE => "EUR"},
     )
   end
 
@@ -103,16 +110,17 @@ describe Paypal::Express::Request do
   end
 
   describe '#setup' do
-    it 'should return Paypal::Express::Response' do
+    it 'returns Paypal::Express::Response' do
       fake_response 'SetExpressCheckout/success'
-      response = instance.setup recurring_payment_request, return_url, cancel_url
+      response = instance.setup(recurring_payment_request, return_url, cancel_url)
       response.should be_instance_of Paypal::Express::Response
     end
 
-    it 'should support no_shipping option' do
-      expect do
-        instance.setup instant_payment_request, return_url, cancel_url, :no_shipping => true
-      end.to request_to nvp_endpoint, :post
+    it 'supports no_shipping option' do
+      expect {
+        instance.setup(instant_payment_request, return_url, cancel_url, :no_shipping => true)
+      }.to(request_to(nvp_endpoint, :post))
+
       instance._method_.should == :SetExpressCheckout
       instance._sent_params_.should == {
         :PAYMENTREQUEST_0_DESC => 'Instant Payment Request',
@@ -237,8 +245,8 @@ describe Paypal::Express::Request do
   describe '#transaction_details' do
     it 'should return Paypal::Express::Response' do
       fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_details 'transaction_id'
-      response.should be_instance_of Paypal::Express::Response
+      response = instance.transaction_details('transaction_id')
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should call GetTransactionDetails' do
@@ -251,25 +259,24 @@ describe Paypal::Express::Request do
       }
     end
 
-    it 'should fail with bad transaction id' do
-      expect do
-        fake_response 'GetTransactionDetails/failure'
-        response = instance.transaction_details 'bad_transaction_id'
-      end.to raise_error(Paypal::Exception::APIError)
+    it 'does not fail with bad transaction id' do
+      fake_response 'GetTransactionDetails/failure'
+      response = instance.transaction_details('bad_transaction_id')
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should handle all attributes' do
       Paypal.logger.should_not_receive(:warn)
       fake_response 'GetTransactionDetails/success'
-      response = instance.transaction_details 'transaction_id'
+      response = instance.transaction_details('transaction_id')
     end
   end
 
   describe "#capture!" do
     it 'should return Paypal::Express::Response' do
       fake_response 'DoCapture/success'
-      response = instance.capture! 'authorization_id', 181.98, :BRL
-      response.should be_instance_of Paypal::Express::Response
+      response = instance.capture!('authorization_id', 181.98, :BRL)
+      response.should be_instance_of(Paypal::Express::Response)
     end
 
     it 'should call DoExpressCheckoutPayment' do
@@ -369,20 +376,21 @@ describe Paypal::Express::Request do
   describe '#subscribe!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'CreateRecurringPaymentsProfile/success'
-      response = instance.subscribe! 'token', recurring_profile
+      response = instance.subscribe!('token', recurring_profile)
       response.should be_instance_of Paypal::Express::Response
     end
 
     it 'should call CreateRecurringPaymentsProfile' do
       expect do
-        instance.subscribe! 'token', recurring_profile
-      end.to request_to nvp_endpoint, :post
+        instance.subscribe!('token', recurring_profile)
+      end.to request_to(nvp_endpoint, :post)
       instance._method_.should == :CreateRecurringPaymentsProfile
       instance._sent_params_.should == {
         :DESC => 'Recurring Profile',
         :TOKEN => 'token',
         :SHIPPINGAMT => '0.00',
         :AMT => '1000.00',
+        :CURRENCYCODE => "EUR",
         :BILLINGFREQUENCY => 1,
         :MAXFAILEDPAYMENTS => 0,
         :BILLINGPERIOD => :Month,
@@ -433,7 +441,7 @@ describe Paypal::Express::Request do
   describe '#cancel!' do
     it 'should return Paypal::Express::Response' do
       fake_response 'ManageRecurringPaymentsProfileStatus/success'
-      response = instance.cancel! 'profile_id'
+      response = instance.cancel!('profile_id')
       response.should be_instance_of(Paypal::Express::Response)
     end
 
@@ -484,6 +492,42 @@ describe Paypal::Express::Request do
         :ACTION => :Reactivate,
         :PROFILEID => 'profile_id'
       }
+    end
+  end
+
+  describe "#amend!(profile_id, options={})" do
+    context "when calling with mandatory options missing" do
+      it "should raise ArgumentError" do
+        expect{instance.amend!('profile_id', {currency_code: "EUR"})}.to raise_error(ArgumentError, ":amount option missing!")
+        expect{instance.amend!('profile_id', {amount: 19.95})}.to raise_error(ArgumentError, ":currency_code option missing!")
+      end
+    end
+
+    context "when calling with note option" do
+      it "should call UpdateRecurringPaymentsProfile with correct method and params" do
+        expect{instance.amend!('profile_id', {note: "test changes", amount: 19.95, currency_code: "EUR"})}.
+          to request_to(nvp_endpoint, :post)
+
+        expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
+        expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', :NOTE => "test changes", CURRENCYCODE: "EUR", :AMT => 19.95})
+      end
+    end
+
+    context "when calling without note option" do
+      it "should call UpdateRecurringPaymentsProfile with correct method and params" do
+        expect{instance.amend!('profile_id', {amount: 19.95, currency_code: "EUR"})}.
+          to request_to(nvp_endpoint, :post)
+
+        expect(instance._method_).to eq :UpdateRecurringPaymentsProfile
+        expect(instance._sent_params_).to eq({:PROFILEID => 'profile_id', CURRENCYCODE: "EUR", :AMT => 19.95})
+      end
+    end
+
+    it 'should return Paypal::Express::Response' do
+      fake_response 'UpdateRecurringPaymentsProfile/success'
+      response = instance.amend!('profile_id', {note: "test changes", currency_code: "EUR", amount: 19.95})
+
+      expect(response.class).to eq Paypal::Express::Response
     end
   end
 

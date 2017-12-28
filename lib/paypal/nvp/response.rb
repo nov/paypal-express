@@ -2,6 +2,7 @@ module Paypal
   module NVP
     class Response < Base
       cattr_reader :attribute_mapping
+
       @@attribute_mapping = {
         :ACK => :ack,
         :BUILD => :build,
@@ -36,6 +37,7 @@ module Paypal
         :INVNUM => :invoice_number,
         :CUSTOM => :custom
       }
+
       attr_accessor *@@attribute_mapping.values
       attr_accessor :shipping_options_is_default, :success_page_redirect_requested, :insurance_option_selected
       attr_accessor :amount, :description, :ship_to, :bill_to, :payer, :recurring, :billing_agreement, :refund
@@ -43,6 +45,8 @@ module Paypal
       alias_method :colleration_id, :correlation_id # NOTE: I made a typo :p
 
       def initialize(attributes = {})
+        @raw_response = attributes
+
         attrs = attributes.dup
         @@attribute_mapping.each do |key, value|
           self.send "#{value}=", attrs.delete(key)
@@ -189,8 +193,9 @@ module Paypal
             payment_responses[index.to_i][key.to_sym] = attrs.delete(_attr_)
           end
         end
+
         @payment_responses = payment_responses.collect do |_attrs_|
-          Payment::Response.new _attrs_
+          Payment::Response.new(_attrs_)
         end
 
         # payment_info
@@ -227,6 +232,14 @@ module Paypal
         attrs.each do |key, value|
           Paypal.log "Ignored Parameter (#{self.class}): #{key}=#{value}", :warn
         end
+      end
+
+      def to_s
+        @raw_response.to_s
+      end
+
+      def to_json
+        @raw_response.to_json
       end
     end
   end

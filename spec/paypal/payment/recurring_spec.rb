@@ -1,6 +1,7 @@
-require 'spec_helper.rb'
-
+# rspec spec/paypal/payment/recurring_spec.rb
 describe Paypal::Payment::Recurring do
+  klass = Paypal::Payment::Recurring
+
   let :keys do
     Paypal::Payment::Recurring.optional_attributes
   end
@@ -56,10 +57,28 @@ describe Paypal::Payment::Recurring do
   end
 
   let :instance do
-    Paypal::Payment::Recurring.new attributes
+    klass.new(attributes)
   end
 
   describe '.new' do
+    # can not make this happen as profile object is used both in cretion, response verification and status checks, which vary in available parameters
+    xit "should raise if attempting to initialize with missing mandatory parameters" do
+      expect{klass.new({raw: {:DESC => "test description"}})}.to raise_error(ArgumentError, /\AMissing mandatory parameters \[:PROFILESTARTDATE, :BILLINGPERIOD, :BILLINGFREQUENCY, :AMT, :CURRENCYCODE\]/)
+    end
+
+    xit "should not raise if initializing with all mandatory parameters" do
+      mandatory_parameters = {
+        :DESC => "Funny Movie Clips Subscription",
+        :PROFILESTARTDATE => "2017-01-25T15:00:00Z",
+        :BILLINGPERIOD => "Day", # "Month", "Year"
+        :BILLINGFREQUENCY => "30",
+        :AMT => "9.00", # two-decimals for cents, whole number for whole currency, like a Euro or Dollar
+        :CURRENCYCODE => "EUR",
+      }
+
+      expect{klass.new(raw: mandatory_parameters)}.to_not raise_error(ArgumentError)
+    end
+
     it 'should accept all supported attributes' do
       instance.identifier.should == '12345'
       instance.description.should == 'Subscription Payment Profile'
@@ -80,6 +99,7 @@ describe Paypal::Payment::Recurring do
           :tax_amount => '0'
         }
       end
+
       it 'should setup trial billing info' do
         instance.billing.trial.should == Paypal::Payment::Recurring::Billing.new(trial_attributes)
       end
@@ -104,11 +124,14 @@ describe Paypal::Payment::Recurring do
       }
     end
 
-    context 'when start_date is Time' do
-      it 'should be stringfy' do
-        instance = Paypal::Payment::Recurring.new attributes.merge(
-          :start_date => Time.utc(2011, 2, 8, 15, 0, 0)
+    context 'when start_date is a Time object' do
+      it 'should get correctly stringfied when converting to params' do
+        instance = Paypal::Payment::Recurring.new(
+          attributes.merge(
+            :start_date => Time.utc(2011, 2, 8, 15, 0, 0)
+          )
         )
+
         instance.start_date.should be_instance_of(Time)
         instance.to_params[:PROFILESTARTDATE].should == '2011-02-08 15:00:00'
       end
@@ -126,6 +149,7 @@ describe Paypal::Payment::Recurring do
           :tax_amount => '0'
         }
       end
+
       it 'should setup trial billing info' do
         instance.to_params.should == {
           :TRIALBILLINGPERIOD => "Month",
@@ -150,6 +174,43 @@ describe Paypal::Payment::Recurring do
         }
       end
     end
+
+    context "when attempting to initialize a Recurring Profile with an initial payment now and same payments every month" do
+      it "should return correct request parameters hash" do
+        @attributes = expected_recurring_profile_parameters
+
+        profile = Paypal::Payment::Recurring.new(raw: @attributes)
+
+        @exp = expected_recurring_profile_parameters
+
+        expect(profile.to_params).to eq @exp
+      end
+    end
+
+    context "when attempting to initialize a Recurring Profile with a large initial payment now and smaller payments every month" do
+      it "should return correct request parameters hash" do
+        @attributes = mandatory_profile_parameters.merge(initial_payment_profile_parameters).merge(auxilary_profile_parameters).merge(:INITAMT => "100.00", :AMT => "1.50")
+
+        profile = Paypal::Payment::Recurring.new(raw: @attributes)
+
+        @exp = mandatory_profile_parameters.merge(initial_payment_profile_parameters).merge(auxilary_profile_parameters).merge(:INITAMT => "100.00", :AMT => "1.50")
+
+        expect(profile.to_params).to eq @exp
+      end
+    end
+
+    context "when attempting to initialize a Recurring Profile with no initial payment and recurring payments every month starting in a week" do
+      it "should return correct request parameters hash" do
+        @attributes = mandatory_profile_parameters.merge(trial_profile_parameters).merge(auxilary_profile_parameters)
+
+        profile = Paypal::Payment::Recurring.new(raw: @attributes)
+
+        @exp = mandatory_profile_parameters.merge(trial_profile_parameters).merge(auxilary_profile_parameters)
+
+        expect(profile.to_params).to eq @exp
+      end
+    end
+
   end
 
   describe '#numeric_attribute?' do

@@ -1,5 +1,3 @@
-require 'spec_helper.rb'
-
 describe Paypal::NVP::Request do
   let :attributes do
     {
@@ -80,19 +78,24 @@ describe Paypal::NVP::Request do
   describe '#request' do
     it 'should POST to NPV endpoint' do
       expect do
-        instance.request :RPCMethod
-      end.to request_to Paypal::NVP::Request::ENDPOINT[:production], :post
+        instance.request(:RPCMethod)
+      end.to request_to(Paypal::NVP::Request::ENDPOINT[:production], :post)
     end
 
     context 'when got API error response' do
-      before do
-        fake_response 'SetExpressCheckout/failure'
-      end
+      subject { instance.request(:SetExpressCheckout) }
+      before { fake_response 'SetExpressCheckout/failure' }
 
-      it 'should raise Paypal::Exception::APIError' do
-        expect do
-          instance.request :SetExpressCheckout
-        end.to raise_error(Paypal::Exception::APIError)
+      it 'does not raise, returns the response object to be handled' do
+        expect{ subject }.to_not raise_error
+        expect(subject).to eq({
+          :ACK => "Failure",
+          :CORRELATIONID => "379d1b7f97afb",
+          :L_ERRORCODE0 => "10001",
+          :L_LONGMESSAGE0 => "Timeout processing request",
+          :L_SHORTMESSAGE0 => "Internal Error",
+          :TIMESTAMP => "2011-02-02T02:16:50Z"
+        })
       end
     end
 
